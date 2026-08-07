@@ -26,7 +26,7 @@ jobs:
 
       # 기능 : 전체 목록 조회에 필요한 라이브러리 설치
       - name: Install dependencies
-        run: pip install pandas lxml
+        run: pip install pandas finance-datareader
 
       # 기능 : 전체 종목 수집 스크립트 실행 (시간이 오래 걸립니다)
       - name: Fetch all KOSPI/KOSDAQ stocks
