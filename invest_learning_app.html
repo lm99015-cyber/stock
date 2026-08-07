@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 학습 프로그램 — 모의주식 투자 &amp; 기업가치 탐험대</title>
+<!-- 기능 : Pretendard 웹폰트 불러오기 (두 프로그램 공용) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ============================================================
+   기능 : 페이지 전역 공통 스타일 (두 프로그램이 공유)
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,"Malgun Gothic",sans-serif;
+  line-height:1.5;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important;}
+}
+
+/* ============================================================
+   기능 : 태블릿(가로 900px 이하) 공통 레이아웃 조정
+          — 학생들이 각자 자기 태블릿으로 수업을 진행하는 상황을 기준으로 함
+   ============================================================ */
+@media (max-width:900px){
+  #appSwitcher button{padding:10px 16px;font-size:0.8rem;}
+  #app-mission .wrap, #app-ai .wrap{padding:0 12px;}
+  #app-mission .progress-box{flex-direction:column;align-items:stretch;text-align:center;}
+  #app-mission .session-tab-btn{padding:10px 14px;font-size:0.82rem;min-height:44px;}
+  #app-mission .mission-item{padding:12px 14px;}
+  #app-ai .ai-card{padding:26px 18px;}
+  #app-ai .ai-btn{width:100%;box-sizing:border-box;}
+}
+
+/* ============================================================
+   기능 : 상단 프로그램 전환 스위처
+   ============================================================ */
+#appSwitcher{
+  position:sticky;top:0;z-index:100;
+  background:#0f1830;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  padding:10px 12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+}
+#appSwitcher button{
+  border:none;cursor:pointer;font:inherit;font-weight:800;font-size:0.88rem;
+  padding:11px 22px;border-radius:999px;min-height:44px;
+  background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.65);
+  transition:all .15s;
+}
+#appSwitcher button:hover{background:rgba(255,255,255,0.16);color:#fff;}
+#appSwitcher button.active{background:#fff;color:#0f1830;}
+#appSwitcher button:focus-visible{outline:3px solid #ffb648;outline-offset:2px;}
+
+/* 기능 : 두 프로그램 화면 전환 (선택된 것만 표시) */
+.app-view{display:none;}
+.app-view.active{display:block;}
+
+/* ============================================================
+   ▼▼▼ 아래는 [모의주식 투자] 전용 스타일 — #app-sim 안에서만 적용 ▼▼▼
+   ============================================================ */
+#app-sim{
+  --bg:#F4F6F9;
+  --panel:#FFFFFF;
+  --ink:#13213C;
+  --ink-soft:#5B677E;
+  --line:#E2E7EF;
+  --up:#D6322B;
+  --up-bg:#FCEDEC;
+  --down:#1E5AE8;
+  --down-bg:#EAF0FE;
+  --navy:#13213C;
+  --gold:#B98A2F;
+  --radius:14px;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+}
+#app-sim .num{font-variant-numeric:tabular-nums;}
+
+#app-sim header{
+  background:var(--navy);
+  color:#fff;
+  padding:18px 22px 16px;
+}
+#app-sim .head-inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;}
+#app-sim .brand{margin-right:auto;}
+#app-sim .brand h1{font-size:1.15rem;font-weight:800;letter-spacing:-0.02em;}
+#app-sim .brand p{font-size:0.78rem;opacity:0.65;margin-top:2px;}
+#app-sim .stat{text-align:right;}
+#app-sim .stat .label{font-size:0.72rem;opacity:0.65;letter-spacing:0.06em;}
+#app-sim .stat .value{font-size:1.35rem;font-weight:800;letter-spacing:-0.01em;}
+#app-sim .stat .value.up{color:#FF8A84;}
+#app-sim .stat .value.down{color:#8FB0FF;}
+#app-sim .data-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  color:#E8D9B8;
+  font-size:0.72rem;
+  padding:4px 10px;border-radius:999px;
+  margin-top:6px;
+}
+#app-sim .data-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+#app-sim .data-chip.live .dot{background:#4CC36B;}
+
+#app-sim main{max-width:1100px;margin:20px auto 60px;padding:0 16px;display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start;}
+#app-sim .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+#app-sim .card h2{font-size:0.92rem;font-weight:800;padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;}
+#app-sim .card h2 .sub{font-weight:500;font-size:0.74rem;color:#7A86A0;margin-left:auto;}
+
+#app-sim table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+#app-sim thead th{
+  text-align:right;padding:8px 12px;font-size:0.7rem;font-weight:600;color:#7A86A0;
+  border-bottom:1px solid var(--line);background:#FAFBFD;
+}
+#app-sim thead th:first-child{text-align:left;padding-left:18px;}
+#app-sim tbody td{padding:10px 12px;text-align:right;border-bottom:1px solid #F0F3F8;}
+#app-sim tbody td:first-child{text-align:left;padding-left:18px;}
+#app-sim tbody tr{cursor:pointer;transition:background 0.1s;}
+#app-sim tbody tr:hover{background:#F6F8FC;}
+#app-sim tbody tr.selected{background:#FFF7EC;box-shadow:inset 3px 0 0 var(--gold);}
+#app-sim .stock-name{font-weight:700;}
+#app-sim .stock-code{font-size:0.7rem;color:#9AA4BB;font-weight:400;}
+#app-sim td.up,#app-sim span.up{color:var(--up);font-weight:700;}
+#app-sim td.down,#app-sim span.down{color:var(--down);font-weight:700;}
+#app-sim td.flat,#app-sim span.flat{color:#7A86A0;}
+#app-sim .badge{display:inline-block;font-size:0.62rem;font-weight:600;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:1px;}
+#app-sim .badge.kospi{background:#EEF1F7;color:#5B677E;}
+#app-sim .badge.kosdaq{background:#F3EEE3;color:#8A6E2F;}
+
+#app-sim .order-body{padding:16px 18px;}
+#app-sim .order-stock{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;}
+#app-sim .order-stock .name{font-size:1.05rem;font-weight:800;}
+#app-sim .order-stock .price{font-size:1.05rem;font-weight:800;margin-left:auto;}
+#app-sim .order-change{font-size:0.78rem;margin-bottom:14px;}
+#app-sim .field{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+#app-sim .field label{font-size:0.78rem;color:#5B677E;width:52px;flex-shrink:0;}
+#app-sim .field input{
+  flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:8px;
+  font:inherit;font-variant-numeric:tabular-nums;text-align:right;
+}
+#app-sim .field input:focus{outline:2px solid var(--navy);outline-offset:-1px;}
+#app-sim .qty-btns{display:flex;gap:6px;margin-bottom:14px;padding-left:60px;}
+#app-sim .qty-btns button{
+  flex:1;padding:6px 0;font-size:0.74rem;border:1px solid var(--line);
+  background:#FAFBFD;border-radius:6px;cursor:pointer;font-family:inherit;color:#5B677E;
+}
+#app-sim .qty-btns button:hover{background:#EEF1F7;}
+#app-sim .cost-table{font-size:0.78rem;color:#5B677E;border-top:1px dashed var(--line);padding-top:10px;margin-bottom:14px;}
+#app-sim .cost-table div{display:flex;justify-content:space-between;padding:2px 0;}
+#app-sim .cost-table .total{font-weight:800;color:var(--ink);font-size:0.88rem;padding-top:6px;}
+#app-sim .order-btns{display:flex;gap:8px;}
+#app-sim .order-btns button{
+  flex:1;padding:12px 0;border:none;border-radius:9px;font:inherit;font-weight:800;
+  font-size:0.95rem;color:#fff;cursor:pointer;transition:filter 0.1s;
+}
+#app-sim .order-btns button:hover{filter:brightness(1.08);}
+#app-sim .order-btns button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+#app-sim .btn-buy{background:var(--up);}
+#app-sim .btn-sell{background:var(--down);}
+#app-sim .order-empty{padding:34px 18px;text-align:center;color:#9AA4BB;font-size:0.85rem;}
+
+#app-sim .tabs{display:flex;border-bottom:1px solid var(--line);}
+#app-sim .tabs button{
+  flex:1;padding:12px 0;border:none;background:none;font:inherit;font-size:0.85rem;
+  font-weight:700;color:#9AA4BB;cursor:pointer;border-bottom:2px solid transparent;
+}
+#app-sim .tabs button.active{color:var(--ink);border-bottom-color:var(--navy);}
+#app-sim .empty-msg{padding:26px 18px;text-align:center;color:#9AA4BB;font-size:0.82rem;}
+#app-sim .history-item{padding:9px 18px;border-bottom:1px solid #F0F3F8;font-size:0.78rem;display:flex;gap:8px;align-items:baseline;}
+#app-sim .history-item .when{color:#9AA4BB;font-size:0.7rem;width:84px;flex-shrink:0;}
+#app-sim .history-item .what{flex:1;}
+
+#app-sim .toolbar{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+#app-sim .toolbar input{
+  padding:9px 14px;border:1px solid var(--line);border-radius:8px;font:inherit;width:180px;background:#fff;
+}
+#app-sim .toolbar button{
+  padding:9px 16px;border:1px solid var(--line);background:#fff;border-radius:8px;
+  font:inherit;font-size:0.82rem;font-weight:600;cursor:pointer;color:var(--ink);
+}
+#app-sim .toolbar button:hover{background:#F6F8FC;}
+#app-sim .toolbar .danger{color:var(--up);border-color:#F2CBC9;}
+#app-sim .toolbar .note{font-size:0.72rem;color:#9AA4BB;margin-left:auto;}
+
+#app-sim #toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);
+  background:var(--navy);color:#fff;padding:10px 20px;border-radius:999px;
+  font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:50;
+}
+#app-sim #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media (max-width:820px){
+  #app-sim main{grid-template-columns:1fr;}
+  #app-sim .stat .value{font-size:1.1rem;}
+}
+
+/* ============================================================
+   ▼▼▼ 아래는 [기업가치 탐험대] 전용 스타일 — #app-explorer 안에서만 적용 ▼▼▼
+   ============================================================ */
+#app-explorer{
+  --orange-main:#ff7e2d;
+  --orange-light:#ff9c4a;
+  --orange-bg:#fff4ec;
+  --navy:#2c3550;
+  --gray:#6b7280;
+  --line:#f0e2d6;
+  --good:#2f9e6e;
+  --bad:#e05252;
+  --blue:#3b6fd4;
+  font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;
+  background:linear-gradient(160deg,#fff8f2 0%,#fff 40%,#fef3e9 100%);
+  color:var(--navy);
+  min-height:100vh;
+  line-height:1.6;
+}
+#app-explorer .num{
+  display:inline-flex;width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--orange-main),var(--orange-light));
+  color:#fff;font-size:0.85rem;align-items:center;justify-content:center;
+  margin-right:8px;
+}
+
+#app-explorer .header{text-align:center;padding:34px 16px 18px;}
+#app-explorer .header h1{
+  font-size:2rem;font-weight:800;
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:-0.5px;
+}
+#app-explorer .header p{color:var(--gray);margin-top:6px;font-size:0.98rem;}
+#app-explorer .data-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#fff;border:1px solid var(--line);color:#9a6231;
+  font-size:0.72rem;padding:4px 10px;border-radius:999px;
+  margin-top:10px;
+}
+#app-explorer .data-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--orange-main);}
+#app-explorer .data-chip.live .dot{background:var(--good);}
+
+#app-explorer .notice{
+  max-width:960px;margin:10px auto 0;padding:10px 18px;
+  background:var(--orange-bg);border:1px solid var(--line);
+  border-radius:12px;font-size:0.85rem;color:#9a6231;text-align:center;
+}
+
+#app-explorer .tabs{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin:22px auto 8px;padding:0 12px;max-width:960px;
+}
+#app-explorer .tab-btn{
+  border:none;cursor:pointer;
+  padding:12px 22px;border-radius:30px;
+  font-size:0.95rem;font-weight:700;font-family:inherit;
+  background:#fff;color:var(--navy);
+  border:2px solid var(--line);
+  transition:all .2s;
+}
+#app-explorer .tab-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,126,45,.18);}
+#app-explorer .tab-btn.active{
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(255,126,45,.35);
+}
+#app-explorer .tab-btn:focus-visible{outline:3px solid var(--orange-light);outline-offset:2px;}
+
+#app-explorer .panel{display:none;max-width:960px;margin:18px auto 60px;padding:0 16px;}
+#app-explorer .panel.active{display:block;animation:appExplorerFadeIn .35s ease;}
+@keyframes appExplorerFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+#app-explorer .panel h2{font-size:1.3rem;margin-bottom:6px;}
+#app-explorer .panel .sub{color:var(--gray);font-size:0.92rem;margin-bottom:18px;}
+
+#app-explorer .card-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+#app-explorer .flip-card{perspective:1000px;height:230px;cursor:pointer;}
+#app-explorer .flip-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .55s;transform-style:preserve-3d;
+}
+#app-explorer .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+#app-explorer .flip-face{
+  position:absolute;inset:0;backface-visibility:hidden;
+  border-radius:16px;padding:20px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+#app-explorer .flip-front{
+  background:#fff;border:2px solid var(--line);
+  box-shadow:0 3px 10px rgba(0,0,0,.05);
+  align-items:center;text-align:center;
+}
+#app-explorer .flip-front .badge{
+  font-size:0.75rem;font-weight:700;color:var(--orange-main);
+  background:var(--orange-bg);padding:3px 12px;border-radius:20px;margin-bottom:10px;
+}
+#app-explorer .flip-front .term{font-size:1.45rem;font-weight:800;}
+#app-explorer .flip-front .kor{color:var(--gray);font-size:0.9rem;margin-top:4px;}
+#app-explorer .flip-front .formula{
+  margin-top:14px;font-size:0.95rem;font-weight:600;color:var(--blue);
+  background:#f2f6ff;padding:6px 14px;border-radius:10px;
+}
+#app-explorer .flip-front .hint{margin-top:12px;font-size:0.78rem;color:#c9a98e;}
+#app-explorer .flip-back{
+  background:linear-gradient(135deg,var(--orange-main),var(--orange-light));
+  color:#fff;transform:rotateY(180deg);font-size:0.88rem;
+}
+#app-explorer .flip-back b{display:block;margin-bottom:6px;font-size:0.95rem;}
+#app-explorer .flip-back .tip{
+  margin-top:10px;background:rgba(255,255,255,.18);
+  border-radius:10px;padding:8px 10px;font-size:0.82rem;
+}
+
+#app-explorer .chip-row{display:flex;flex-wrap:wrap;gap:10px 16px;margin-bottom:18px;}
+#app-explorer .sector-group{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;border:1.5px dashed var(--line);border-radius:30px;
+  padding:5px 10px 5px 14px;
+}
+#app-explorer .sector-tag{font-size:0.74rem;font-weight:700;color:#c08a55;white-space:nowrap;}
+#app-explorer .chip{
+  border:2px solid var(--line);background:#fff;border-radius:24px;
+  padding:8px 16px;font-size:0.9rem;font-weight:600;font-family:inherit;
+  cursor:pointer;transition:all .15s;color:var(--navy);
+}
+#app-explorer .chip:hover{border-color:var(--orange-light);}
+#app-explorer .chip.on{
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  color:#fff;border-color:transparent;
+}
+#app-explorer .chip:focus-visible{outline:3px solid var(--orange-light);outline-offset:2px;}
+
+#app-explorer .compare-wrap{overflow-x:auto;background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px;}
+#app-explorer table.compare{width:100%;border-collapse:collapse;font-size:0.9rem;min-width:520px;}
+#app-explorer table.compare th,#app-explorer table.compare td{padding:10px 12px;text-align:right;border-bottom:1px solid #f7ede3;}
+#app-explorer table.compare th:first-child,#app-explorer table.compare td:first-child{text-align:left;font-weight:700;}
+#app-explorer table.compare thead th{
+  background:var(--orange-bg);color:#9a6231;font-size:0.82rem;
+  position:sticky;top:0;
+}
+#app-explorer table.compare tbody tr:last-child td{border-bottom:none;}
+#app-explorer .mini{display:block;font-size:0.72rem;color:var(--gray);font-weight:400;}
+
+#app-explorer .bar-section{margin-top:22px;}
+#app-explorer .bar-group{
+  background:#fff;border:2px solid var(--line);border-radius:16px;
+  padding:16px 18px;margin-bottom:14px;
+}
+#app-explorer .bar-group h3{font-size:1rem;margin-bottom:4px;}
+#app-explorer .bar-group .desc{font-size:0.8rem;color:var(--gray);margin-bottom:10px;}
+#app-explorer .bar-row{display:flex;align-items:center;gap:10px;margin:7px 0;}
+#app-explorer .bar-label{width:110px;font-size:0.84rem;font-weight:600;flex-shrink:0;}
+#app-explorer .bar-track{flex:1;background:#faf2ea;border-radius:8px;height:22px;overflow:hidden;}
+#app-explorer .bar-fill{
+  height:100%;border-radius:8px;
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  transition:width .6s ease;min-width:2px;
+}
+#app-explorer .bar-val{width:80px;font-size:0.84rem;font-weight:700;text-align:right;flex-shrink:0;}
+
+#app-explorer .insight{
+  margin-top:18px;background:#f3fbf6;border:2px solid #cdeeda;
+  border-radius:16px;padding:16px 18px;font-size:0.9rem;
+}
+#app-explorer .insight h3{font-size:1rem;color:var(--good);margin-bottom:8px;}
+#app-explorer .insight li{margin-left:18px;margin-bottom:4px;}
+
+#app-explorer .quiz-box{
+  background:#fff;border:2px solid var(--line);border-radius:18px;
+  padding:26px 24px;max-width:680px;margin:0 auto;
+}
+#app-explorer .quiz-progress{font-size:0.82rem;color:var(--gray);margin-bottom:10px;font-weight:600;}
+#app-explorer .quiz-q{font-size:1.05rem;font-weight:700;margin-bottom:18px;white-space:pre-line;}
+#app-explorer .quiz-opts{display:flex;flex-direction:column;gap:10px;}
+#app-explorer .opt-btn{
+  text-align:left;border:2px solid var(--line);background:#fffaf5;
+  border-radius:12px;padding:12px 16px;font-size:0.93rem;font-family:inherit;
+  cursor:pointer;transition:all .15s;color:var(--navy);
+}
+#app-explorer .opt-btn:hover:not(:disabled){border-color:var(--orange-light);transform:translateX(3px);}
+#app-explorer .opt-btn.correct{background:#e9f9f0;border-color:var(--good);font-weight:700;}
+#app-explorer .opt-btn.wrong{background:#fdeeee;border-color:var(--bad);}
+#app-explorer .opt-btn:disabled{cursor:default;}
+#app-explorer .quiz-explain{
+  margin-top:14px;background:var(--orange-bg);border-radius:12px;
+  padding:12px 14px;font-size:0.86rem;color:#9a6231;display:none;
+}
+#app-explorer .quiz-next{
+  margin-top:16px;display:none;
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  color:#fff;border:none;border-radius:24px;padding:11px 28px;
+  font-size:0.95rem;font-weight:700;font-family:inherit;cursor:pointer;
+}
+#app-explorer .quiz-next:hover{box-shadow:0 4px 14px rgba(255,126,45,.35);}
+#app-explorer .quiz-result{text-align:center;display:none;}
+#app-explorer .quiz-result .score{
+  font-size:2.6rem;font-weight:800;margin:12px 0;
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+#app-explorer .ws-step{
+  background:#fff;border:2px solid var(--line);border-radius:16px;
+  padding:18px 20px;margin-bottom:16px;
+}
+#app-explorer .ws-step h3{font-size:1rem;margin-bottom:8px;}
+#app-explorer .ws-step .guide{font-size:0.85rem;color:var(--gray);margin-bottom:10px;}
+#app-explorer select.ws-select{
+  font-family:inherit;font-size:0.95rem;padding:10px 14px;
+  border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);
+  width:100%;max-width:340px;
+}
+#app-explorer .data-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+#app-explorer .pill{
+  background:var(--orange-bg);border-radius:12px;padding:8px 14px;
+  font-size:0.84rem;
+}
+#app-explorer .pill b{display:block;font-size:0.72rem;color:#b07a4a;font-weight:600;}
+#app-explorer .slider-row{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap;}
+#app-explorer input[type=range]{flex:1;min-width:180px;accent-color:var(--orange-main);}
+#app-explorer .slider-val{
+  font-size:1.1rem;font-weight:800;color:var(--orange-main);
+  min-width:70px;text-align:center;
+}
+#app-explorer .calc-box{
+  margin-top:10px;background:#f2f6ff;border-radius:12px;padding:12px 16px;
+  font-size:0.95rem;font-weight:600;color:var(--blue);
+}
+#app-explorer .gauge-wrap{margin-top:14px;}
+#app-explorer .gauge-track{
+  position:relative;height:30px;border-radius:16px;overflow:hidden;
+  background:linear-gradient(90deg,#2f9e6e 0%,#a8d977 35%,#ffd24a 50%,#ffa14a 65%,#e05252 100%);
+}
+#app-explorer .gauge-needle{
+  position:absolute;top:-4px;width:4px;height:38px;background:var(--navy);
+  border-radius:2px;left:50%;transition:left .5s ease;
+}
+#app-explorer .gauge-labels{display:flex;justify-content:space-between;font-size:0.74rem;color:var(--gray);margin-top:4px;}
+#app-explorer .verdict{
+  margin-top:12px;font-size:1.05rem;font-weight:800;text-align:center;
+  padding:10px;border-radius:12px;
+}
+#app-explorer .verdict.under{background:#e9f9f0;color:var(--good);}
+#app-explorer .verdict.over{background:#fdeeee;color:var(--bad);}
+#app-explorer .verdict.fair{background:#fff8e2;color:#b08a1f;}
+#app-explorer textarea.ws-memo{
+  width:100%;min-height:110px;font-family:inherit;font-size:0.92rem;
+  border:2px solid var(--line);border-radius:12px;padding:12px;resize:vertical;
+  color:var(--navy);
+}
+#app-explorer textarea.ws-memo:focus{outline:none;border-color:var(--orange-light);}
+#app-explorer .print-btn{
+  display:block;margin:6px auto 0;
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  color:#fff;border:none;border-radius:26px;padding:13px 36px;
+  font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;
+}
+#app-explorer .print-btn:hover{box-shadow:0 4px 16px rgba(255,126,45,.4);transform:translateY(-2px);}
+
+#app-explorer .footer{
+  text-align:center;color:#c2a98f;font-size:0.78rem;
+  padding:0 16px 36px;max-width:760px;margin:0 auto;
+}
+
+@media print{
+  #appSwitcher,#app-sim{display:none!important;}
+  #app-explorer{display:block!important;}
+  #app-explorer .header,#app-explorer .tabs,#app-explorer .notice,#app-explorer .footer,#app-explorer .print-btn{display:none!important;}
+  #app-explorer .panel{display:none!important;}
+  #app-explorer #panel-ws{display:block!important;margin:0;}
+  #app-explorer .ws-step{break-inside:avoid;border-color:#ccc;}
+}
+
+@media (max-width:600px){
+  #app-explorer .header h1{font-size:1.5rem;}
+  #app-explorer .tab-btn{padding:10px 14px;font-size:0.85rem;}
+  #app-explorer .bar-label{width:84px;font-size:0.78rem;}
+}
+
+/* ============================================================
+   ▼▼▼ 아래는 [미션] 전용 스타일 — #app-mission 안에서만 적용 ▼▼▼
+   ============================================================ */
+#app-mission{
+  --teal:#0f9d78;
+  --teal-light:#3fc99c;
+  --teal-bg:#eafaf3;
+  --ink:#173a30;
+  --gray:#6b7280;
+  --line:#dcf1e7;
+  background:linear-gradient(160deg,#f2fbf7 0%,#fff 40%,#eafaf3 100%);
+  color:var(--ink);
+  min-height:100vh;
+  font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;
+}
+#app-mission .header{text-align:center;padding:34px 16px 18px;}
+#app-mission .header h1{
+  font-size:2rem;font-weight:800;
+  background:linear-gradient(90deg,var(--teal),var(--teal-light));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+#app-mission .header p{color:var(--gray);margin-top:6px;font-size:0.98rem;}
+#app-mission .wrap{max-width:760px;margin:0 auto 60px;padding:0 16px;}
+#app-mission .progress-box{
+  background:#fff;border:2px solid var(--line);border-radius:18px;
+  padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+#app-mission .progress-box .count{font-size:1.6rem;font-weight:800;color:var(--teal);white-space:nowrap;}
+#app-mission .progress-track{flex:1;min-width:140px;background:var(--teal-bg);border-radius:10px;height:14px;overflow:hidden;}
+#app-mission .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:10px;transition:width .5s ease;}
+#app-mission .refresh-btn{
+  border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:20px;
+  padding:8px 16px;font:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;
+}
+#app-mission .refresh-btn:hover{border-color:var(--teal-light);}
+#app-mission .mission-group{margin-bottom:22px;}
+#app-mission .mission-group h2{font-size:1rem;color:var(--teal);margin-bottom:10px;}
+#app-mission .session-tabs{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;
+}
+#app-mission .session-tab-btn{
+  position:relative;border:2px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:20px;padding:9px 18px;font:inherit;font-size:0.86rem;font-weight:700;
+  cursor:pointer;transition:all .15s;
+}
+#app-mission .session-tab-btn:hover{border-color:var(--teal-light);}
+#app-mission .session-tab-btn.active{
+  background:linear-gradient(90deg,var(--teal),var(--teal-light));
+  color:#fff;border-color:transparent;
+}
+#app-mission .session-tab-btn .lock{font-size:0.72rem;margin-left:3px;opacity:0.7;}
+#app-mission .session-tab-btn.cleared::after{
+  content:"✓";position:absolute;top:-6px;right:-6px;
+  width:18px;height:18px;border-radius:50%;background:var(--teal);color:#fff;
+  font-size:0.66rem;display:flex;align-items:center;justify-content:center;
+}
+#app-mission .session-info{
+  background:#fff;border:2px dashed var(--line);border-radius:14px;
+  padding:14px 18px;margin-bottom:16px;
+}
+#app-mission .session-info .s-title{font-weight:800;font-size:1.02rem;color:var(--teal);}
+#app-mission .session-info .s-desc{font-size:0.85rem;color:var(--gray);margin-top:4px;}
+#app-mission .mission-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:#fff;border:2px solid var(--line);border-radius:14px;
+  padding:14px 16px;margin-bottom:10px;transition:all .2s;
+}
+#app-mission .mission-item.done{background:var(--teal-bg);border-color:var(--teal-light);}
+#app-mission .mission-item .check{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:2px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;color:transparent;background:#fff;
+}
+#app-mission .mission-item.done .check{background:var(--teal);border-color:var(--teal);color:#fff;}
+#app-mission .mission-item .txt{flex:1;}
+#app-mission .mission-item .title{font-weight:700;font-size:0.95rem;}
+#app-mission .mission-item .desc{font-size:0.82rem;color:var(--gray);margin-top:2px;}
+#app-mission .goto-btn{
+  display:inline-block;margin-top:8px;
+  background:#fff;border:2px solid var(--teal-light);color:var(--teal);
+  border-radius:16px;padding:7px 14px;font:inherit;font-size:0.78rem;font-weight:700;
+  cursor:pointer;transition:all .15s;
+}
+#app-mission .goto-btn:hover{background:var(--teal);color:#fff;}
+#app-mission .mission-item.locked{
+  opacity:0.55;background:#f5f5f5;border-style:dashed;cursor:not-allowed;
+}
+#app-mission .mission-item.locked .check.lock-icon{
+  background:transparent;border-color:var(--line);color:var(--gray);font-size:0.95rem;
+}
+#app-mission .session-tab-btn.locked{
+  opacity:0.5;cursor:not-allowed;background:#f3f3f3;color:var(--gray);
+}
+#app-mission .session-tab-btn.locked:hover{border-color:var(--line);}
+#app-mission .mission-item.note-item{align-items:stretch;}
+#app-mission .mission-item.note-item .txt{width:100%;}
+#app-mission textarea.mission-note{
+  width:100%;min-height:90px;margin-top:8px;
+  font-family:inherit;font-size:0.87rem;color:var(--ink);
+  border:2px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;
+}
+#app-mission textarea.mission-note:focus{outline:none;border-color:var(--teal-light);}
+#app-mission .mission-item.note-item .note-count{margin-top:6px;text-align:right;font-weight:600;}
+  display:block;margin:6px auto 0;
+  background:linear-gradient(90deg,var(--teal),var(--teal-light));
+  color:#fff;border:none;border-radius:26px;padding:13px 36px;
+  font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;
+}
+#app-mission .copy-btn:hover{box-shadow:0 4px 16px rgba(15,157,120,.35);transform:translateY(-2px);}
+#app-mission .reset-all-btn{
+  display:block;margin:14px auto 0;
+  background:#fff;color:#c23b3b;border:2px solid #f3d3d3;border-radius:22px;
+  padding:11px 22px;font-size:0.84rem;font-weight:700;font-family:inherit;cursor:pointer;
+}
+#app-mission .reset-all-btn:hover{background:#fdf0f0;border-color:#e8a9a9;}
+#app-mission #missionToast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:#fff;padding:10px 20px;border-radius:999px;
+  font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:50;
+}
+#app-mission #missionToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ============================================================
+   ▼▼▼ 아래는 [AI에게 물어보기] 전용 스타일 — #app-ai 안에서만 적용 ▼▼▼
+   ============================================================ */
+#app-ai{
+  --violet:#7c5cff;
+  --violet-light:#a48bff;
+  --violet-bg:#f2efff;
+  --ink:#241b47;
+  --gray:#6b7280;
+  --line:#e6e0ff;
+  background:linear-gradient(160deg,#f7f5ff 0%,#fff 40%,#f2efff 100%);
+  color:var(--ink);
+  min-height:100vh;
+  font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;
+}
+#app-ai .header{text-align:center;padding:34px 16px 18px;}
+#app-ai .header h1{
+  font-size:2rem;font-weight:800;
+  background:linear-gradient(90deg,var(--violet),var(--violet-light));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+#app-ai .header p{color:var(--gray);margin-top:6px;font-size:0.98rem;}
+#app-ai .wrap{max-width:640px;margin:0 auto 60px;padding:0 16px;text-align:center;}
+#app-ai .ai-card{
+  background:#fff;border:2px solid var(--line);border-radius:20px;
+  padding:36px 28px;
+}
+#app-ai .ai-card .emoji{font-size:2.6rem;margin-bottom:10px;}
+#app-ai .ai-card h2{font-size:1.15rem;margin-bottom:8px;}
+#app-ai .ai-card p{font-size:0.92rem;color:var(--gray);margin-bottom:22px;line-height:1.7;}
+#app-ai .ai-btn{
+  display:inline-block;text-decoration:none;
+  background:linear-gradient(90deg,var(--violet),var(--violet-light));
+  color:#fff;border:none;border-radius:26px;padding:15px 38px;
+  font-size:1.02rem;font-weight:700;font-family:inherit;cursor:pointer;
+}
+#app-ai .ai-btn:hover{box-shadow:0 4px 18px rgba(124,92,255,.4);transform:translateY(-2px);}
+#app-ai .hint-list{
+  margin-top:26px;text-align:left;background:var(--violet-bg);
+  border-radius:14px;padding:16px 20px;font-size:0.85rem;color:#4b3f80;
+}
+#app-ai .hint-list b{display:block;margin-bottom:6px;}
+#app-ai .hint-list li{margin-left:18px;margin-bottom:3px;}
+#app-ai .teacher-note{
+  margin-top:16px;font-size:0.78rem;color:#9a8fc9;
+  border-top:1px dashed var(--line);padding-top:14px;
+}
+</style>
+</head>
+<body>
+
+<!-- 기능 : 두 학습 프로그램 사이 전환 스위처 -->
+<nav id="appSwitcher">
+  <button data-view="app-mission" class="active">🎯 미션</button>
+  <button data-view="app-explorer">📊 기업가치 탐험대</button>
+  <button data-view="app-sim">💰 모의주식 투자</button>
+  <button data-view="app-ai">🤖 AI에게 물어보기</button>
+</nav>
+
+<!-- ============================================================
+     [1] 모의주식 투자 프로그램
+     ============================================================ -->
+<div id="app-sim" class="app-view">
+
+<header>
+  <div class="head-inner">
+    <div class="brand">
+      <h1>모의주식 투자 교실</h1>
+      <p>가상 자금으로 실제 종목을 거래하며 배우는 투자 연습장</p>
+      <span class="data-chip" id="dataChip"><span class="dot"></span><span id="dataChipText">시세 불러오는 중…</span></span>
+    </div>
+    <div class="stat">
+      <div class="label">보유 현금</div>
+      <div class="value num" id="statCash">-</div>
+    </div>
+    <div class="stat">
+      <div class="label">총 자산</div>
+      <div class="value num" id="statTotal">-</div>
+    </div>
+    <div class="stat">
+      <div class="label">수익률</div>
+      <div class="value num" id="statReturn">-</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- 기능 : 종목 시세표 영역 -->
+  <section class="card">
+    <h2>종목 시세 <span class="sub">종목을 누르면 주문할 수 있어요</span></h2>
+    <table>
+      <thead>
+        <tr><th>종목</th><th>현재가</th><th>등락률</th><th>보유</th></tr>
+      </thead>
+      <tbody id="marketBody"></tbody>
+    </table>
+  </section>
+
+  <!-- 기능 : 주문 + 보유종목 + 거래내역 영역 -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <section class="card">
+      <h2>주문하기</h2>
+      <div id="orderPanel"><div class="order-empty">왼쪽 시세표에서 종목을 선택하세요</div></div>
+    </section>
+
+    <section class="card">
+      <div class="tabs">
+        <button class="active" data-tab="portfolio">보유종목</button>
+        <button data-tab="history">거래내역</button>
+      </div>
+      <div id="tabContent"></div>
+    </section>
+  </div>
+
+  <!-- 기능 : 학생 이름 입력 및 결과 제출 도구 -->
+  <div class="toolbar">
+    <input type="text" id="studentName" placeholder="이름 (예: 2학년 3반 김OO)" maxlength="20">
+    <button id="copyBtn">결과 요약 복사</button>
+    <button class="danger" id="resetBtn">처음부터 다시</button>
+    <span class="note">수수료 0.015% · 매도 시 거래세 0.20% 적용</span>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+</div>
+<!-- /#app-sim -->
+
+<!-- ============================================================
+     [2] 기업가치 탐험대 프로그램
+     ============================================================ -->
+<div id="app-explorer" class="app-view">
+
+<header class="header">
+  <h1>📊 기업가치 탐험대</h1>
+  <p>PER · PBR · ROE — 주식 지표로 배우는 기업 가치 분석</p>
+  <span class="data-chip" id="expDataChip"><span class="dot"></span><span id="expDataChipText">시세 불러오는 중…</span></span>
+</header>
+
+<div class="notice">
+  ⚠️ <b>주가</b>는 연결된 경우 실시간 시세를 사용하고, <b>EPS·BPS·배당수익률 등 나머지 지표</b>는
+  <b>2026년 상반기 기준 학습용 예시 값(고정)</b>입니다. 따라서 PER·PBR은 주가 변동에 따라 실시간으로
+  바뀌지만, 실제 최신 재무제표와는 차이가 있을 수 있습니다. 투자 권유가 아닌 <b>교육 목적</b>으로만 사용하세요.
+</div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="learn" role="tab">① 지표 개념 학습</button>
+  <button class="tab-btn" data-tab="quiz" role="tab">② 지표 퀴즈</button>
+  <button class="tab-btn" data-tab="ws" role="tab">③ 가치평가 워크시트</button>
+  <button class="tab-btn" data-tab="compare" role="tab">④ 기업 비교 분석</button>
+</nav>
+
+<section class="panel active" id="panel-learn">
+  <h2>① 지표 개념 학습</h2>
+  <p class="sub">카드를 클릭하면 뒤집혀서 자세한 설명이 나타납니다. 모든 카드를 뒤집어 보세요!</p>
+  <div class="card-grid" id="cardGrid"></div>
+</section>
+
+<section class="panel" id="panel-compare">
+  <h2>④ 기업 비교 분석</h2>
+  <p class="sub">기업을 <b>2~3개</b> 선택하면 지표를 표와 그래프로 비교하고, 해석 도우미가 분석 힌트를 알려줍니다.</p>
+  <div class="chip-row" id="chipRow"></div>
+  <div id="compareArea"><p style="color:var(--gray);font-size:0.9rem;">👆 위에서 기업을 선택해 보세요.</p></div>
+</section>
+
+<section class="panel" id="panel-quiz">
+  <h2>② 지표 퀴즈</h2>
+  <p class="sub">개념 문제와 계산 문제가 섞여 나옵니다. 총 10문제!</p>
+  <div class="quiz-box">
+    <div id="quizPlay">
+      <div class="quiz-progress" id="quizProgress"></div>
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <div class="quiz-explain" id="quizExplain"></div>
+      <button class="quiz-next" id="quizNext">다음 문제 →</button>
+    </div>
+    <div class="quiz-result" id="quizResult">
+      <h3>🎉 퀴즈 완료!</h3>
+      <div class="score" id="quizScore"></div>
+      <p id="quizComment" style="color:var(--gray);font-size:0.92rem;"></p>
+      <button class="quiz-next" id="quizRetry" style="display:inline-block;margin-top:18px;">다시 풀기</button>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="panel-ws">
+  <h2>③ 모의 가치평가 워크시트</h2>
+  <p class="sub">애널리스트가 되어 한 기업의 <b>적정주가</b>를 직접 계산하고, 고평가/저평가 여부를 판단해 봅시다.</p>
+
+  <div class="ws-step">
+    <h3><span class="num">1</span>분석할 기업 선택</h3>
+    <p class="guide">기업을 고르면 핵심 지표가 자동으로 표시됩니다.</p>
+    <select class="ws-select" id="wsCompany"></select>
+    <div class="data-pills" id="wsPills"></div>
+  </div>
+
+  <div class="ws-step">
+    <h3><span class="num">2</span>목표 PER 결정하기</h3>
+    <p class="guide">
+      "이 기업의 이익에 몇 배의 가치를 매길 것인가?"를 정하는 단계입니다.
+      성장성이 높으면 높은 PER을, 이익이 불안정하면 낮은 PER을 적용합니다.
+      슬라이더를 움직여 <b>나만의 목표 PER</b>을 정해 보세요. (참고: 코스피 평균 PER은 보통 10~14배 수준)
+    </p>
+    <div class="slider-row">
+      <input type="range" id="wsPer" min="1" max="60" step="0.5" value="12" aria-label="목표 PER 슬라이더">
+      <div class="slider-val"><span id="wsPerVal">12.0</span>배</div>
+    </div>
+  </div>
+
+  <div class="ws-step">
+    <h3><span class="num">3</span>적정주가 계산</h3>
+    <p class="guide">적정주가 = 주당순이익(EPS) × 목표 PER</p>
+    <div class="calc-box" id="wsCalc"></div>
+    <div class="gauge-wrap">
+      <div class="gauge-track"><div class="gauge-needle" id="wsNeedle"></div></div>
+      <div class="gauge-labels"><span>◀ 저평가 (싸다)</span><span>적정</span><span>고평가 (비싸다) ▶</span></div>
+    </div>
+    <div class="verdict" id="wsVerdict"></div>
+  </div>
+
+  <div class="ws-step">
+    <h3><span class="num">4</span>나의 분석 결론 쓰기</h3>
+    <p class="guide">
+      왜 그 목표 PER을 선택했는지, 계산 결과 이 기업이 고평가/저평가라고 판단한 근거는 무엇인지,
+      PER 외에 함께 살펴봐야 할 지표(PBR, ROE, 배당수익률 등)는 무엇인지 적어 보세요.
+    </p>
+    <textarea class="ws-memo" id="wsMemo" placeholder="예시) 나는 ○○기업의 목표 PER을 △△배로 정했다. 그 이유는..."></textarea>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ 워크시트 인쇄하기</button>
+</section>
+
+<footer class="footer">
+  본 프로그램은 경제·금융 교육용 학습 도구입니다. 표시된 수치는 학습 편의를 위한 예시 데이터이며
+  특정 종목에 대한 투자 권유 또는 추천이 아닙니다. · Play! Click! Think! 학습 모형 기반
+</footer>
+
+</div>
+<!-- /#app-explorer -->
+
+<!-- ============================================================
+     [3] 미션 페이지
+     ============================================================ -->
+<div id="app-mission" class="app-view active">
+  <header class="header">
+    <h1>🎯 5차시 미션 챌린지</h1>
+    <p>1차시부터 5차시까지, 회차가 올라갈수록 미션이 조금씩 심화돼요</p>
+  </header>
+  <div class="wrap">
+    <div class="progress-box">
+      <div class="count" id="missionCount">0 / 15 완료</div>
+      <div class="progress-track"><div class="progress-fill" id="missionFill" style="width:0%"></div></div>
+      <button class="refresh-btn" id="missionRefresh">🔄 현황 새로고침</button>
+    </div>
+
+    <nav class="session-tabs" id="sessionTabs" role="tablist"></nav>
+
+    <div class="session-info" id="sessionInfo"></div>
+    <div id="missionList"></div>
+
+    <button class="copy-btn" id="missionCopyBtn">📋 미션 현황 복사 (전체 5차시)</button>
+    <button class="reset-all-btn" id="missionResetAll">🗑️ 전체 처음부터 다시 시작 (모의주식+탐험대+미션 전부 초기화)</button>
+  </div>
+  <div id="missionToast"></div>
+</div>
+<!-- /#app-mission -->
+
+<!-- ============================================================
+     [4] AI에게 물어보기 페이지
+     ============================================================ -->
+<div id="app-ai" class="app-view">
+  <header class="header">
+    <h1>🤖 AI에게 물어보기</h1>
+    <p>PER·PBR·ROE, 매매 용어 등 궁금한 점을 AI와 대화하며 풀어보세요</p>
+  </header>
+  <div class="wrap">
+    <div class="ai-card">
+      <div class="emoji">💬</div>
+      <h2>선생님이 준비한 제미나이 노트북으로 이동합니다</h2>
+      <p>
+        이 버튼을 누르면 선생님이 수업 자료(개념 설명, 지표 정리 등)를 미리 넣어둔
+        <b>제미나이 노트북(Gemini Notebook)</b>이 새 탭으로 열려요. 그 안에서 자유롭게 질문하고 답을 확인할 수 있어요.
+        (제미나이 노트북은 2026년 7월까지 'NotebookLM'이라는 이름으로 불리던 것과 같은 서비스입니다.)
+      </p>
+      <p style="background:var(--violet-bg);border-radius:12px;padding:10px 16px;font-size:0.85rem;color:#4b3f80;">
+        🔑 <b>구글(Google) 계정 로그인이 필요합니다.</b> 학교 구글 계정이 있다면 그걸로 로그인해주세요.
+        계정이 없다면 선생님께 먼저 안내를 받으세요.
+      </p>
+      <a class="ai-btn" id="notebookLmLink" href="#" target="_blank" rel="noopener noreferrer">
+        제미나이 노트북에서 질문하기 →
+      </a>
+      <div class="hint-list">
+        <b>💡 이런 질문을 해보세요</b>
+        <ul>
+          <li>PER이 낮으면 무조건 좋은 주식인가요?</li>
+          <li>PBR과 PER은 어떻게 다른가요?</li>
+          <li>수수료랑 거래세는 왜 매도할 때 더 붙나요?</li>
+          <li>ROE가 높은 기업의 예시를 더 알려줘</li>
+        </ul>
+      </div>
+      <div class="teacher-note">
+        🔧 선생님께: 이 버튼은 현재 제미나이 노트북 첫 화면으로 연결되어 있어요.
+        수업용 노트북을 만든 뒤 "공유 → 링크가 있는 모든 사용자" 로 설정하고,
+        그 주소를 이 파일에서 <code>GEMINI_NOTEBOOK_URL</code> 부분에 바꿔 넣어주세요.
+        노트북을 만들거나 열 때도 구글 계정 로그인이 필요합니다.
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /#app-ai -->
+
+<script>
+/* ============================================================
+   기능 : 상단 스위처로 두 프로그램 화면 전환
+   ============================================================ */
+function activateAppView(view){
+  document.querySelectorAll("#appSwitcher button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  document.querySelectorAll(".app-view").forEach(v => v.classList.toggle("active", v.id === view));
+  if(view === "app-mission" && typeof window.__recomputeMissions === "function"){
+    window.__recomputeMissions();
+  }
+}
+document.querySelectorAll("#appSwitcher button").forEach(btn => {
+  btn.addEventListener("click", () => activateAppView(btn.dataset.view));
+});
+
+/* 기능 : 미션 카드의 "바로가기" 버튼 등에서 호출 — 화면 전환 + (탐험대인 경우) 세부 탭까지 이동 */
+window.__gotoAppView = function(view, subTab){
+  activateAppView(view);
+  if(subTab){
+    const tabBtn = document.querySelector(`#app-explorer .tab-btn[data-tab="${subTab}"]`);
+    if(tabBtn) tabBtn.click();
+  }
+  window.scrollTo({top:0, behavior:"smooth"});
+};
+</script>
+
+<script>
+/* ============================================================
+   [모의주식 투자] 프로그램 스크립트 (독립 스코프로 격리)
+   ============================================================ */
+(function(){
+/* 기능 : 기본 설정값 정의 */
+const SEED_MONEY = 10000000;      // 시작 가상 자금 (1,000만원)
+const FEE_RATE   = 0.00015;       // 매매 수수료 0.015%
+const TAX_RATE   = 0.002;         // 매도 시 증권거래세 0.20%
+const REFRESH_MS = 60000;         // 시세 자동 새로고침 주기 (60초)
+const PRICES_URL = "prices.json"; // GitHub Actions가 갱신하는 시세 파일
+
+/* 기능 : 내장 예시 시세 (prices.json이 없을 때 사용하는 대비책) */
+const FALLBACK_STOCKS = [
+  {code:"005930", name:"삼성전자",        market:"KOSPI",  price:71200,  changeRate: 0.85},
+  {code:"000660", name:"SK하이닉스",      market:"KOSPI",  price:198500, changeRate: 1.72},
+  {code:"373220", name:"LG에너지솔루션",  market:"KOSPI",  price:342000, changeRate:-0.58},
+  {code:"006400", name:"삼성SDI",         market:"KOSPI",  price:220000, changeRate:-0.42},
+  {code:"207940", name:"삼성바이오로직스",market:"KOSPI",  price:812000, changeRate: 0.12},
+  {code:"068270", name:"셀트리온",        market:"KOSPI",  price:176200, changeRate: 0.00},
+  {code:"005380", name:"현대차",          market:"KOSPI",  price:241500, changeRate:-1.03},
+  {code:"000270", name:"기아",            market:"KOSPI",  price:112300, changeRate:-0.27},
+  {code:"035420", name:"NAVER",           market:"KOSPI",  price:213500, changeRate: 2.15},
+  {code:"035720", name:"카카오",          market:"KOSPI",  price:46850,  changeRate: 0.97},
+  {code:"005490", name:"POSCO홀딩스",     market:"KOSPI",  price:287500, changeRate:-0.86},
+  {code:"004020", name:"현대제철",        market:"KOSPI",  price:33000,  changeRate:-1.21},
+  {code:"105560", name:"KB금융",          market:"KOSPI",  price:88400,  changeRate: 0.45},
+  {code:"055550", name:"신한지주",        market:"KOSPI",  price:65000,  changeRate: 0.77},
+  {code:"352820", name:"하이브",          market:"KOSPI",  price:228000, changeRate: 1.33},
+  {code:"329180", name:"HD현대중공업",    market:"KOSPI",  price:480000, changeRate: 1.05},
+  {code:"042660", name:"한화오션",        market:"KOSPI",  price:115000, changeRate:-0.61},
+  {code:"017670", name:"SK텔레콤",        market:"KOSPI",  price:58000,  changeRate: 0.34},
+  {code:"030200", name:"KT",              market:"KOSPI",  price:52000,  changeRate:-0.19},
+  {code:"035900", name:"JYP Ent.",        market:"KOSDAQ", price:62300,  changeRate: 0.65}
+];
+
+/* 기능 : 저장소 래퍼 (localStorage 사용 불가 환경에서는 메모리로 대체) */
+const storage = (() => {
+  let memory = {};
+  let useLocal = false;
+  try {
+    localStorage.setItem("__t","1"); localStorage.removeItem("__t");
+    useLocal = true;
+  } catch(e){ useLocal = false; }
+  return {
+    get(key){ try { return useLocal ? localStorage.getItem(key) : (memory[key] ?? null); } catch(e){ return memory[key] ?? null; } },
+    set(key,val){ try { if(useLocal) localStorage.setItem(key,val); else memory[key]=val; } catch(e){ memory[key]=val; } },
+    remove(key){ try { if(useLocal) localStorage.removeItem(key); else delete memory[key]; } catch(e){ delete memory[key]; } }
+  };
+})();
+
+/* 기능 : 앱 상태 정의 및 저장/복원 */
+let stocks = FALLBACK_STOCKS.map(s => ({...s}));
+let dataUpdatedAt = null;   // 시세 기준 시각
+let isLiveData = false;     // prices.json 로딩 성공 여부
+let selectedCode = null;    // 현재 선택된 종목 코드
+let activeTab = "portfolio";
+
+let state = {
+  cash: SEED_MONEY,
+  holdings: {},   // {종목코드: {qty, avgPrice}}
+  history: [],    // [{time, type, name, qty, price, amount}]
+  name: ""
+};
+
+function saveState(){
+  storage.set("stockSimState", JSON.stringify(state));
+}
+
+function loadState(){
+  const raw = storage.get("stockSimState");
+  if(!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    if(typeof parsed.cash === "number" && parsed.holdings) state = parsed;
+    if(!Array.isArray(state.history)) state.history = [];
+  } catch(e){ /* 손상된 데이터는 무시하고 새로 시작 */ }
+}
+
+/* 기능 : 시세 데이터 불러오기 (prices.json → 실패 시 내장 예시) */
+async function loadPrices(){
+  try {
+    const res = await fetch(PRICES_URL + "?t=" + Date.now(), {cache:"no-store"});
+    if(!res.ok) throw new Error("not found");
+    const data = await res.json();
+    if(!data.stocks || !data.stocks.length) throw new Error("empty");
+    stocks = data.stocks;
+    dataUpdatedAt = data.updated || null;
+    isLiveData = true;
+  } catch(e){
+    if(!isLiveData){ stocks = FALLBACK_STOCKS.map(s => ({...s})); dataUpdatedAt = null; }
+  }
+  renderAll();
+}
+
+/* 기능 : 공용 유틸 (금액 표기, 등락 클래스, 토스트) */
+const won = n => n.toLocaleString("ko-KR") + "원";
+const cls = rate => rate > 0 ? "up" : rate < 0 ? "down" : "flat";
+const arrow = rate => rate > 0 ? "▲" : rate < 0 ? "▼" : "";
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+function getStock(code){ return stocks.find(s => s.code === code); }
+
+function renderHeader(){
+  let holdingValue = 0;
+  for(const code in state.holdings){
+    const s = getStock(code);
+    if(s) holdingValue += s.price * state.holdings[code].qty;
+  }
+  const total = state.cash + holdingValue;
+  const rate = (total - SEED_MONEY) / SEED_MONEY * 100;
+
+  document.getElementById("statCash").textContent = won(state.cash);
+  document.getElementById("statTotal").textContent = won(total);
+  const ret = document.getElementById("statReturn");
+  ret.textContent = (rate > 0 ? "+" : "") + rate.toFixed(2) + "%";
+  ret.className = "value num " + cls(rate);
+
+  const chip = document.getElementById("dataChip");
+  const chipText = document.getElementById("dataChipText");
+  if(isLiveData){
+    chip.classList.add("live");
+    chipText.textContent = "실제 시세 · 기준 " + (dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "-");
+  } else {
+    chip.classList.remove("live");
+    chipText.textContent = "예시 시세로 연습 중 (prices.json 미연결)";
+  }
+}
+
+function renderMarket(){
+  const body = document.getElementById("marketBody");
+  body.innerHTML = "";
+  for(const s of stocks){
+    const h = state.holdings[s.code];
+    const tr = document.createElement("tr");
+    if(s.code === selectedCode) tr.classList.add("selected");
+    tr.innerHTML = `
+      <td><span class="stock-name">${s.name}</span><span class="badge ${s.market === "KOSDAQ" ? "kosdaq" : "kospi"}">${s.market}</span><br><span class="stock-code">${s.code}</span></td>
+      <td class="num ${cls(s.changeRate)}">${s.price.toLocaleString("ko-KR")}</td>
+      <td class="num ${cls(s.changeRate)}">${arrow(s.changeRate)} ${Math.abs(s.changeRate).toFixed(2)}%</td>
+      <td class="num">${h ? h.qty + "주" : "-"}</td>`;
+    tr.addEventListener("click", () => { selectedCode = s.code; renderMarket(); renderOrder(); });
+    body.appendChild(tr);
+  }
+}
+
+function renderOrder(){
+  const panel = document.getElementById("orderPanel");
+  const s = getStock(selectedCode);
+  if(!s){
+    panel.innerHTML = `<div class="order-empty">왼쪽 시세표에서 종목을 선택하세요</div>`;
+    return;
+  }
+  const held = state.holdings[s.code]?.qty || 0;
+  panel.innerHTML = `
+    <div class="order-body">
+      <div class="order-stock">
+        <span class="name">${s.name}</span>
+        <span class="price num ${cls(s.changeRate)}">${s.price.toLocaleString("ko-KR")}원</span>
+      </div>
+      <div class="order-change ${cls(s.changeRate)}">${arrow(s.changeRate)} ${Math.abs(s.changeRate).toFixed(2)}% &nbsp;<span style="color:#9AA4BB">보유 ${held}주</span></div>
+      <div class="field">
+        <label for="qtyInput">수량</label>
+        <input type="number" id="qtyInput" min="1" step="1" value="1" inputmode="numeric">
+      </div>
+      <div class="qty-btns">
+        <button data-q="1">+1</button><button data-q="5">+5</button><button data-q="10">+10</button>
+        <button data-q="maxbuy">최대 매수</button><button data-q="maxsell">전량 매도</button>
+      </div>
+      <div class="cost-table" id="costTable"></div>
+      <div class="order-btns">
+        <button class="btn-buy" id="buyBtn">매수</button>
+        <button class="btn-sell" id="sellBtn">매도</button>
+      </div>
+    </div>`;
+
+  const qtyInput = panel.querySelector("#qtyInput");
+
+  function renderCost(){
+    const qty = Math.max(0, Math.floor(Number(qtyInput.value) || 0));
+    const amount = s.price * qty;
+    const fee = Math.floor(amount * FEE_RATE);
+    const tax = Math.floor(amount * TAX_RATE);
+    document.getElementById("costTable").innerHTML = `
+      <div><span>주문 금액</span><span class="num">${won(amount)}</span></div>
+      <div><span>수수료 (0.015%)</span><span class="num">${won(fee)}</span></div>
+      <div><span>매수 시 필요 금액</span><span class="num">${won(amount + fee)}</span></div>
+      <div><span>매도 시 거래세 (0.20%)</span><span class="num">${won(tax)}</span></div>
+      <div class="total"><span>매도 시 받는 금액</span><span class="num">${won(Math.max(0, amount - fee - tax))}</span></div>`;
+  }
+  qtyInput.addEventListener("input", renderCost);
+  renderCost();
+
+  panel.querySelectorAll(".qty-btns button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const q = btn.dataset.q;
+      if(q === "maxbuy"){
+        const perShare = s.price * (1 + FEE_RATE);
+        qtyInput.value = Math.max(1, Math.floor(state.cash / perShare));
+      } else if(q === "maxsell"){
+        qtyInput.value = Math.max(1, held);
+      } else {
+        qtyInput.value = (Math.floor(Number(qtyInput.value)) || 0) + Number(q);
+      }
+      renderCost();
+    });
+  });
+
+  panel.querySelector("#buyBtn").addEventListener("click", () => trade("buy", s, Math.floor(Number(qtyInput.value))));
+  panel.querySelector("#sellBtn").addEventListener("click", () => trade("sell", s, Math.floor(Number(qtyInput.value))));
+}
+
+function trade(type, s, qty){
+  if(!qty || qty < 1){ toast("수량을 1 이상 입력하세요"); return; }
+  const amount = s.price * qty;
+  const fee = Math.floor(amount * FEE_RATE);
+  const now = new Date().toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+
+  if(type === "buy"){
+    const need = amount + fee;
+    if(need > state.cash){ toast("현금이 부족해요 (필요: " + won(need) + ")"); return; }
+    state.cash -= need;
+    const h = state.holdings[s.code] || {qty:0, avgPrice:0};
+    h.avgPrice = Math.round((h.avgPrice * h.qty + amount) / (h.qty + qty));
+    h.qty += qty;
+    state.holdings[s.code] = h;
+    state.history.unshift({time:now, type:"매수", name:s.name, qty, price:s.price, amount:need});
+    toast(s.name + " " + qty + "주 매수 완료");
+  } else {
+    const h = state.holdings[s.code];
+    if(!h || h.qty < qty){ toast("보유 수량이 부족해요 (보유: " + (h?.qty || 0) + "주)"); return; }
+    const tax = Math.floor(amount * TAX_RATE);
+    const receive = amount - fee - tax;
+    state.cash += receive;
+    h.qty -= qty;
+    if(h.qty === 0) delete state.holdings[s.code];
+    state.history.unshift({time:now, type:"매도", name:s.name, qty, price:s.price, amount:receive});
+    toast(s.name + " " + qty + "주 매도 완료");
+  }
+  if(state.history.length > 200) state.history.length = 200;
+  saveState();
+  renderAll();
+}
+
+function renderTabs(){
+  const box = document.getElementById("tabContent");
+  document.querySelectorAll("#app-sim .tabs button").forEach(b =>
+    b.classList.toggle("active", b.dataset.tab === activeTab));
+
+  if(activeTab === "portfolio"){
+    const codes = Object.keys(state.holdings);
+    if(!codes.length){ box.innerHTML = `<div class="empty-msg">아직 보유한 종목이 없어요. 시세표에서 첫 매수를 해보세요!</div>`; return; }
+    let rows = "";
+    for(const code of codes){
+      const h = state.holdings[code];
+      const s = getStock(code);
+      if(!s) continue;
+      const value = s.price * h.qty;
+      const profit = value - h.avgPrice * h.qty;
+      const rate = h.avgPrice ? (s.price - h.avgPrice) / h.avgPrice * 100 : 0;
+      rows += `<tr>
+        <td><span class="stock-name">${s.name}</span><br><span class="stock-code">${h.qty}주 · 평단 ${h.avgPrice.toLocaleString("ko-KR")}</span></td>
+        <td class="num">${value.toLocaleString("ko-KR")}</td>
+        <td class="num ${cls(profit)}">${profit > 0 ? "+" : ""}${profit.toLocaleString("ko-KR")}</td>
+        <td class="num ${cls(rate)}">${rate > 0 ? "+" : ""}${rate.toFixed(2)}%</td>
+      </tr>`;
+    }
+    box.innerHTML = `<table><thead><tr><th>종목</th><th>평가금액</th><th>평가손익</th><th>수익률</th></tr></thead><tbody>${rows}</tbody></table>`;
+  } else {
+    if(!state.history.length){ box.innerHTML = `<div class="empty-msg">거래내역이 여기에 기록돼요</div>`; return; }
+    box.innerHTML = state.history.map(h => `
+      <div class="history-item">
+        <span class="when">${h.time}</span>
+        <span class="what"><b class="${h.type === "매수" ? "up" : "down"}">${h.type}</b> ${h.name} ${h.qty}주 @ ${h.price.toLocaleString("ko-KR")}</span>
+        <span class="num" style="color:#7A86A0">${h.amount.toLocaleString("ko-KR")}원</span>
+      </div>`).join("");
+  }
+}
+
+function buildSummary(){
+  let holdingValue = 0, lines = [];
+  for(const code in state.holdings){
+    const s = getStock(code); const h = state.holdings[code];
+    if(!s) continue;
+    const value = s.price * h.qty;
+    holdingValue += value;
+    const rate = h.avgPrice ? (s.price - h.avgPrice) / h.avgPrice * 100 : 0;
+    lines.push(`- ${s.name} ${h.qty}주 (평단 ${h.avgPrice.toLocaleString("ko-KR")}, 수익률 ${rate >= 0 ? "+" : ""}${rate.toFixed(2)}%)`);
+  }
+  const total = state.cash + holdingValue;
+  const rate = (total - SEED_MONEY) / SEED_MONEY * 100;
+  return [
+    `[모의주식 결과] ${state.name || "(이름 미입력)"}`,
+    `총 자산: ${won(total)} / 수익률: ${rate >= 0 ? "+" : ""}${rate.toFixed(2)}%`,
+    `현금: ${won(state.cash)} / 주식 평가: ${won(holdingValue)}`,
+    `거래 횟수: ${state.history.length}회`,
+    lines.length ? "보유종목:\n" + lines.join("\n") : "보유종목: 없음",
+    `기준: ${isLiveData ? "실제 시세 " + (dataUpdatedAt || "") : "예시 시세"}`
+  ].join("\n");
+}
+
+function renderAll(){
+  renderHeader();
+  renderMarket();
+  renderOrder();
+  renderTabs();
+}
+
+document.querySelectorAll("#app-sim .tabs button").forEach(b =>
+  b.addEventListener("click", () => { activeTab = b.dataset.tab; renderTabs(); }));
+
+document.getElementById("studentName").addEventListener("input", e => {
+  state.name = e.target.value; saveState();
+});
+
+document.getElementById("copyBtn").addEventListener("click", async () => {
+  const text = buildSummary();
+  try { await navigator.clipboard.writeText(text); toast("결과 요약을 복사했어요. 선생님께 붙여넣기로 제출!"); }
+  catch(e){ prompt("아래 내용을 복사하세요", text); }
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(!confirm("모든 거래 기록과 자산이 초기화됩니다. 처음부터 다시 시작할까요?")) return;
+  state = {cash:SEED_MONEY, holdings:{}, history:[], name:state.name};
+  saveState();
+  renderAll();
+  toast("초기화 완료! 1,000만원으로 다시 시작합니다");
+});
+
+loadState();
+document.getElementById("studentName").value = state.name || "";
+renderAll();
+loadPrices();
+setInterval(loadPrices, REFRESH_MS);
+})();
+</script>
+
+<script>
+/* ============================================================
+   [기업가치 탐험대] 프로그램 스크립트 (독립 스코프로 격리)
+   ============================================================ */
+(function(){
+/* 기능 : 미션 페이지에서 자동 체크할 수 있도록, 학생의 학습 활동을 localStorage에 기록
+   저장 항목 : flippedTerms(뒤집어본 개념 카드), quizBestScore(퀴즈 최고점),
+             compareEverDone(2개 이상 비교 경험 여부), wsMemo(워크시트 결론 텍스트) */
+const expStorage = (() => {
+  let memory = {};
+  let useLocal = false;
+  try { localStorage.setItem("__t","1"); localStorage.removeItem("__t"); useLocal = true; }
+  catch(e){ useLocal = false; }
+  return {
+    get(key){ try { return useLocal ? localStorage.getItem(key) : (memory[key] ?? null); } catch(e){ return memory[key] ?? null; } },
+    set(key,val){ try { if(useLocal) localStorage.setItem(key,val); else memory[key]=val; } catch(e){ memory[key]=val; } }
+  };
+})();
+let expProgress = {flippedTerms:[], quizBestScore:0, quizCompleted:false, compareEverDone:false, maxCompareSelected:0, wsMemo:"", wsPerTouched:false};
+try {
+  const raw = expStorage.get("expProgress");
+  if(raw) expProgress = {...expProgress, ...JSON.parse(raw)};
+} catch(e){ /* 손상된 데이터는 무시 */ }
+function saveExpProgress(){ expStorage.set("expProgress", JSON.stringify(expProgress)); }
+
+/* 기능 : 학습용 기업 스냅샷 데이터 정의
+   설명 : 2026년 상반기 기준 예시 값 (수업용)
+          price=주가(원), eps=주당순이익, bps=주당순자산,
+          div=배당수익률(%), cap=시가총액(조원) */
+/* 기능 : code는 실시간 시세(prices.json)와 매칭하기 위한 종목코드입니다.
+   price/eps/bps/div/cap은 학습용 예시 스냅샷이며, code가 매칭되면
+   price만 실시간 값으로 갱신되고 PER·PBR은 그 자리에서 재계산됩니다. */
+const COMPANIES=[
+  {code:"005930", name:"삼성전자",        sector:"반도체",   price:268500,  eps:12573,  bps:62100,  div:0.6, cap:1600},
+  {code:"000660", name:"SK하이닉스",      sector:"반도체",   price:1686000, eps:280000, bps:450000, div:0.7, cap:1230},
+  {code:"035420", name:"NAVER",           sector:"IT서비스", price:231000,  eps:14100,  bps:166000, div:0.5, cap:37},
+  {code:"035720", name:"카카오",          sector:"IT서비스", price:61500,   eps:1540,   bps:23700,  div:0.1, cap:27},
+  {code:"005380", name:"현대차",          sector:"자동차",   price:262000,  eps:47600,  bps:323000, div:4.6, cap:55},
+  {code:"000270", name:"기아",            sector:"자동차",   price:115000,  eps:24200,  bps:151000, div:5.2, cap:45},
+  {code:"373220", name:"LG에너지솔루션",  sector:"2차전지",  price:420000,  eps:6000,   bps:105000, div:0.0, cap:98},
+  {code:"006400", name:"삼성SDI",         sector:"2차전지",  price:220000,  eps:5500,   bps:290000, div:0.5, cap:17},
+  {code:"207940", name:"삼성바이오로직스",sector:"바이오",   price:1050000, eps:16500,  bps:155000, div:0.0, cap:75},
+  {code:"068270", name:"셀트리온",        sector:"바이오",   price:191000,  eps:3820,   bps:80300,  div:0.4, cap:41},
+  {code:"329180", name:"HD현대중공업",    sector:"조선",     price:480000,  eps:13000,  bps:95000,  div:0.5, cap:42},
+  {code:"042660", name:"한화오션",        sector:"조선",     price:115000,  eps:2800,   bps:23000,  div:0.0, cap:35},
+  {code:"352820", name:"하이브",          sector:"엔터",     price:300000,  eps:6200,   bps:78000,  div:0.2, cap:12.5},
+  {code:"035900", name:"JYP Ent.",        sector:"엔터",     price:95000,   eps:3400,   bps:16500,  div:1.0, cap:3.4},
+  {code:"017670", name:"SK텔레콤",        sector:"통신",     price:58000,   eps:5300,   bps:57000,  div:6.1, cap:12.5},
+  {code:"030200", name:"KT",              sector:"통신",     price:52000,   eps:6300,   bps:74000,  div:4.0, cap:13},
+  {code:"105560", name:"KB금융",          sector:"금융",     price:112000,  eps:13800,  bps:167000, div:4.0, cap:44},
+  {code:"055550", name:"신한지주",        sector:"금융",     price:65000,   eps:9500,   bps:120000, div:4.2, cap:33},
+  {code:"005490", name:"POSCO홀딩스",     sector:"철강",     price:298000,  eps:11900,  bps:508000, div:3.4, cap:25},
+  {code:"004020", name:"현대제철",        sector:"철강",     price:33000,   eps:2100,   bps:135000, div:2.4, cap:4.4},
+];
+
+COMPANIES.forEach(c=>{
+  c.per=c.price/c.eps;
+  c.pbr=c.price/c.bps;
+  c.roe=c.eps/c.bps*100;
+});
+
+const fmt=(n,d=1)=>Number(n).toLocaleString("ko-KR",{maximumFractionDigits:d,minimumFractionDigits:d});
+const fmtWon=n=>Math.round(n).toLocaleString("ko-KR")+"원";
+
+document.querySelectorAll("#app-explorer .tab-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("#app-explorer .tab-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll("#app-explorer .panel").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("panel-"+btn.dataset.tab).classList.add("active");
+  });
+});
+
+const CONCEPTS=[
+  {term:"시가총액",eng:"Market Cap",formula:"주가 × 발행 주식 수",
+   mean:"시장이 평가하는 기업 전체의 '가격표'입니다. 그 회사를 통째로 사려면 필요한 금액과 같습니다.",
+   tip:"기업의 '덩치'를 비교할 때는 주가가 아니라 시가총액으로 비교해야 합니다."},
+  {term:"EPS",eng:"주당순이익",formula:"당기순이익 ÷ 주식 수",
+   mean:"주식 1주가 1년 동안 벌어들인 순이익입니다. 기업의 '벌어들이는 힘'을 1주 단위로 나타냅니다.",
+   tip:"EPS가 꾸준히 늘어나는 기업은 성장하고 있다는 신호입니다."},
+  {term:"PER",eng:"주가수익비율",formula:"주가 ÷ EPS",
+   mean:"이익 대비 주가가 몇 배인지 나타냅니다. 'PER 10배'는 지금 이익이 10년 쌓이면 주가만큼 된다는 뜻입니다.",
+   tip:"낮으면 저평가 가능성, 높으면 미래 성장 기대가 크다는 뜻일 수 있습니다. 업종끼리 비교하세요!"},
+  {term:"BPS",eng:"주당순자산",formula:"순자산 ÷ 주식 수",
+   mean:"회사가 지금 문을 닫고 자산을 나눈다면 1주당 돌아오는 금액, 즉 1주의 '장부상 가치'입니다.",
+   tip:"BPS는 기업의 '재산'을, EPS는 기업의 '수입'을 보여줍니다."},
+  {term:"PBR",eng:"주가순자산비율",formula:"주가 ÷ BPS",
+   mean:"장부상 가치 대비 주가가 몇 배인지 나타냅니다. PBR 1배 미만이면 주가가 순자산보다 싸다는 의미입니다.",
+   tip:"은행·철강처럼 자산이 많은 업종은 PBR이 낮고, IT·바이오는 높게 나오는 경향이 있습니다."},
+  {term:"ROE",eng:"자기자본이익률",formula:"순이익 ÷ 자기자본 × 100",
+   mean:"주주의 돈(자기자본)으로 1년에 몇 %의 이익을 냈는지 보여주는 '경영 효율 성적표'입니다.",
+   tip:"ROE가 꾸준히 10%를 넘으면 자본을 효율적으로 쓰는 기업으로 평가받습니다."},
+  {term:"배당수익률",eng:"Dividend Yield",formula:"주당 배당금 ÷ 주가 × 100",
+   mean:"주가 대비 1년에 받는 배당금의 비율입니다. 주식을 보유하며 받는 '이자'와 비슷한 개념입니다.",
+   tip:"배당수익률이 높은 기업은 안정적이지만, 성장에 재투자할 돈이 적을 수도 있습니다."},
+];
+
+const cardGrid=document.getElementById("cardGrid");
+CONCEPTS.forEach(c=>{
+  const el=document.createElement("div");
+  el.className="flip-card";
+  el.setAttribute("tabindex","0");
+  el.innerHTML=`
+    <div class="flip-inner">
+      <div class="flip-face flip-front">
+        <span class="badge">핵심 지표</span>
+        <div class="term">${c.term}</div>
+        <div class="kor">${c.eng}</div>
+        <div class="formula">${c.formula}</div>
+        <div class="hint">클릭해서 뜻 알아보기 👆</div>
+      </div>
+      <div class="flip-face flip-back">
+        <b>${c.term} — ${c.eng}</b>
+        ${c.mean}
+        <div class="tip">💡 ${c.tip}</div>
+      </div>
+    </div>`;
+  const flip=()=>{
+    el.classList.toggle("flipped");
+    if(el.classList.contains("flipped") && !expProgress.flippedTerms.includes(c.term)){
+      expProgress.flippedTerms.push(c.term);
+      saveExpProgress();
+    }
+  };
+  if(expProgress.flippedTerms.includes(c.term)) el.classList.add("flipped");
+  el.addEventListener("click",flip);
+  el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip();}});
+  cardGrid.appendChild(el);
+});
+
+const chipRow=document.getElementById("chipRow");
+let selected=[];
+const sectorMap={};
+COMPANIES.forEach((c,i)=>{(sectorMap[c.sector]??=[]).push(i);});
+Object.entries(sectorMap).forEach(([sector,idxs])=>{
+  const g=document.createElement("div");
+  g.className="sector-group";
+  g.innerHTML=`<span class="sector-tag">${sector}</span>`;
+  idxs.forEach(i=>{
+    const c=COMPANIES[i];
+    const b=document.createElement("button");
+    b.className="chip";
+    b.textContent=c.name;
+    b.addEventListener("click",()=>{
+      if(selected.includes(i)){selected=selected.filter(x=>x!==i);b.classList.remove("on");}
+      else{
+        if(selected.length>=3){alert("최대 3개까지 비교할 수 있어요!");return;}
+        selected.push(i);b.classList.add("on");
+      }
+      if(selected.length>=2 && !expProgress.compareEverDone){
+        expProgress.compareEverDone=true;
+      }
+      if(selected.length > expProgress.maxCompareSelected){
+        expProgress.maxCompareSelected = selected.length;
+      }
+      saveExpProgress();
+      renderCompare();
+    });
+    g.appendChild(b);
+  });
+  chipRow.appendChild(g);
+});
+
+function renderCompare(){
+  const area=document.getElementById("compareArea");
+  if(selected.length<2){
+    area.innerHTML='<p style="color:var(--gray);font-size:0.9rem;">기업을 <b>2개 이상</b> 선택하면 비교 결과가 나타납니다.</p>';
+    return;
+  }
+  const list=selected.map(i=>COMPANIES[i]);
+
+  let html=`<div class="compare-wrap"><table class="compare">
+    <thead><tr><th>지표</th>${list.map(c=>`<th>${c.name}<span class="mini">${c.sector}</span></th>`).join("")}</tr></thead>
+    <tbody>
+      <tr><td>주가</td>${list.map(c=>`<td>${fmtWon(c.price)}</td>`).join("")}</tr>
+      <tr><td>시가총액</td>${list.map(c=>`<td>${fmt(c.cap,c.cap<10?1:0)}조원</td>`).join("")}</tr>
+      <tr><td>EPS</td>${list.map(c=>`<td>${fmtWon(c.eps)}</td>`).join("")}</tr>
+      <tr><td>BPS</td>${list.map(c=>`<td>${fmtWon(c.bps)}</td>`).join("")}</tr>
+      <tr><td>PER</td>${list.map(c=>`<td>${fmt(c.per)}배</td>`).join("")}</tr>
+      <tr><td>PBR</td>${list.map(c=>`<td>${fmt(c.pbr,2)}배</td>`).join("")}</tr>
+      <tr><td>ROE</td>${list.map(c=>`<td>${fmt(c.roe)}%</td>`).join("")}</tr>
+      <tr><td>배당수익률</td>${list.map(c=>`<td>${fmt(c.div)}%</td>`).join("")}</tr>
+    </tbody></table></div>`;
+
+  const metrics=[
+    {key:"per",label:"PER (배)",desc:"낮을수록 이익 대비 주가가 싸다는 뜻 — 단, 업종 특성을 고려하세요",d:1},
+    {key:"pbr",label:"PBR (배)",desc:"1배 미만이면 장부가치보다 주가가 낮다는 의미",d:2},
+    {key:"roe",label:"ROE (%)",desc:"높을수록 주주의 돈을 효율적으로 굴리는 기업",d:1},
+    {key:"div",label:"배당수익률 (%)",desc:"높을수록 보유 중 현금 수익이 크다는 뜻",d:1},
+  ];
+  html+='<div class="bar-section">';
+  metrics.forEach(m=>{
+    const max=Math.max(...list.map(c=>c[m.key]));
+    html+=`<div class="bar-group"><h3>${m.label}</h3><p class="desc">${m.desc}</p>`;
+    list.forEach(c=>{
+      const w=max>0?(c[m.key]/max*100):0;
+      html+=`<div class="bar-row">
+        <div class="bar-label">${c.name}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${w}%"></div></div>
+        <div class="bar-val">${fmt(c[m.key],m.d)}</div></div>`;
+    });
+    html+="</div>";
+  });
+  html+="</div>";
+
+  const lowPer=list.reduce((a,b)=>a.per<b.per?a:b);
+  const highRoe=list.reduce((a,b)=>a.roe>b.roe?a:b);
+  const highDiv=list.reduce((a,b)=>a.div>b.div?a:b);
+  const lowPbr=list.reduce((a,b)=>a.pbr<b.pbr?a:b);
+  let tips=[
+    `<li><b>${lowPer.name}</b>의 PER(${fmt(lowPer.per)}배)이 가장 낮습니다. 이익 대비 주가가 상대적으로 싸지만, 미래 이익이 줄어들 것이라는 시장의 우려가 반영됐을 수도 있습니다.</li>`,
+    `<li><b>${highRoe.name}</b>의 ROE(${fmt(highRoe.roe)}%)가 가장 높아 자본을 가장 효율적으로 활용하고 있습니다.</li>`,
+    `<li>배당을 중시한다면 배당수익률이 가장 높은 <b>${highDiv.name}</b>(${fmt(highDiv.div)}%)이 눈에 띕니다.</li>`,
+  ];
+  if(lowPbr.pbr<1) tips.push(`<li><b>${lowPbr.name}</b>의 PBR은 ${fmt(lowPbr.pbr,2)}배로 1배 미만입니다. 장부상 가치보다 주가가 낮게 거래되고 있다는 뜻인데, 왜 그럴지 토론해 보세요!</li>`);
+  const sectors=new Set(list.map(c=>c.sector));
+  if(sectors.size>1) tips.push(`<li>⚠️ 서로 다른 업종(${[...sectors].join(", ")})을 비교 중입니다. PER·PBR의 '정상 범위'는 업종마다 다르므로 단순 비교에 주의하세요.</li>`);
+  else tips.push(`<li>✅ 같은 <b>${list[0].sector}</b> 업종끼리의 비교입니다. 동종업계에서는 PER·PBR 차이가 곧 시장 평가의 차이를 의미합니다. 어느 기업이 왜 더 높은 평가를 받는지 이유를 추론해 보세요!</li>`);
+  html+=`<div class="insight"><h3>🔍 해석 도우미</h3><ul>${tips.join("")}</ul></div>`;
+
+  area.innerHTML=html;
+}
+
+const QUIZ=[
+  {q:"PER(주가수익비율)을 구하는 올바른 식은?",
+   opts:["주가 ÷ EPS","EPS ÷ 주가","주가 ÷ BPS","순이익 ÷ 자기자본"],a:0,
+   ex:"PER = 주가 ÷ 주당순이익(EPS). 이익 대비 주가가 몇 배인지 나타냅니다."},
+  {q:"PBR이 1배 미만이라는 것은 무엇을 의미할까?",
+   opts:["주가가 장부상 순자산 가치보다 낮다","회사가 적자를 내고 있다","배당을 주지 않는다","주식 수가 줄었다"],a:0,
+   ex:"PBR = 주가 ÷ BPS이므로, 1배 미만이면 주가 < 1주당 순자산. 장부 가치보다 싸게 거래된다는 뜻입니다."},
+  {q:"기업의 '덩치(전체 크기)'를 비교할 때 가장 적절한 지표는?",
+   opts:["시가총액","주가","EPS","배당수익률"],a:0,
+   ex:"주가는 발행 주식 수에 따라 달라지므로, 기업 규모는 주가 × 주식 수인 시가총액으로 비교해야 합니다."},
+  {q:"ROE가 높다는 것은 어떤 의미일까?",
+   opts:["주주의 자본으로 이익을 효율적으로 내고 있다","주가가 매일 오르고 있다","부채가 전혀 없다","배당을 많이 준다"],a:0,
+   ex:"ROE = 순이익 ÷ 자기자본. 주주가 맡긴 돈을 얼마나 잘 굴려 이익을 냈는지 보여주는 효율 지표입니다."},
+  {q:"일반적으로 PER이 높게 형성되는 기업의 특징은?",
+   opts:["미래 성장에 대한 기대가 크다","자산이 매우 많다","배당수익률이 높다","주식 수가 적다"],a:0,
+   ex:"시장이 미래 이익 성장을 기대하면 현재 이익 대비 높은 가격(높은 PER)을 지불합니다. IT·바이오 기업에서 흔합니다."},
+  {q:"어떤 기업의 주가가 50,000원이고 EPS가 5,000원이다.\n이 기업의 PER은?",
+   opts:["10배","5배","25배","0.1배"],a:0,
+   ex:"PER = 50,000 ÷ 5,000 = 10배."},
+  {q:"어떤 기업의 주가가 80,000원이고 BPS가 100,000원이다.\n이 기업의 PBR은?",
+   opts:["0.8배","1.25배","8배","20배"],a:0,
+   ex:"PBR = 80,000 ÷ 100,000 = 0.8배. 장부 가치보다 낮게 거래되는 상태입니다."},
+  {q:"EPS가 4,000원인 기업에 목표 PER 15배를 적용하면\n적정주가는 얼마일까?",
+   opts:["60,000원","19,000원","37,500원","4,015원"],a:0,
+   ex:"적정주가 = EPS × 목표 PER = 4,000 × 15 = 60,000원."},
+  {q:"주가 100,000원, 주당 배당금 4,000원인 기업의\n배당수익률은?",
+   opts:["4%","2.5%","40%","0.4%"],a:0,
+   ex:"배당수익률 = 4,000 ÷ 100,000 × 100 = 4%."},
+  {q:"은행 업종은 PBR이 낮게 나오는 경우가 많다.\n그 이유로 가장 적절한 설명은?",
+   opts:["자산(자본) 규모가 매우 커서 BPS가 높기 때문","주가가 0원에 가깝기 때문","배당을 주지 않기 때문","EPS가 음수이기 때문"],a:0,
+   ex:"은행은 보유 자산이 거대해 BPS가 매우 큽니다. PBR = 주가 ÷ BPS이므로 분모가 크면 PBR이 낮아집니다."},
+];
+
+let qIdx=0,qScore=0,qOrder=[];
+const $=id=>document.getElementById(id);
+
+function shuffleQuiz(){
+  qOrder=QUIZ.map(q=>{
+    const idx=q.opts.map((_,i)=>i).sort(()=>Math.random()-0.5);
+    return {...q,opts:idx.map(i=>q.opts[i]),a:idx.indexOf(q.a)};
+  }).sort(()=>Math.random()-0.5);
+}
+
+function showQuiz(){
+  const q=qOrder[qIdx];
+  $("quizProgress").textContent=`문제 ${qIdx+1} / ${qOrder.length}  ·  현재 점수 ${qScore}점`;
+  $("quizQ").textContent=q.q;
+  $("quizExplain").style.display="none";
+  $("quizNext").style.display="none";
+  const box=$("quizOpts");box.innerHTML="";
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement("button");
+    b.className="opt-btn";b.textContent=`${i+1}. ${opt}`;
+    b.addEventListener("click",()=>answer(i,b));
+    box.appendChild(b);
+  });
+}
+
+function answer(i,btn){
+  const q=qOrder[qIdx];
+  document.querySelectorAll("#app-explorer .opt-btn").forEach((b,j)=>{
+    b.disabled=true;
+    if(j===q.a)b.classList.add("correct");
+  });
+  if(i===q.a){qScore+=10;}
+  else{btn.classList.add("wrong");}
+  $("quizExplain").textContent="📘 "+q.ex;
+  $("quizExplain").style.display="block";
+  $("quizNext").style.display="inline-block";
+  $("quizNext").textContent=qIdx===qOrder.length-1?"결과 보기 🏁":"다음 문제 →";
+}
+
+$("quizNext").addEventListener("click",()=>{
+  qIdx++;
+  if(qIdx<qOrder.length){showQuiz();}
+  else{
+    $("quizPlay").style.display="none";
+    $("quizResult").style.display="block";
+    $("quizScore").textContent=qScore+"점";
+    let changed=false;
+    if(qScore>expProgress.quizBestScore){ expProgress.quizBestScore=qScore; changed=true; }
+    if(!expProgress.quizCompleted){ expProgress.quizCompleted=true; changed=true; }
+    if(changed) saveExpProgress();
+    $("quizComment").textContent=
+      qScore>=90?"완벽해요! 이제 애널리스트처럼 분석할 준비가 됐어요 🏆":
+      qScore>=70?"훌륭해요! 헷갈린 지표만 개념 카드에서 복습해 보세요 👍":
+      qScore>=50?"좋은 출발! ① 지표 개념 학습 탭을 한 번 더 살펴보세요 📚":
+      "괜찮아요! 개념 카드부터 차근차근 다시 도전해 봅시다 💪";
+  }
+});
+
+$("quizRetry").addEventListener("click",()=>{
+  qIdx=0;qScore=0;shuffleQuiz();
+  $("quizResult").style.display="none";
+  $("quizPlay").style.display="block";
+  showQuiz();
+});
+shuffleQuiz();showQuiz();
+
+const wsSel=$("wsCompany");
+Object.entries(sectorMap).forEach(([sector,idxs])=>{
+  const og=document.createElement("optgroup");
+  og.label=sector;
+  idxs.forEach(i=>{
+    const o=document.createElement("option");
+    o.value=i;o.textContent=COMPANIES[i].name;
+    og.appendChild(o);
+  });
+  wsSel.appendChild(og);
+});
+
+function renderPills(){
+  const c=COMPANIES[wsSel.value];
+  $("wsPills").innerHTML=`
+    <div class="pill"><b>현재 주가</b>${fmtWon(c.price)}</div>
+    <div class="pill"><b>EPS (주당순이익)</b>${fmtWon(c.eps)}</div>
+    <div class="pill"><b>현재 PER</b>${fmt(c.per)}배</div>
+    <div class="pill"><b>PBR</b>${fmt(c.pbr,2)}배</div>
+    <div class="pill"><b>ROE</b>${fmt(c.roe)}%</div>
+    <div class="pill"><b>배당수익률</b>${fmt(c.div)}%</div>`;
+}
+
+function renderCalc(){
+  const c=COMPANIES[wsSel.value];
+  const per=parseFloat($("wsPer").value);
+  $("wsPerVal").textContent=per.toFixed(1);
+  const fair=c.eps*per;
+  const gap=(c.price-fair)/fair*100;
+
+  $("wsCalc").innerHTML=
+    `적정주가 = ${fmtWon(c.eps)} × ${per.toFixed(1)}배 = <b style="font-size:1.15rem;">${fmtWon(fair)}</b>
+     &nbsp;｜&nbsp; 현재 주가 ${fmtWon(c.price)} (괴리율 ${gap>=0?"+":""}${fmt(gap)}%)`;
+
+  const pos=Math.max(0,Math.min(100,50+gap));
+  $("wsNeedle").style.left=pos+"%";
+
+  const v=$("wsVerdict");
+  if(gap<=-10){v.className="verdict under";v.textContent=`📗 내 기준으로 ${c.name}은(는) 약 ${fmt(Math.abs(gap),0)}% 저평가 상태입니다`;}
+  else if(gap>=10){v.className="verdict over";v.textContent=`📕 내 기준으로 ${c.name}은(는) 약 ${fmt(gap,0)}% 고평가 상태입니다`;}
+  else{v.className="verdict fair";v.textContent=`📙 내 기준으로 ${c.name}의 주가는 적정 수준에 가깝습니다`;}
+}
+
+wsSel.addEventListener("change",()=>{renderPills();renderCalc();});
+$("wsPer").addEventListener("input",()=>{
+  renderCalc();
+  if(!expProgress.wsPerTouched){
+    expProgress.wsPerTouched = true;
+    saveExpProgress();
+  }
+});
+renderPills();renderCalc();
+
+/* 기능 : 워크시트 결론 메모 저장/복원 (미션 자동 체크용) */
+const wsMemoEl = $("wsMemo");
+if(expProgress.wsMemo) wsMemoEl.value = expProgress.wsMemo;
+wsMemoEl.addEventListener("input", ()=>{
+  expProgress.wsMemo = wsMemoEl.value;
+  saveExpProgress();
+});
+
+/* ============================================================
+   기능 : 실시간 시세(prices.json) 연동 — 종목코드가 일치하는 기업의
+          주가만 실시간 값으로 갱신하고, PER·PBR을 그 자리에서 재계산
+   ============================================================ */
+const EXP_PRICES_URL = "prices.json";
+const EXP_REFRESH_MS = 60000; // 60초마다 재확인 (모의주식 투자와 동일 주기)
+let expIsLive = false;
+let expUpdatedAt = null;
+
+function renderExpChip(){
+  const chip = $("expDataChip");
+  const chipText = $("expDataChipText");
+  if(expIsLive){
+    chip.classList.add("live");
+    chipText.textContent = "주가 실시간 반영 중 · 기준 " + (expUpdatedAt ? new Date(expUpdatedAt).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "-");
+  } else {
+    chip.classList.remove("live");
+    chipText.textContent = "예시 주가 사용 중 (prices.json 미연결)";
+  }
+}
+
+async function loadExplorerPrices(){
+  try{
+    const res = await fetch(EXP_PRICES_URL + "?t=" + Date.now(), {cache:"no-store"});
+    if(!res.ok) throw new Error("not found");
+    const data = await res.json();
+    if(!data.stocks || !data.stocks.length) throw new Error("empty");
+    const liveMap = {};
+    data.stocks.forEach(s => { liveMap[s.code] = s; });
+    COMPANIES.forEach(c => {
+      const live = liveMap[c.code];
+      if(live && typeof live.price === "number"){
+        c.price = live.price;
+        c.per = c.price / c.eps;
+        c.pbr = c.price / c.bps;
+      }
+    });
+    expIsLive = true;
+    expUpdatedAt = data.updated || null;
+    // 기능 : 현재 화면(비교분석/워크시트)에 반영된 값도 함께 갱신
+    renderCompare();
+    renderPills();
+    renderCalc();
+  }catch(e){
+    // prices.json이 아직 없으면 예시 값을 그대로 유지
+  }
+  renderExpChip();
+}
+
+loadExplorerPrices();
+setInterval(loadExplorerPrices, EXP_REFRESH_MS);
+})();
+</script>
+
+<script>
+/* ============================================================
+   [미션] 페이지 스크립트 (독립 스코프로 격리)
+   모의주식 투자 · 기업가치 탐험대의 실제 활동 데이터를 읽어
+   미션 완료 여부를 자동으로 판단합니다.
+   ============================================================ */
+(function(){
+/* 기능 : 거래내역은 종목명(name)만 저장하므로, 이름 → 업종 매핑을 준비 (업종 다양성 판단용) */
+const NAME_SECTOR = {
+  "삼성전자":"반도체","SK하이닉스":"반도체",
+  "NAVER":"IT서비스","카카오":"IT서비스",
+  "현대차":"자동차","기아":"자동차",
+  "LG에너지솔루션":"2차전지","삼성SDI":"2차전지",
+  "삼성바이오로직스":"바이오","셀트리온":"바이오",
+  "HD현대중공업":"조선","한화오션":"조선",
+  "하이브":"엔터","JYP Ent.":"엔터",
+  "SK텔레콤":"통신","KT":"통신",
+  "KB금융":"금융","신한지주":"금융",
+  "POSCO홀딩스":"철강","현대제철":"철강",
+};
+
+function readJSON(key, fallback){
+  try {
+    const raw = localStorage.getItem(key);
+    if(!raw) return fallback;
+    return {...fallback, ...JSON.parse(raw)};
+  } catch(e){ return fallback; }
+}
+function saveJSON(key, obj){
+  try { localStorage.setItem(key, JSON.stringify(obj)); } catch(e){ /* 무시 */ }
+}
+
+/* 기능 : 두 프로그램의 저장된 활동 데이터 + 미션 탐구노트를 읽어 판정용 지표로 정리 */
+function readStats(){
+  const sim = readJSON("stockSimState", {cash:10000000, holdings:{}, history:[], name:""});
+  const exp = readJSON("expProgress", {
+    flippedTerms:[], quizBestScore:0, quizCompleted:false,
+    compareEverDone:false, maxCompareSelected:0, wsMemo:"", wsPerTouched:false
+  });
+  const notes = readJSON("missionNotes", {n1:"", n3:"", n4:"", n5:""});
+  const history = sim.history || [];
+  const buyHistory = history.filter(h => h.type === "매수");
+  const sellHistory = history.filter(h => h.type === "매도");
+  return {
+    studentName: sim.name || "",
+    totalTrades: history.length,
+    buyCount: buyHistory.length,
+    sellCount: sellHistory.length,
+    distinctStocksBought: new Set(buyHistory.map(h => h.name)).size,
+    distinctSectorsBought: new Set(buyHistory.map(h => NAME_SECTOR[h.name]).filter(Boolean)).size,
+    flippedCount: (exp.flippedTerms || []).length,
+    maxCompareSelected: exp.maxCompareSelected || 0,
+    quizCompleted: !!exp.quizCompleted,
+    quizBestScore: exp.quizBestScore || 0,
+    wsPerTouched: !!exp.wsPerTouched,
+    wsMemoLen: (exp.wsMemo || "").trim().length,
+    notes,
+  };
+}
+
+/* 기능 : 5차시 미션 정의
+   설계 의도 : 앞 차시는 클릭 몇 번으로 끝나는 "체험" 위주지만,
+             뒤로 갈수록 직접 계산 → 비교 판단 근거 쓰기 → 제미나이 노트북 실제 자료 탐구 →
+             종합 분석 보고서 작성으로 난이도와 사고의 깊이가 함께 올라갑니다.
+   type: "check"(자동 감지) | "note"(직접 서술, 글자 수로 완료 판정) */
+const SESSIONS = [
+  {
+    id:1, title:"1차시 · 지표의 뜻 정확히 알기", desc:"핵심 지표를 모두 익히고, 내가 산 종목의 PER을 직접 계산해봐요.",
+    missions:[
+      {type:"check", title:"지표 개념 카드 7개 모두 뒤집어보기", target:s=>`${s.flippedCount} / 7개`, done:s=>s.flippedCount>=7,
+       goto:{view:"app-explorer", subTab:"learn"}},
+      {type:"check", title:"모의주식에서 종목 1개 매수해보기", target:s=>`매수 ${s.buyCount}회`, done:s=>s.buyCount>=1,
+       goto:{view:"app-sim"}},
+      {type:"note", key:"n1", minLen:15, title:"방금 매수한 종목의 PER을 직접 계산해서 적어보기",
+       guide:"주가 ÷ EPS 를 스스로 계산한 값과 풀이 과정을 적어보세요. (예: 삼성전자 주가 268,500 ÷ EPS 12,573 = 약 21.4배)",
+       target:s=>`${s.notes.n1.trim().length} / 15자`, done:s=>s.notes.n1.trim().length>=15,
+       goto:{view:"app-explorer", subTab:"ws"}},
+    ],
+  },
+  {
+    id:2, title:"2차시 · 매매로 지표 체감하기", desc:"매도까지 경험하고, 업종을 넓혀가며 퀴즈 실력을 키워요.",
+    missions:[
+      {type:"check", title:"매수한 종목을 매도까지 해보기", target:s=>`매도 ${s.sellCount}회`, done:s=>s.sellCount>=1,
+       goto:{view:"app-sim"}},
+      {type:"check", title:"서로 다른 업종 2개 이상 매수해보기", target:s=>`${s.distinctSectorsBought} / 2업종`, done:s=>s.distinctSectorsBought>=2,
+       goto:{view:"app-sim"}},
+      {type:"check", title:"지표 퀴즈에서 70점 이상 받기", target:s=>`최고점 ${s.quizBestScore}점`, done:s=>s.quizBestScore>=70,
+       goto:{view:"app-explorer", subTab:"quiz"}},
+    ],
+  },
+  {
+    id:3, title:"3차시 · 비교로 판단력 기르기", desc:"기업 3곳을 나란히 비교하고, 왜 그렇게 판단했는지 근거를 남겨요.",
+    missions:[
+      {type:"check", title:"기업 3개를 골라 비교 분석해보기", target:s=>`최대 ${s.maxCompareSelected}개 선택`, done:s=>s.maxCompareSelected>=3,
+       goto:{view:"app-explorer", subTab:"compare"}},
+      {type:"note", key:"n3", minLen:40, title:"비교한 기업 중 저평가/고평가라고 생각하는 기업과 이유 적어보기",
+       guide:"어떤 지표(PER·PBR·ROE·배당수익률)를 근거로 그렇게 판단했는지 구체적으로 적어보세요.",
+       target:s=>`${s.notes.n3.trim().length} / 40자`, done:s=>s.notes.n3.trim().length>=40,
+       goto:{view:"app-explorer", subTab:"compare"}},
+      {type:"check", title:"지표 퀴즈에서 90점 이상 받기", target:s=>`최고점 ${s.quizBestScore}점`, done:s=>s.quizBestScore>=90,
+       goto:{view:"app-explorer", subTab:"quiz"}},
+    ],
+  },
+  {
+    id:4, title:"4차시 · 제미나이 노트북으로 자료 탐구하기", desc:"🤖 AI에게 물어보기로 이동해 실제 자료를 조사하고, 워크시트로 적정주가를 계산해요.",
+    missions:[
+      {type:"note", key:"n4", minLen:80, title:"제미나이 노트북에게 관심 기업에 대해 최소 3가지 질문하고 알아낸 내용 요약하기",
+       guide:"🤖 AI에게 물어보기 탭에서 제미나이 노트북을 열고 궁금한 점을 질문해보세요. 무엇을 물었고 어떤 답을 얻었는지 요약해서 적어보세요.",
+       target:s=>`${s.notes.n4.trim().length} / 80자`, done:s=>s.notes.n4.trim().length>=80,
+       goto:{view:"app-ai"}},
+      {type:"check", title:"워크시트에서 목표 PER을 직접 조정해 적정주가 계산해보기", target:s=>s.wsPerTouched?"조정 완료":"미조정", done:s=>s.wsPerTouched,
+       goto:{view:"app-explorer", subTab:"ws"}},
+      {type:"check", title:"계산 결과를 근거로 워크시트 결론을 40자 이상 남기기", target:s=>`${s.wsMemoLen} / 40자`, done:s=>s.wsMemoLen>=40,
+       goto:{view:"app-explorer", subTab:"ws"}},
+    ],
+  },
+  {
+    id:5, title:"5차시 · 나만의 기업 분석 보고서 완성하기", desc:"지금까지의 탐구를 종합해 하나의 분석 보고서로 완성해요.",
+    missions:[
+      {type:"note", key:"n5", minLen:150, title:"제미나이 노트북 탐구 내용을 바탕으로 나만의 기업 분석 보고서 작성하기",
+       guide:"기업 개요, 핵심 지표(PER·PBR·ROE 등) 해석, 제미나이 노트북에서 찾은 근거, 나의 투자 결론을 포함해 하나의 글로 정리해보세요.",
+       target:s=>`${s.notes.n5.trim().length} / 150자`, done:s=>s.notes.n5.trim().length>=150,
+       goto:{view:"app-ai"}},
+      {type:"check", title:"워크시트 결론을 60자 이상으로 완성하기", target:s=>`${s.wsMemoLen} / 60자`, done:s=>s.wsMemoLen>=60,
+       goto:{view:"app-explorer", subTab:"ws"}},
+      {type:"check", title:"거래 10회 이상 + 서로 다른 업종 3개 이상 매수 종합 달성", target:s=>`거래 ${s.totalTrades}회 · ${s.distinctSectorsBought}업종`, done:s=>s.totalTrades>=10 && s.distinctSectorsBought>=3,
+       goto:{view:"app-sim"}},
+    ],
+  },
+];
+
+let activeSession = 1;
+let currentStats = null;
+
+function sessionCleared(session, stats){
+  return session.missions.every(m => m.done(stats));
+}
+
+function sessionUnlocked(sessionId, stats){
+  if(sessionId === 1) return true;
+  const prev = SESSIONS.find(s => s.id === sessionId - 1);
+  return prev ? sessionCleared(prev, stats) : true;
+}
+
+/* 기능 : 미션1을 완료해야 미션2가 열리는 식으로, 같은 차시 안에서도 순서대로 잠금 해제 */
+function missionUnlocked(session, idx, stats){
+  if(idx === 0) return true;
+  return session.missions[idx - 1].done(stats);
+}
+
+function renderTabs(stats){
+  const nav = document.getElementById("sessionTabs");
+  nav.innerHTML = SESSIONS.map(s => {
+    const cleared = sessionCleared(s, stats);
+    const unlocked = sessionUnlocked(s.id, stats);
+    return `<button class="session-tab-btn ${s.id===activeSession?"active":""} ${cleared?"cleared":""} ${!unlocked?"locked":""}" data-id="${s.id}">${!unlocked?"🔒 ":""}${s.id}차시</button>`;
+  }).join("");
+  nav.querySelectorAll(".session-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = Number(btn.dataset.id);
+      if(!sessionUnlocked(id, currentStats)){
+        toast("이전 차시 미션을 먼저 모두 완료해야 열려요");
+        return;
+      }
+      activeSession = id;
+      renderMissions();
+    });
+  });
+}
+
+function renderSessionInfo(session){
+  document.getElementById("sessionInfo").innerHTML = `
+    <div class="s-title">${session.title}</div>
+    <div class="s-desc">${session.desc}</div>`;
+}
+
+function updateProgressBar(stats){
+  const all = SESSIONS.flatMap(s => s.missions);
+  const doneCount = all.filter(m => m.done(stats)).length;
+  document.getElementById("missionCount").textContent = `${doneCount} / ${all.length} 완료`;
+  document.getElementById("missionFill").style.width = (doneCount / all.length * 100) + "%";
+}
+
+const VIEW_LABEL = {
+  "app-sim":"💰 모의주식 투자로 이동",
+  "app-explorer":"📊 기업가치 탐험대로 이동",
+  "app-ai":"🤖 AI에게 물어보기로 이동",
+};
+function gotoButtonHTML(m){
+  if(!m.goto) return "";
+  const label = VIEW_LABEL[m.goto.view] || "이동하기";
+  return `<button class="goto-btn" data-view="${m.goto.view}" data-subtab="${m.goto.subTab || ""}">${label} →</button>`;
+}
+
+function singleItemHTML(session, idx, stats){
+  const m = session.missions[idx];
+  if(!missionUnlocked(session, idx, stats)){
+    return `
+      <div class="mission-item locked" data-idx="${idx}">
+        <div class="check lock-icon">🔒</div>
+        <div class="txt">
+          <div class="title">${m.title}</div>
+          <div class="desc">바로 위 미션을 먼저 완료하면 열려요</div>
+        </div>
+      </div>`;
+  }
+  const done = m.done(stats);
+  if(m.type === "note"){
+    return `
+      <div class="mission-item note-item ${done ? "done" : ""}" data-idx="${idx}">
+        <div class="check">${done ? "✓" : ""}</div>
+        <div class="txt">
+          <div class="title">${m.title}</div>
+          <div class="desc">${m.guide}</div>
+          ${gotoButtonHTML(m)}
+          <textarea class="mission-note" data-key="${m.key}" placeholder="여기에 적어보세요...">${stats.notes[m.key] || ""}</textarea>
+          <div class="desc note-count">${m.target(stats)}</div>
+        </div>
+      </div>`;
+  }
+  return `
+    <div class="mission-item ${done ? "done" : ""}" data-idx="${idx}">
+      <div class="check">${done ? "✓" : ""}</div>
+      <div class="txt">
+        <div class="title">${m.title}</div>
+        <div class="desc">${m.target(stats)}</div>
+        ${gotoButtonHTML(m)}
+      </div>
+    </div>`;
+}
+
+function attachNoteListeners(session){
+  // 기능 : "바로가기" 버튼은 이벤트 위임으로 한 번만 등록 (재렌더링돼도 계속 동작)
+  const list = document.getElementById("missionList");
+  if(!list.dataset.gotoBound){
+    list.dataset.gotoBound = "1";
+    list.addEventListener("click", (e) => {
+      const btn = e.target.closest(".goto-btn");
+      if(!btn) return;
+      if(typeof window.__gotoAppView === "function"){
+        window.__gotoAppView(btn.dataset.view, btn.dataset.subtab || null);
+      }
+    });
+  }
+
+  document.querySelectorAll("#missionList textarea.mission-note").forEach(ta => {
+    if(ta.dataset.bound) return; // 이미 바인딩된 경우 중복 등록 방지
+    ta.dataset.bound = "1";
+    ta.addEventListener("input", () => {
+      const key = ta.dataset.key;
+      const idx = Number(ta.closest(".mission-item").dataset.idx);
+      const notes = readJSON("missionNotes", {n1:"", n3:"", n4:"", n5:""});
+      notes[key] = ta.value;
+      saveJSON("missionNotes", notes);
+      currentStats.notes[key] = ta.value;
+
+      // 기능 : 지금 입력 중인 항목 자체는 DOM을 다시 그리지 않고 값만 갱신 (커서 이탈 방지)
+      const m = session.missions[idx];
+      const done = m.done(currentStats);
+      const item = ta.closest(".mission-item");
+      item.classList.toggle("done", done);
+      item.querySelector(".check").textContent = done ? "✓" : "";
+      item.querySelector(".note-count").textContent = m.target(currentStats);
+
+      // 기능 : 나머지 항목은 새로 계산해서, 방금 완료로 새로 열린 미션이 있으면 즉시 보여줌
+      session.missions.forEach((mm, i) => {
+        if(i === idx) return; // 입력 중인 항목은 건드리지 않음
+        const el = document.querySelector(`#missionList .mission-item[data-idx="${i}"]`);
+        if(!el) return;
+        const newHTML = singleItemHTML(session, i, currentStats);
+        if(el.outerHTML !== newHTML) el.outerHTML = newHTML;
+      });
+      attachNoteListeners(session);
+
+      updateProgressBar(currentStats);
+      renderTabs(currentStats); // 탭의 완료·잠금 배지만 갱신 (텍스트영역 포커스에는 영향 없음)
+    });
+  });
+}
+
+function renderMissionItems(session, stats){
+  document.getElementById("missionList").innerHTML =
+    session.missions.map((m, idx) => singleItemHTML(session, idx, stats)).join("");
+  attachNoteListeners(session);
+}
+
+function renderMissions(){
+  currentStats = readStats();
+  if(!sessionUnlocked(activeSession, currentStats)){
+    // 기능 : 어떤 이유로든 잠긴 차시에 머물러 있었다면, 열려 있는 가장 이른 차시로 이동
+    const firstOpen = SESSIONS.find(s => sessionUnlocked(s.id, currentStats) && !sessionCleared(s, currentStats))
+      || SESSIONS.find(s => sessionUnlocked(s.id, currentStats));
+    activeSession = firstOpen ? firstOpen.id : 1;
+  }
+  renderTabs(currentStats);
+  const session = SESSIONS.find(s => s.id === activeSession);
+  renderSessionInfo(session);
+  renderMissionItems(session, currentStats);
+  updateProgressBar(currentStats);
+}
+
+function toast(msg){
+  const t = document.getElementById("missionToast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+document.getElementById("missionRefresh").addEventListener("click", () => {
+  renderMissions();
+  toast("미션 현황을 새로고침했어요");
+});
+
+document.getElementById("missionCopyBtn").addEventListener("click", async () => {
+  const stats = readStats();
+  const all = SESSIONS.flatMap(s => s.missions);
+  const doneCount = all.filter(m => m.done(stats)).length;
+  const lines = [
+    `[5차시 미션 현황] ${stats.studentName || "(이름 미입력)"}`,
+    `전체 완료: ${doneCount} / ${all.length}`,
+    "",
+  ];
+  SESSIONS.forEach(s => {
+    lines.push(`▸ ${s.title}`);
+    s.missions.forEach(m => {
+      lines.push(`${m.done(stats) ? "✅" : "⬜"} ${m.title} (${m.target(stats)})`);
+      if(m.type === "note" && stats.notes[m.key] && stats.notes[m.key].trim()){
+        lines.push(`   └ "${stats.notes[m.key].trim()}"`);
+      }
+    });
+    lines.push("");
+  });
+  const text = lines.join("\n").trim();
+  try { await navigator.clipboard.writeText(text); toast("미션 현황을 복사했어요. 선생님께 제출해보세요!"); }
+  catch(e){ prompt("아래 내용을 복사하세요", text); }
+});
+
+document.getElementById("missionResetAll").addEventListener("click", () => {
+  const ok = confirm(
+    "정말 처음부터 다시 시작할까요?\n\n" +
+    "모의주식 투자(잔고·거래내역), 기업가치 탐험대(카드 학습·퀴즈 점수·비교 기록·워크시트),\n" +
+    "미션 서술 답변까지 모두 지워지고, 15개 미션이 전부 잠긴 상태로 되돌아갑니다.\n" +
+    "이 작업은 되돌릴 수 없어요."
+  );
+  if(!ok) return;
+  try {
+    localStorage.removeItem("stockSimState");
+    localStorage.removeItem("expProgress");
+    localStorage.removeItem("missionNotes");
+  } catch(e){ /* 무시 */ }
+  location.reload();
+});
+
+window.__recomputeMissions = renderMissions;
+renderMissions();
+})();
+</script>
+
+<script>
+/* ============================================================
+   [AI에게 물어보기] 페이지 스크립트
+   ============================================================ */
+(function(){
+/* 🔧 선생님: 아래 주소를 본인의 제미나이 노트북(Gemini Notebook, 구 NotebookLM) 공유 링크로 바꿔주세요.
+   (notebooklm.google.com 접속 → 노트북 생성 → 자료 업로드 → 공유 → "링크가 있는 모든 사용자")
+   구글 계정으로 로그인해야 노트북을 만들 수 있습니다. */
+const GEMINI_NOTEBOOK_URL = "https://notebooklm.google.com/";
+
+const link = document.getElementById("notebookLmLink");
+if(link) link.href = GEMINI_NOTEBOOK_URL;
+})();
+</script>
+</body>
+</html>
