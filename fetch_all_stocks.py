@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-기능 : 코스피 + 코스닥 전체 상장종목의 이름·업종과 핵심 투자지표(PER·PBR·EPS·BPS·배당수익률)를
-      수집해 all_stocks.csv로 저장합니다. NotebookLM에 CSV 파일로 그대로 업로드할 수 있습니다.
+기능 : 코스피 + 코스닥 전체 상장종목의 이름·시장구분과 핵심 투자지표(PER·PBR·EPS·BPS·배당수익률)를
+      수집해 all_stocks.csv로 저장합니다. NotebookLM(제미나이 노트북)에 CSV 파일로 그대로 업로드할 수 있습니다.
 사용 : python fetch_all_stocks.py
       (전체 종목을 1개씩 조회하므로 시간이 오래 걸립니다. 약 15~25분 예상)
-주의 : - pandas, lxml 필요 (pip install pandas lxml)
+주의 : - pandas, finance-datareader 필요 (pip install pandas finance-datareader)
       - 네이버 금융 비공식 API를 종목마다 1회씩 호출합니다. 자주 실행하면 서버에 부담을
         주고 일시적으로 차단될 수 있으니, 학기당 1~2회 정도만 실행하는 것을 권장합니다.
       - fetch_prices.py(10분마다 자동 실행)와는 별개의 스크립트입니다. 이 스크립트는
@@ -14,18 +14,34 @@ import json
 import time
 import urllib.request
 import pandas as pd
+import FinanceDataReader as fdr
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (classroom research tool; educational use)"}
 
 
 def fetch_listing():
-    """기능 : KRX 기업공시채널(KIND)에서 코스피+코스닥 전체 상장법인 목록을 받아옴"""
-    url = "https://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13"
-    df = pd.read_html(url, header=0, encoding="euc-kr")[0]
-    df = df[["회사명", "종목코드", "업종"]].copy()
-    df["종목코드"] = df["종목코드"].astype(str).str.zfill(6)
-    df = df.rename(columns={"회사명": "name", "종목코드": "code", "업종": "sector"})
-    return df.reset_index(drop=True)
+    """기능 : FinanceDataReader로 코스피+코스닥 전체 상장법인 목록을 받아옴
+       참고 : KRX 사이트를 직접 스크래핑하는 대신, 더 안정적인 전용 라이브러리를 사용합니다.
+             'KRX-DESC'는 업종(Sector) 정보까지 포함하지만 두 소스를 병합하는 방식이라
+             간혹 실패할 수 있어, 실패 시 업종 없이 시장구분만으로 자동 재시도합니다."""
+    try:
+        df = fdr.StockListing("KRX-DESC")
+        sector_col = "Sector" if "Sector" in df.columns else "Market"
+    except Exception as e:
+        print(f"KRX-DESC 조회 실패({e}), 업종 없이 재시도합니다...")
+        df = fdr.StockListing("KRX")
+        sector_col = "Market"
+
+    code_col = "Code" if "Code" in df.columns else "Symbol"
+    name_col = "Name" if "Name" in df.columns else "name"
+
+    out = pd.DataFrame({
+        "code": df[code_col].astype(str).str.zfill(6),
+        "name": df[name_col],
+        "sector": df[sector_col] if sector_col in df.columns else "",
+    })
+    out = out.drop_duplicates(subset="code").reset_index(drop=True)
+    return out
 
 
 def _to_num(v):
@@ -81,4 +97,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        import traceback
+        print("=" * 60)
+        print("전체 종목 수집 중 오류가 발생해 중단되었습니다.")
+        print(f"오류 내용: {e}")
+        traceback.print_exc()
+        print("=" * 60)
+        raise SystemExit(1)
