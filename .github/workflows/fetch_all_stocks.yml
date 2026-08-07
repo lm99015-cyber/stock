@@ -33,10 +33,17 @@ jobs:
         run: python fetch_all_stocks.py
 
       # 기능 : all_stocks.csv에 변경이 있을 때만 커밋/푸시
+      # 참고 : 이 작업은 15~25분 넘게 걸리는데, 그 사이 update_prices.yml(10분마다 자동 실행)이
+      #       먼저 커밋해버리면 push가 거절될 수 있어 커밋 후 pull --rebase로 최신 내용을 먼저 받습니다.
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add all_stocks.csv
-          git diff --cached --quiet || git commit -m "update all_stocks.csv"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "update all_stocks.csv"
+            git pull --rebase origin main
+            git push
+          else
+            echo "변경 사항 없음, 커밋 생략"
+          fi
