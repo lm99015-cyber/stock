@@ -1,0 +1,42 @@
+# 기능 : 코스피+코스닥 전체 상장종목의 이름·업종·PER·PBR·EPS·BPS·배당수익률을 수집해 all_stocks.csv로 저장
+# 설치 : 저장소의 .github/workflows/fetch_all_stocks.yml 경로에 이 파일을 저장
+# 주의 : 자동 스케줄 없이 수동 실행(workflow_dispatch)만 가능하도록 설계했습니다.
+#        전체 종목(약 2,500개)을 1개씩 조회하므로 실행에 15~25분 정도 걸립니다.
+#        네이버 금융 비공식 API에 부담을 주지 않도록, 학기당 1~2회 정도만 실행해주세요.
+name: fetch-all-stocks
+
+on:
+  workflow_dispatch:
+    # 기능 : Actions 탭에서 "Run workflow" 버튼을 눌러야만 실행됩니다 (자동 실행 없음)
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      # 기능 : 저장소 코드 내려받기
+      - uses: actions/checkout@v4
+
+      # 기능 : 파이썬 환경 준비
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 기능 : 전체 목록 조회에 필요한 라이브러리 설치
+      - name: Install dependencies
+        run: pip install pandas lxml
+
+      # 기능 : 전체 종목 수집 스크립트 실행 (시간이 오래 걸립니다)
+      - name: Fetch all KOSPI/KOSDAQ stocks
+        run: python fetch_all_stocks.py
+
+      # 기능 : all_stocks.csv에 변경이 있을 때만 커밋/푸시
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add all_stocks.csv
+          git diff --cached --quiet || git commit -m "update all_stocks.csv"
+          git push
