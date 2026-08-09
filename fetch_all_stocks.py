@@ -45,24 +45,27 @@ def fetch_listing():
 
 
 def _to_num(v):
-    """기능 : '21.4배', '1,234', '3.2%' 같은 문자열을 숫자로 변환 (실패 시 None)"""
+    """기능 : '21.4배', '1,234원', '3.2%' 같은 문자열을 숫자로 변환 (실패 시 None)"""
     if v in (None, "", "N/A", "-"):
         return None
     try:
-        return float(str(v).replace(",", "").replace("%", "").replace("배", "").strip())
+        cleaned = str(v).replace(",", "").replace("%", "").replace("배", "").replace("원", "").strip()
+        return float(cleaned)
     except ValueError:
         return None
 
 
 def fetch_metrics(code):
-    """기능 : 종목 1개의 현재가·PER·PBR·EPS·BPS·배당수익률을 네이버 모바일 API에서 조회"""
+    """기능 : 종목 1개의 현재가·PER·PBR·EPS·BPS·배당수익률을 네이버 모바일 API에서 조회
+       참고 : totalInfos의 각 항목은 {"code":"per","key":"PER","value":"18.79배"} 형태이며,
+             실제 값을 찾을 때는 화면표시용 "key"가 아니라 기계 판별용 "code"로 찾아야 합니다."""
     url = f"https://m.stock.naver.com/api/stock/{code}/integration"
     req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=10) as res:
         data = json.loads(res.read().decode("utf-8"))
-    info = {row.get("key"): row.get("value") for row in data.get("totalInfos", [])}
+    info = {row.get("code"): row.get("value") for row in data.get("totalInfos", [])}
     return {
-        "price": _to_num(info.get("closePrice") or info.get("lastClosePrice")),
+        "price": _to_num(info.get("lastClosePrice")),
         "per": _to_num(info.get("per")),
         "eps": _to_num(info.get("eps")),
         "pbr": _to_num(info.get("pbr")),
