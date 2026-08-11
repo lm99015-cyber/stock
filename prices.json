@@ -1,55 +1,55 @@
 {
-  "updated": "2026-08-11T12:02:06+09:00",
+  "updated": "2026-08-11T13:36:05+09:00",
   "source": "naver-finance (unofficial, delayed)",
   "stocks": [
     {
       "code": "005930",
       "name": "삼성전자",
       "market": "KOSPI",
-      "price": 239000,
-      "changeRate": 3.91
+      "price": 241500,
+      "changeRate": 5.0
     },
     {
       "code": "000660",
       "name": "SK하이닉스",
       "market": "KOSPI",
-      "price": 1418000,
-      "changeRate": -0.14
+      "price": 1446000,
+      "changeRate": 1.83
     },
     {
       "code": "373220",
       "name": "LG에너지솔루션",
       "market": "KOSPI",
-      "price": 361000,
-      "changeRate": -1.77
+      "price": 355500,
+      "changeRate": -3.27
     },
     {
       "code": "006400",
       "name": "삼성SDI",
       "market": "KOSPI",
-      "price": 470000,
-      "changeRate": -2.39
+      "price": 464500,
+      "changeRate": -3.53
     },
     {
       "code": "207940",
       "name": "삼성바이오로직스",
       "market": "KOSPI",
-      "price": 1609000,
-      "changeRate": 2.55
+      "price": 1601000,
+      "changeRate": 2.04
     },
     {
       "code": "068270",
       "name": "셀트리온",
       "market": "KOSPI",
-      "price": 210500,
-      "changeRate": 4.73
+      "price": 210000,
+      "changeRate": 4.48
     },
     {
       "code": "005380",
       "name": "현대차",
       "market": "KOSPI",
-      "price": 404000,
-      "changeRate": -0.98
+      "price": 404500,
+      "changeRate": -0.86
     },
     {
       "code": "000270",
@@ -62,50 +62,50 @@
       "code": "035420",
       "name": "NAVER",
       "market": "KOSPI",
-      "price": 214000,
-      "changeRate": 1.18
+      "price": 213000,
+      "changeRate": 0.71
     },
     {
       "code": "035720",
       "name": "카카오",
       "market": "KOSPI",
-      "price": 40650,
-      "changeRate": 2.78
+      "price": 40350,
+      "changeRate": 2.02
     },
     {
       "code": "005490",
       "name": "POSCO홀딩스",
       "market": "KOSPI",
-      "price": 328500,
-      "changeRate": -2.23
+      "price": 328000,
+      "changeRate": -2.38
     },
     {
       "code": "004020",
       "name": "현대제철",
       "market": "KOSPI",
-      "price": 28550,
-      "changeRate": -1.21
+      "price": 28600,
+      "changeRate": -1.04
     },
     {
       "code": "105560",
       "name": "KB금융",
       "market": "KOSPI",
-      "price": 169200,
-      "changeRate": -1.46
+      "price": 167050,
+      "changeRate": -2.71
     },
     {
       "code": "055550",
       "name": "신한지주",
       "market": "KOSPI",
-      "price": 106000,
-      "changeRate": -0.38
+      "price": 105100,
+      "changeRate": -1.22
     },
     {
       "code": "352820",
       "name": "하이브",
       "market": "KOSPI",
-      "price": 180600,
-      "changeRate": -1.79
+      "price": 180200,
+      "changeRate": -2.01
     },
     {
       "code": "329180",
@@ -118,29 +118,29 @@
       "code": "042660",
       "name": "한화오션",
       "market": "KOSPI",
-      "price": 89700,
-      "changeRate": -4.98
+      "price": 89500,
+      "changeRate": -5.19
     },
     {
       "code": "017670",
       "name": "SK텔레콤",
       "market": "KOSPI",
-      "price": 86300,
-      "changeRate": 1.53
+      "price": 85900,
+      "changeRate": 1.06
     },
     {
       "code": "030200",
       "name": "KT",
       "market": "KOSPI",
-      "price": 53400,
-      "changeRate": 1.91
+      "price": 53200,
+      "changeRate": 1.53
     },
     {
       "code": "035900",
       "name": "JYP Ent.",
       "market": "KOSDAQ",
-      "price": 46300,
-      "changeRate": -2.22
+      "price": 46150,
+      "changeRate": -2.53
     }
   ]
 }
