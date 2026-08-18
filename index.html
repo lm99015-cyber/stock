@@ -147,6 +147,7 @@ body{
 #app-sim main{max-width:1100px;margin:20px auto 60px;padding:0 16px;display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start;}
 #app-sim .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
 #app-sim .card h2{font-size:0.92rem;font-weight:800;padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;}
+#app-sim .order-fee-note{padding:8px 18px 0;font-size:0.72rem;color:#9AA4BB;}
 #app-sim .card h2 .sub{font-weight:500;font-size:0.74rem;color:#7A86A0;margin-left:auto;}
 
 #app-sim table{width:100%;border-collapse:collapse;font-size:0.85rem;}
@@ -226,37 +227,62 @@ body{
 
 #app-sim .journal-card{grid-column:1 / -1;}
 #app-sim .journal-card h2 .sub{font-weight:500;font-size:0.74rem;color:#7A86A0;margin-left:8px;}
-#app-sim .journal-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 18px;
+#app-sim .journal-log{padding:8px 18px 18px;}
+#app-sim .journal-log .empty-msg{padding:20px 0;}
+#app-sim .journal-item{
+  border-left:3px solid var(--line);padding:8px 0 8px 14px;margin-bottom:10px;
 }
-@media (max-width:820px){ #app-sim .journal-grid{grid-template-columns:1fr;} }
-#app-sim .journal-entry{
-  border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#FAFBFD;
-}
-#app-sim .journal-entry h3{font-size:0.9rem;margin-bottom:6px;}
-#app-sim .journal-guide{font-size:0.78rem;color:#7A86A0;margin-bottom:10px;line-height:1.5;}
-#app-sim .journal-snapshot{
-  display:none;font-size:0.78rem;background:#fff;border:1px dashed var(--line);
-  border-radius:8px;padding:8px 10px;margin-bottom:10px;color:#5B677E;
-}
-#app-sim .journal-snapshot.show{display:block;}
-#app-sim textarea.journal-text{
-  width:100%;min-height:90px;font-family:inherit;font-size:0.85rem;
-  border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical;
-  color:var(--ink);margin-bottom:8px;
-}
-#app-sim textarea.journal-text:disabled{background:#F0F3F8;color:#7A86A0;}
+#app-sim .journal-item.buy{border-left-color:var(--up);}
+#app-sim .journal-item.sell{border-left-color:var(--down);}
+#app-sim .journal-item .j-head{font-size:0.82rem;color:#5B677E;margin-bottom:3px;}
+#app-sim .journal-item .j-head b{color:var(--ink);}
+#app-sim .journal-item .j-note{font-size:0.85rem;color:var(--ink);}
+#app-sim .journal-item .j-note.empty{color:#9AA4BB;font-style:italic;}
 #app-sim .journal-btn{
   padding:9px 16px;border:none;border-radius:8px;background:var(--navy);color:#fff;
   font:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;
 }
 #app-sim .journal-btn:hover{filter:brightness(1.1);}
 #app-sim .journal-btn.rewrite{background:#fff;color:var(--navy);border:1px solid var(--line);}
-#app-sim .journal-compare{
-  margin:0 18px 18px;padding:14px 16px;background:#FFF7EC;border:1px solid #F0DFB8;
-  border-radius:10px;font-size:0.85rem;color:#5B4A1F;
+
+#app-sim .final-card{grid-column:1 / -1;}
+#app-sim .final-card .sub{display:block;font-weight:500;font-size:0.78rem;color:#7A86A0;margin-top:2px;}
+#app-sim textarea.final-text{
+  width:calc(100% - 36px);min-height:120px;font-family:inherit;font-size:0.9rem;
+  border:1px solid var(--line);border-radius:8px;padding:12px;resize:vertical;
+  color:var(--ink);margin:14px 18px 10px;
 }
-#app-sim .journal-compare b{color:var(--navy);}
+#app-sim .final-print{display:none;}
+#app-sim .final-card .print-btn{
+  display:block;margin:0 18px 18px;
+  background:var(--navy);color:#fff;border:none;border-radius:10px;
+  padding:12px 0;width:calc(100% - 36px);
+  font:inherit;font-size:0.92rem;font-weight:700;cursor:pointer;
+}
+#app-sim .final-card .print-btn:hover{filter:brightness(1.15);}
+
+#app-sim .trade-note-overlay{
+  position:fixed;inset:0;background:rgba(15,24,48,0.55);z-index:300;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+}
+#app-sim .trade-note-box{
+  background:#fff;border-radius:16px;padding:22px 24px;max-width:420px;width:100%;
+  box-shadow:0 12px 32px rgba(0,0,0,.25);
+}
+#app-sim .trade-note-box h3{font-size:1.02rem;margin-bottom:8px;}
+#app-sim .trade-note-context{font-size:0.85rem;color:#5B677E;margin-bottom:12px;background:#FAFBFD;border-radius:8px;padding:8px 10px;}
+#app-sim .trade-note-box textarea{
+  width:100%;min-height:90px;font-family:inherit;font-size:0.88rem;
+  border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical;
+  color:var(--ink);margin-bottom:12px;
+}
+#app-sim .trade-note-actions{display:flex;gap:8px;justify-content:flex-end;}
+#app-sim .trade-note-actions button{
+  padding:9px 16px;border-radius:8px;font:inherit;font-size:0.85rem;font-weight:700;cursor:pointer;
+}
+#app-sim #tradeNoteSkip{background:#fff;border:1px solid var(--line);color:#5B677E;}
+#app-sim #tradeNoteSave{background:var(--navy);border:none;color:#fff;}
+#app-sim #tradeNoteSave:hover{filter:brightness(1.1);}
 
 #app-sim #toast{
   position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);
@@ -476,6 +502,7 @@ body{
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
+:is(#app-learn,#app-valuation,#app-compare) .quiz-print-summary{display:none;}
 
 :is(#app-learn,#app-valuation,#app-compare) .ws-step{
   background:#fff;border:2px solid var(--line);border-radius:16px;
@@ -557,9 +584,9 @@ body{
 }
 
 @media print{
-  #appSwitcher,#app-sim,#app-ai{display:none!important;}
-  :is(#app-learn,#app-valuation,#app-compare):not(.active){display:none!important;}
-  :is(#app-learn,#app-valuation,#app-compare).active{display:block!important;}
+  #appSwitcher,#app-ai{display:none!important;}
+  :is(#app-learn,#app-valuation,#app-compare,#app-sim):not(.active){display:none!important;}
+  :is(#app-learn,#app-valuation,#app-compare,#app-sim).active{display:block!important;}
   :is(#app-learn,#app-valuation,#app-compare).active .header,
   :is(#app-learn,#app-valuation,#app-compare).active .notice,
   :is(#app-learn,#app-valuation,#app-compare).active .print-btn{display:none!important;}
@@ -568,6 +595,37 @@ body{
   #app-compare.active .judgment-options{display:none!important;}
   #app-compare.active .judgment-company-print{
     display:block!important;font-weight:700;margin-bottom:8px;color:#222;
+  }
+  /* 기능 : 지표학습 페이지는 인쇄 시 개념 카드 섹션은 숨기고, 퀴즈 결과 요약만 보여줌 */
+  #app-learn.active > .page-block:not(.quiz-page-block),
+  #app-learn.active .footer{display:none!important;}
+  #app-learn.active #quizSelect,
+  #app-learn.active #quizPlay,
+  #app-learn.active .quiz-result h3,
+  #app-learn.active .quiz-result .score,
+  #app-learn.active .quiz-result #quizComment,
+  #app-learn.active #quizRetry,
+  #app-learn.active #quizBackToSelect{display:none!important;}
+  #app-learn.active .quiz-print-summary{
+    display:block!important;text-align:left;
+    white-space:pre-wrap;word-break:break-word;
+    border:1px solid #ccc;border-radius:8px;
+    padding:14px 16px;font-family:inherit;font-size:0.92rem;color:#222;
+  }
+  /* 기능 : 모의투자 페이지는 인쇄 시 "투자 기록 일지 + 최종 활동 소감"만 보여주고 나머지(거래 화면 등)는 숨김 */
+  #app-sim.active > header,
+  #app-sim.active > main > *:not(.journal-card):not(.final-card),
+  #app-sim.active #toast,
+  #app-sim.active #tradeNoteModal{display:none!important;}
+  #app-sim.active .journal-card{break-inside:avoid-page;}
+  #app-sim.active .final-card .print-btn{display:none!important;}
+  #app-sim.active textarea.final-text{display:none!important;}
+  #app-sim.active .final-print{
+    display:block!important;
+    white-space:pre-wrap;word-break:break-word;
+    border:1px solid #ccc;border-radius:8px;
+    padding:12px 14px;min-height:100px;
+    font-family:inherit;font-size:0.92rem;color:#222;margin:14px 18px;
   }
   :is(#app-valuation,#app-compare).active textarea.ws-memo{display:none!important;}
   :is(#app-valuation,#app-compare).active .ws-memo-print{
@@ -711,6 +769,7 @@ body{
   <div style="display:flex;flex-direction:column;gap:16px;">
     <section class="card">
       <h2>주문하기</h2>
+      <p class="order-fee-note">수수료 0.015% · 매도 시 거래세 0.20% 적용</p>
       <div id="orderPanel"><div class="order-empty">왼쪽 시세표에서 종목을 선택하세요</div></div>
     </section>
 
@@ -723,38 +782,41 @@ body{
     </section>
   </div>
 
-  <!-- 기능 : 투자 일지 (학습 전 → 학습 후 2단계 기록) -->
+  <!-- 기능 : 투자 일지 (매수·매도할 때마다 이유를 기록, 아래는 지금까지의 기록 모아보기) -->
   <section class="card journal-card">
-    <h2>📝 투자 기록 일지 <span class="sub">학습 전과 후, 내 투자 판단이 어떻게 바뀌었는지 남겨보세요</span></h2>
-    <div class="journal-grid">
-      <div class="journal-entry" id="journalBeforeBox">
-        <h3>① 학습 전 기록</h3>
-        <p class="journal-guide">아직 지표를 배우기 전이에요. 지금 어떤 종목을 보유 중인지, 왜 그 종목을 골랐는지(직감이어도 괜찮아요) 적어보세요.</p>
-        <div class="journal-snapshot" id="journalBeforeSnapshot"></div>
-        <textarea class="journal-text" id="journalBeforeText" placeholder="예시) 나는 OO전자를 매수했다. 이름을 많이 들어봐서 골랐다..."></textarea>
-        <button class="journal-btn" id="journalBeforeBtn">✍️ 지금 기록하기</button>
-      </div>
-      <div class="journal-entry" id="journalAfterBox">
-        <h3>② 학습 후 기록</h3>
-        <p class="journal-guide">지표학습·가치평가·기업 비교 분석을 거친 뒤 다시 와서 적어보세요. 판단이 어떻게, 왜 바뀌었나요?</p>
-        <div class="journal-snapshot" id="journalAfterSnapshot"></div>
-        <textarea class="journal-text" id="journalAfterText" placeholder="예시) 처음엔 이름만 보고 골랐는데, PER·ROE를 확인해보니..."></textarea>
-        <button class="journal-btn" id="journalAfterBtn">✍️ 지금 기록하기</button>
-      </div>
-    </div>
-    <div class="journal-compare" id="journalCompare" style="display:none;"></div>
+    <h2>📝 투자 기록 일지 <span class="sub">매수·매도할 때마다 왜 그렇게 판단했는지 남겨요</span></h2>
+    <div id="journalLog" class="journal-log"></div>
   </section>
 
-  <!-- 기능 : 학생 이름 입력 및 결과 제출 도구 -->
+  <!-- 기능 : 최종 활동 소감 (인쇄 가능) -->
+  <section class="card final-card">
+    <h2>🎯 최종 활동 소감</h2>
+    <p class="sub">지표학습·가치평가·기업 비교 분석·모의투자까지, 전체 활동을 마치고 느낀 점을 정리해보세요.</p>
+    <textarea class="final-text" id="finalReflectionText" placeholder="예시) 이번 활동을 통해 배운 점, 가장 인상 깊었던 지표나 기업, 앞으로 투자할 때 참고하고 싶은 점 등을 자유롭게 적어보세요."></textarea>
+    <div class="final-print" id="finalReflectionPrint"></div>
+    <button class="print-btn" id="finalReflectionPrintBtn">🖨️ 투자 일지 + 소감 인쇄하기</button>
+  </section>
+
+  <!-- 기능 : 결과 제출 도구 -->
   <div class="toolbar">
-    <input type="text" id="studentName" placeholder="이름 (예: 2학년 3반 김OO)" maxlength="20">
-    <button id="copyBtn">결과 요약 복사</button>
     <button class="danger" id="resetBtn">처음부터 다시</button>
-    <span class="note">수수료 0.015% · 매도 시 거래세 0.20% 적용</span>
   </div>
 </main>
 
 <div id="toast"></div>
+
+<!-- 기능 : 매수·매도 직후 뜨는 거래 메모 모달 -->
+<div class="trade-note-overlay" id="tradeNoteModal" style="display:none;">
+  <div class="trade-note-box">
+    <h3>📝 거래 메모 남기기</h3>
+    <p class="trade-note-context" id="tradeNoteContext"></p>
+    <textarea id="tradeNoteText" placeholder="왜 이 거래를 했나요? 어떤 지표나 이유로 판단했는지 적어보세요."></textarea>
+    <div class="trade-note-actions">
+      <button id="tradeNoteSkip">나중에 쓸게요</button>
+      <button id="tradeNoteSave">저장하기</button>
+    </div>
+  </div>
+</div>
 
 </div>
 <!-- /#app-sim -->
@@ -784,7 +846,7 @@ body{
   <div class="card-grid" id="cardGrid"></div>
 </section>
 
-<section class="page-block">
+<section class="page-block quiz-page-block">
   <h2>지표 퀴즈로 확인하기</h2>
   <p class="sub">난이도를 골라 도전하세요. 초급 → 중급 → 고급 순서로 점점 어려워져요.</p>
   <div class="quiz-box">
@@ -823,6 +885,8 @@ body{
       <p id="quizComment" style="color:var(--gray);font-size:0.92rem;"></p>
       <button class="quiz-next" id="quizRetry" style="display:inline-block;margin-top:18px;">다시 풀기</button>
       <button class="quiz-next" id="quizBackToSelect" style="display:inline-block;margin-top:18px;margin-left:8px;background:#fff;color:var(--orange-main);border:2px solid var(--orange-main);">난이도 다시 선택</button>
+      <button class="print-btn" id="quizPrintBtn" style="margin-top:14px;">🖨️ 퀴즈 결과 인쇄하기</button>
+      <div class="quiz-print-summary" id="quizPrintSummary"></div>
     </div>
   </div>
 </section>
@@ -1027,6 +1091,11 @@ const TAX_RATE   = 0.002;         // 매도 시 증권거래세 0.20%
 const REFRESH_MS = 60000;         // 시세 자동 새로고침 주기 (60초)
 const PRICES_URL = "prices.json"; // GitHub Actions가 갱신하는 시세 파일
 
+// 🔧 선생님 설정 : "처음부터 다시" 버튼을 누를 때 요구할 비밀번호.
+// 학생이 스스로 기록을 초기화해 책임을 회피하지 못하도록, 원하는 값으로 바꿔서 사용하세요.
+// (완벽한 보안은 아니고, 학생이 함부로 초기화하지 못하게 막는 정도의 장치입니다.)
+const RESET_PASSWORD = "2026";
+
 /* ============================================================
    🔧 선생님 설정 : 거래 가능 시간대 (요일·시간 반복 방식)
    ------------------------------------------------------------
@@ -1132,9 +1201,9 @@ let activeTab = "portfolio";
 let state = {
   cash: SEED_MONEY,
   holdings: {},   // {종목코드: {qty, avgPrice}}
-  history: [],    // [{time, type, name, qty, price, amount}]
+  history: [],    // [{time, type, name, qty, price, amount, note}] — note는 그 거래 직후 작성한 투자 일지
   name: "",
-  journal: { before: null, after: null } // 기능 : 투자 일지 (학습 전/후 2단계 기록, 각 항목은 {time, total, rate, holdingsList, text})
+  finalReflection: "", // 기능 : 최종 활동 소감 (전체 활동을 마친 뒤 작성)
 };
 
 function saveState(){
@@ -1148,7 +1217,7 @@ function loadState(){
     const parsed = JSON.parse(raw);
     if(typeof parsed.cash === "number" && parsed.holdings) state = parsed;
     if(!Array.isArray(state.history)) state.history = [];
-    if(!state.journal) state.journal = { before: null, after: null };
+    if(typeof state.finalReflection !== "string") state.finalReflection = "";
   } catch(e){ /* 손상된 데이터는 무시하고 새로 시작 */ }
 }
 
@@ -1346,6 +1415,8 @@ function trade(type, s, qty){
   if(state.history.length > 200) state.history.length = 200;
   saveState();
   renderAll();
+  renderJournal();
+  showTradeNoteModal();
 }
 
 function renderTabs(){
@@ -1383,34 +1454,6 @@ function renderTabs(){
   }
 }
 
-function buildSummary(){
-  let holdingValue = 0, lines = [];
-  for(const code in state.holdings){
-    const s = getStock(code); const h = state.holdings[code];
-    if(!s) continue;
-    const value = s.price * h.qty;
-    holdingValue += value;
-    const rate = h.avgPrice ? (s.price - h.avgPrice) / h.avgPrice * 100 : 0;
-    lines.push(`- ${s.name} ${h.qty}주 (평단 ${h.avgPrice.toLocaleString("ko-KR")}, 수익률 ${rate >= 0 ? "+" : ""}${rate.toFixed(2)}%)`);
-  }
-  const total = state.cash + holdingValue;
-  const rate = (total - SEED_MONEY) / SEED_MONEY * 100;
-  const summary = [
-    `[모의주식 결과] ${state.name || "(이름 미입력)"}`,
-    `총 자산: ${won(total)} / 수익률: ${rate >= 0 ? "+" : ""}${rate.toFixed(2)}%`,
-    `현금: ${won(state.cash)} / 주식 평가: ${won(holdingValue)}`,
-    `거래 횟수: ${state.history.length}회`,
-    lines.length ? "보유종목:\n" + lines.join("\n") : "보유종목: 없음",
-    `기준: ${isLiveData ? "실제 시세 " + (dataUpdatedAt || "") : "예시 시세"}`,
-  ];
-  if(state.journal && (state.journal.before || state.journal.after)){
-    summary.push("", "▸ 투자 기록 일지");
-    if(state.journal.before) summary.push(`① 학습 전 (${state.journal.before.time}, 수익률 ${state.journal.before.rate.toFixed(2)}%): ${state.journal.before.text}`);
-    if(state.journal.after) summary.push(`② 학습 후 (${state.journal.after.time}, 수익률 ${state.journal.after.rate.toFixed(2)}%): ${state.journal.after.text}`);
-  }
-  return summary.join("\n");
-}
-
 function renderAll(){
   renderHeader();
   renderMarket();
@@ -1419,121 +1462,90 @@ function renderAll(){
 }
 
 /* ============================================================
-   기능 : 투자 일지 (학습 전 → 학습 후 2단계 기록)
+   기능 : 투자 일지 (매수·매도할 때마다 그 자리에서 이유를 기록)
    ============================================================ */
-function computeSnapshot(){
-  let holdingValue = 0;
-  const holdingsList = [];
-  for(const code in state.holdings){
-    const s = getStock(code);
-    const h = state.holdings[code];
-    if(s){
-      holdingValue += s.price * h.qty;
-      holdingsList.push(`${s.name} ${h.qty}주`);
-    }
-  }
-  const total = state.cash + holdingValue;
-  const rate = (total - SEED_MONEY) / SEED_MONEY * 100;
-  return {
-    time: new Date().toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}),
-    total, rate,
-    holdingsList: holdingsList.length ? holdingsList : ["보유 종목 없음"],
-  };
-}
-
-function snapshotHTML(entry){
-  return `기록 시각: ${entry.time}<br>
-    총자산: <b>${won(entry.total)}</b> · 수익률: <b class="${cls(entry.rate)}">${(entry.rate>0?"+":"")+entry.rate.toFixed(2)}%</b><br>
-    보유종목: ${entry.holdingsList.join(", ")}`;
-}
-
-function renderJournalSlot(key){
-  const box = document.getElementById(key === "before" ? "journalBeforeBox" : "journalAfterBox");
-  const snapshotEl = box.querySelector(".journal-snapshot");
-  const textEl = box.querySelector(".journal-text");
-  const btn = box.querySelector(".journal-btn");
-  const entry = state.journal[key];
-
-  if(entry){
-    snapshotEl.innerHTML = snapshotHTML(entry);
-    snapshotEl.classList.add("show");
-    textEl.value = entry.text;
-    textEl.disabled = true;
-    btn.textContent = "✏️ 다시 기록하기";
-    btn.classList.add("rewrite");
-  } else {
-    snapshotEl.classList.remove("show");
-    textEl.disabled = false;
-    btn.textContent = "✍️ 지금 기록하기";
-    btn.classList.remove("rewrite");
-  }
-}
-
-function renderJournalCompare(){
-  const box = document.getElementById("journalCompare");
-  const {before, after} = state.journal;
-  if(!before || !after){ box.style.display = "none"; return; }
-  const diff = after.rate - before.rate;
-  const diffStr = (diff>=0?"+":"") + diff.toFixed(2) + "%p";
-  box.style.display = "block";
-  box.innerHTML = `
-    <b>📊 학습 전 → 학습 후 변화</b><br>
-    수익률: ${before.rate.toFixed(2)}% → ${after.rate.toFixed(2)}% (${diffStr})<br>
-    <span style="font-size:0.8rem;">두 기록의 글을 비교해보며, 무엇을 배워서 판단이 달라졌는지 스스로 점검해보세요.</span>`;
-}
-
 function renderJournal(){
-  renderJournalSlot("before");
-  renderJournalSlot("after");
-  renderJournalCompare();
+  const box = document.getElementById("journalLog");
+  const noted = state.history.filter(h => typeof h.note !== "undefined");
+  if(!state.history.length){
+    box.innerHTML = `<div class="empty-msg">아직 거래 기록이 없어요. 매수·매도를 하면 여기에 기록이 쌓여요.</div>`;
+    return;
+  }
+  box.innerHTML = state.history.map(h => {
+    const hasNote = h.note && h.note.trim();
+    return `
+      <div class="journal-item ${h.type === "매수" ? "buy" : "sell"}">
+        <div class="j-head">[${h.time}] <b class="${h.type === "매수" ? "up" : "down"}">${h.type}</b> ${h.name} ${h.qty}주 · ${won(h.price)}</div>
+        <div class="j-note ${hasNote ? "" : "empty"}">${hasNote ? h.note.trim() : "(메모 없음)"}</div>
+      </div>`;
+  }).join("");
 }
 
-function bindJournalButton(key){
-  const boxId = key === "before" ? "journalBeforeBox" : "journalAfterBox";
-  const btn = document.getElementById(key === "before" ? "journalBeforeBtn" : "journalAfterBtn");
-  btn.addEventListener("click", () => {
-    const box = document.getElementById(boxId);
-    const textEl = box.querySelector(".journal-text");
-    if(state.journal[key]){
-      // 기능 : 다시 쓰기 — 확인 후 잠금 해제
-      if(!confirm("이미 기록이 있어요. 다시 쓰면 이전 기록은 사라집니다. 계속할까요?")) return;
-      state.journal[key] = null;
-      saveState();
-      renderJournalSlot(key);
-      textEl.focus();
-      return;
-    }
-    if(!textEl.value.trim()){ toast("내용을 먼저 적어주세요"); return; }
-    state.journal[key] = { ...computeSnapshot(), text: textEl.value.trim() };
-    saveState();
-    renderJournal();
-    toast(key === "before" ? "학습 전 기록을 저장했어요!" : "학습 후 기록을 저장했어요!");
-  });
+/* 기능 : 매수·매도 직후 이유를 적을 수 있는 모달을 띄움 */
+function showTradeNoteModal(){
+  const entry = state.history[0]; // 방금 unshift로 추가된 가장 최근 거래
+  if(!entry) return;
+  document.getElementById("tradeNoteContext").textContent =
+    `${entry.type} · ${entry.name} ${entry.qty}주 · ${won(entry.price)} (${entry.time})`;
+  const textEl = document.getElementById("tradeNoteText");
+  textEl.value = "";
+  document.getElementById("tradeNoteModal").style.display = "flex";
+  textEl.focus();
 }
-bindJournalButton("before");
-bindJournalButton("after");
+function closeTradeNoteModal(){
+  document.getElementById("tradeNoteModal").style.display = "none";
+}
+document.getElementById("tradeNoteSave").addEventListener("click", () => {
+  const note = document.getElementById("tradeNoteText").value.trim();
+  if(state.history[0]) state.history[0].note = note;
+  saveState();
+  closeTradeNoteModal();
+  renderJournal();
+  if(activeTab === "history") renderTabs();
+});
+document.getElementById("tradeNoteSkip").addEventListener("click", () => {
+  if(state.history[0] && typeof state.history[0].note === "undefined") state.history[0].note = "";
+  saveState();
+  closeTradeNoteModal();
+  renderJournal();
+});
 
 document.querySelectorAll("#app-sim .tabs button").forEach(b =>
   b.addEventListener("click", () => { activeTab = b.dataset.tab; renderTabs(); }));
 
-document.getElementById("studentName").addEventListener("input", e => {
-  state.name = e.target.value; saveState();
-});
-
-document.getElementById("copyBtn").addEventListener("click", async () => {
-  const text = buildSummary();
-  try { await navigator.clipboard.writeText(text); toast("결과 요약을 복사했어요. 선생님께 붙여넣기로 제출!"); }
-  catch(e){ prompt("아래 내용을 복사하세요", text); }
-});
-
 document.getElementById("resetBtn").addEventListener("click", () => {
+  const pw = prompt("초기화하려면 선생님이 알려준 비밀번호를 입력하세요.");
+  if(pw === null) return; // 취소
+  if(pw !== RESET_PASSWORD){ toast("비밀번호가 틀렸어요."); return; }
   if(!confirm("모든 거래 기록과 자산이 초기화됩니다. 처음부터 다시 시작할까요?")) return;
-  state = {cash:SEED_MONEY, holdings:{}, history:[], name:state.name, journal:state.journal};
+  state = {cash:SEED_MONEY, holdings:{}, history:[], name:state.name, finalReflection:state.finalReflection};
   saveState();
   renderAll();
   renderJournal();
   toast("초기화 완료! 1,000만원으로 다시 시작합니다");
 });
+
+/* 기능 : 최종 활동 소감 저장/복원 + 인쇄 (거래 기록과 무관하게 학습 여정 기록이라 초기화해도 남김) */
+const finalTextEl = document.getElementById("finalReflectionText");
+const finalPrintEl = document.getElementById("finalReflectionPrint");
+function syncFinalPrint(){
+  finalPrintEl.textContent = finalTextEl.value.trim() || "(작성한 내용이 없습니다)";
+}
+function restoreFinalReflection(){
+  // 기능 : loadState() 이후에 호출되어야 저장된 값을 정확히 불러옴
+  finalTextEl.value = state.finalReflection || "";
+  syncFinalPrint();
+}
+finalTextEl.addEventListener("input", () => {
+  state.finalReflection = finalTextEl.value;
+  saveState();
+  syncFinalPrint();
+});
+document.getElementById("finalReflectionPrintBtn").addEventListener("click", () => {
+  syncFinalPrint();
+  window.print();
+});
+window.addEventListener("beforeprint", syncFinalPrint);
 
 /* 기능 : 반 선택 배너 — 최초 접속 시 반을 고르게 하고, 이후엔 그 반의 거래 시간만 적용 */
 let lastTradeOpenState = null;
@@ -1594,7 +1606,7 @@ function checkTradeStatusChange(){
 }
 
 loadState();
-document.getElementById("studentName").value = state.name || "";
+restoreFinalReflection();
 initSetupTool();
 renderAll();
 renderJournal();
@@ -2165,6 +2177,40 @@ $("quizBackToSelect").addEventListener("click",()=>{
   $("quizPlay").style.display="none";
   $("quizSelect").style.display="block";
   renderTierSelect();
+});
+
+/* 기능 : 퀴즈 결과 인쇄 — 방금 결과 + 3단계 전체 최고점 요약을 함께 보여줌 */
+function getStudentNameForPrint(){
+  try {
+    const raw = localStorage.getItem("stockSimState");
+    if(!raw) return "";
+    const parsed = JSON.parse(raw);
+    return parsed.name || "";
+  } catch(e){ return ""; }
+}
+function syncQuizPrintSummary(){
+  const name = getStudentNameForPrint();
+  const now = new Date().toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+  const scores = {beginner:0, intermediate:0, advanced:0, ...(expProgress.quizScores || {})};
+  const lines = [
+    `이름: ${name || "(이름 미입력)"}`,
+    `인쇄 시각: ${now}`,
+    "",
+    `방금 완료한 단계: ${TIER_LABEL[currentTier] || "-"} · 점수 ${qScore}점`,
+    "",
+    "▸ 난이도별 최고 점수",
+    `🟢 초급: ${scores.beginner}점`,
+    `🟡 중급: ${scores.intermediate}점`,
+    `🔴 고급: ${scores.advanced}점`,
+  ];
+  document.getElementById("quizPrintSummary").textContent = lines.join("\n");
+}
+$("quizPrintBtn").addEventListener("click", () => {
+  syncQuizPrintSummary();
+  window.print();
+});
+window.addEventListener("beforeprint", () => {
+  if($("quizResult").style.display !== "none") syncQuizPrintSummary();
 });
 
 const wsSel=$("wsCompany");
