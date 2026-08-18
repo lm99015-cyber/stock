@@ -214,9 +214,6 @@ body{
 #app-sim .history-item .what{flex:1;}
 
 #app-sim .toolbar{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-#app-sim .toolbar input{
-  padding:9px 14px;border:1px solid var(--line);border-radius:8px;font:inherit;width:180px;background:#fff;
-}
 #app-sim .toolbar button{
   padding:9px 16px;border:1px solid var(--line);background:#fff;border-radius:8px;
   font:inherit;font-size:0.82rem;font-weight:600;cursor:pointer;color:var(--ink);
@@ -526,6 +523,12 @@ body{
   font-family:inherit;font-size:0.95rem;padding:10px 14px;
   border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);
   width:100%;max-width:340px;
+}
+:is(#app-learn,#app-valuation,#app-compare) .ws-step .field{
+  display:flex;align-items:center;gap:10px;margin:12px 0;
+}
+:is(#app-learn,#app-valuation,#app-compare) .ws-step .field label{
+  font-size:0.85rem;font-weight:700;color:var(--navy);flex-shrink:0;
 }
 :is(#app-learn,#app-valuation,#app-compare) .data-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
 :is(#app-learn,#app-valuation,#app-compare) .pill{
@@ -893,7 +896,7 @@ body{
 
 <footer class="footer">
   본 프로그램은 경제·금융 교육용 학습 도구입니다. 표시된 수치는 학습 편의를 위한 예시 데이터이며
-  특정 종목에 대한 투자 권유 또는 추천이 아닙니다. · Play! Click! Think! 학습 모형 기반
+  특정 종목에 대한 투자 권유 또는 추천이 아닙니다.
 </footer>
 
 </div>
@@ -927,21 +930,28 @@ body{
   </div>
 
   <div class="ws-step">
-    <h3><span class="num">2</span>목표 PER 결정하기</h3>
-    <p class="guide">
+    <h3><span class="num">2</span>가치평가 방식과 목표 배수 결정하기</h3>
+    <p class="guide" id="wsMethodGuide">
       "이 기업의 이익에 몇 배의 가치를 매길 것인가?"를 정하는 단계입니다.
       성장성이 높으면 높은 PER을, 이익이 불안정하면 낮은 PER을 적용합니다.
       슬라이더를 움직여 <b>나만의 목표 PER</b>을 정해 보세요. (참고: 코스피 평균 PER은 보통 10~14배 수준)
     </p>
+    <div class="field">
+      <label for="wsMethod">평가 방식</label>
+      <select class="ws-select" id="wsMethod">
+        <option value="per">PER 방식 (이익 기준)</option>
+        <option value="pbr">PBR 방식 (순자산 기준)</option>
+      </select>
+    </div>
     <div class="slider-row">
-      <input type="range" id="wsPer" min="1" max="60" step="0.5" value="12" aria-label="목표 PER 슬라이더">
-      <div class="slider-val"><span id="wsPerVal">12.0</span>배</div>
+      <input type="range" id="wsPer" min="1" max="60" step="0.5" value="12" aria-label="목표 배수 슬라이더">
+      <div class="slider-val"><span id="wsPerVal">12.0</span><span id="wsMethodUnit">배</span></div>
     </div>
   </div>
 
   <div class="ws-step">
     <h3><span class="num">3</span>적정주가 계산</h3>
-    <p class="guide">적정주가 = 주당순이익(EPS) × 목표 PER</p>
+    <p class="guide" id="wsFormulaGuide">적정주가 = 주당순이익(EPS) × 목표 PER</p>
     <div class="calc-box" id="wsCalc"></div>
     <div class="gauge-wrap">
       <div class="gauge-track"><div class="gauge-needle" id="wsNeedle"></div></div>
@@ -965,7 +975,7 @@ body{
 
 <footer class="footer">
   본 프로그램은 경제·금융 교육용 학습 도구입니다. 표시된 수치는 학습 편의를 위한 예시 데이터이며
-  특정 종목에 대한 투자 권유 또는 추천이 아닙니다. · Play! Click! Think! 학습 모형 기반
+  특정 종목에 대한 투자 권유 또는 추천이 아닙니다.
 </footer>
 
 </div>
@@ -1008,7 +1018,7 @@ body{
 
 <footer class="footer">
   본 프로그램은 경제·금융 교육용 학습 도구입니다. 표시된 수치는 학습 편의를 위한 예시 데이터이며
-  특정 종목에 대한 투자 권유 또는 추천이 아닙니다. · Play! Click! Think! 학습 모형 기반
+  특정 종목에 대한 투자 권유 또는 추천이 아닙니다.
 </footer>
 
 </div>
@@ -2225,6 +2235,38 @@ Object.entries(sectorMap).forEach(([sector,idxs])=>{
   wsSel.appendChild(og);
 });
 
+/* 기능 : 가치평가 방식별 설정 — 슬라이더 범위, 안내문, 공식, 계산 방법을 방식마다 다르게 정의 */
+const VALUATION_METHODS = {
+  per: {
+    unit:"배", min:1, max:60, step:0.5, default:12,
+    guide: `"이 기업의 이익에 몇 배의 가치를 매길 것인가?"를 정하는 단계입니다.
+      성장성이 높으면 높은 PER을, 이익이 불안정하면 낮은 PER을 적용합니다.
+      슬라이더를 움직여 <b>나만의 목표 PER</b>을 정해 보세요. (참고: 코스피 평균 PER은 보통 10~14배 수준)`,
+    formula: "적정주가 = 주당순이익(EPS) × 목표 PER",
+    calcLine: (c, target) => `적정주가 = ${fmtWon(c.eps)} × ${target.toFixed(1)}배`,
+    calc: (c, target) => c.eps * target,
+  },
+  pbr: {
+    unit:"배", min:0.1, max:10, step:0.1, default:1.0,
+    guide: `"이 기업의 순자산(재산)에 몇 배의 가치를 매길 것인가?"를 정하는 단계입니다.
+      자산이 견고하고 안정적이면 높은 PBR을, 자산 대비 수익성이 낮으면 낮은 PBR을 적용합니다.
+      슬라이더를 움직여 <b>나만의 목표 PBR</b>을 정해 보세요. (참고: 업종에 따라 0.5~2배 수준이 흔합니다)`,
+    formula: "적정주가 = 주당순자산(BPS) × 목표 PBR",
+    calcLine: (c, target) => `적정주가 = ${fmtWon(c.bps)} × ${target.toFixed(1)}배`,
+    calc: (c, target) => c.bps * target,
+  },
+};
+const wsMethodEl = $("wsMethod");
+
+function applyMethodDefaults(){
+  const m = VALUATION_METHODS[wsMethodEl.value];
+  const perEl = $("wsPer");
+  perEl.min = m.min; perEl.max = m.max; perEl.step = m.step; perEl.value = m.default;
+  $("wsMethodGuide").innerHTML = m.guide;
+  $("wsFormulaGuide").textContent = m.formula;
+  $("wsMethodUnit").textContent = m.unit;
+}
+
 function renderPills(){
   const c=COMPANIES[wsSel.value];
   $("wsPills").innerHTML=`
@@ -2240,13 +2282,14 @@ function renderPills(){
 
 function renderCalc(){
   const c=COMPANIES[wsSel.value];
-  const per=parseFloat($("wsPer").value);
-  $("wsPerVal").textContent=per.toFixed(1);
-  const fair=c.eps*per;
+  const m=VALUATION_METHODS[wsMethodEl.value];
+  const target=parseFloat($("wsPer").value);
+  $("wsPerVal").textContent=target.toFixed(1);
+  const fair=m.calc(c, target);
   const gap=(c.price-fair)/fair*100;
 
   $("wsCalc").innerHTML=
-    `적정주가 = ${fmtWon(c.eps)} × ${per.toFixed(1)}배 = <b style="font-size:1.15rem;">${fmtWon(fair)}</b>
+    `${m.calcLine(c, target)} = <b style="font-size:1.15rem;">${fmtWon(fair)}</b>
      &nbsp;｜&nbsp; 현재 주가 ${fmtWon(c.price)} (괴리율 ${gap>=0?"+":""}${fmt(gap)}%)`;
 
   const pos=Math.max(0,Math.min(100,50+gap));
@@ -2259,6 +2302,14 @@ function renderCalc(){
 }
 
 wsSel.addEventListener("change",()=>{renderPills();renderCalc();});
+wsMethodEl.addEventListener("change",()=>{
+  applyMethodDefaults();
+  renderCalc();
+  if(!expProgress.wsPerTouched){
+    expProgress.wsPerTouched = true;
+    saveExpProgress();
+  }
+});
 $("wsPer").addEventListener("input",()=>{
   renderCalc();
   if(!expProgress.wsPerTouched){
@@ -2266,6 +2317,7 @@ $("wsPer").addEventListener("input",()=>{
     saveExpProgress();
   }
 });
+applyMethodDefaults();
 renderPills();renderCalc();
 
 /* 기능 : 워크시트 결론 메모 저장/복원 (미션 자동 체크용) */
