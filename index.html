@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>투자 학습 프로그램 — 모의주식 투자 &amp; 기업가치 탐험대</title>
+<title>투자 학습 프로그램 (교사 안내형) — 기업가치 탐험대 &amp; 모의주식 투자</title>
 <!-- 기능 : Pretendard 웹폰트 불러오기 (두 프로그램 공용) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -27,11 +27,9 @@ body{
           — 학생들이 각자 자기 태블릿으로 수업을 진행하는 상황을 기준으로 함
    ============================================================ */
 @media (max-width:900px){
-  #appSwitcher button{padding:10px 16px;font-size:0.8rem;}
-  #app-mission .wrap, #app-ai .wrap{padding:0 12px;}
-  #app-mission .progress-box{flex-direction:column;align-items:stretch;text-align:center;}
-  #app-mission .session-tab-btn{padding:10px 14px;font-size:0.82rem;min-height:44px;}
-  #app-mission .mission-item{padding:12px 14px;}
+  #appSwitcher button{padding:9px 14px;font-size:0.78rem;}
+  #appSwitcher .app-brand{width:100%;text-align:center;margin:0 0 4px;padding:4px 0;font-size:0.85rem;}
+  #app-ai .wrap{padding:0 12px;}
   #app-ai .ai-card{padding:26px 18px;}
   #app-ai .ai-btn{width:100%;box-sizing:border-box;}
 }
@@ -55,6 +53,11 @@ body{
 #appSwitcher button:hover{background:rgba(255,255,255,0.16);color:#fff;}
 #appSwitcher button.active{background:#fff;color:#0f1830;}
 #appSwitcher button:focus-visible{outline:3px solid #ffb648;outline-offset:2px;}
+#appSwitcher .app-brand{
+  color:#fff;font-weight:800;font-size:0.92rem;
+  padding:11px 6px 11px 4px;margin-right:6px;
+  white-space:nowrap;opacity:0.9;
+}
 
 /* 기능 : 두 프로그램 화면 전환 (선택된 것만 표시) */
 .app-view{display:none;}
@@ -103,10 +106,43 @@ body{
   color:#E8D9B8;
   font-size:0.72rem;
   padding:4px 10px;border-radius:999px;
-  margin-top:6px;
+  margin-top:6px;margin-right:6px;
 }
 #app-sim .data-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
 #app-sim .data-chip.live .dot{background:#4CC36B;}
+#app-sim .data-chip.locked{background:rgba(214,50,43,0.18);border-color:rgba(214,50,43,0.4);color:#FFC9C6;}
+#app-sim .data-chip.locked .dot{background:var(--up);}
+#app-sim .order-btns button:disabled{opacity:0.4;cursor:not-allowed;}
+#app-sim .lock-banner{
+  grid-column:1 / -1;background:#FFF3F0;border:1px solid #F2CBC9;border-radius:12px;
+  padding:12px 16px;font-size:0.85rem;color:#8A3B36;text-align:center;
+}
+
+#app-sim .setup-card{grid-column:1 / -1;border:2px dashed var(--gold);}
+#app-sim .setup-body{padding:16px 18px;}
+#app-sim .setup-guide{font-size:0.82rem;color:#5B677E;line-height:1.6;margin-bottom:14px;background:#FFF7EC;border-radius:8px;padding:10px 12px;}
+#app-sim .setup-body .field{align-items:center;margin-bottom:10px;}
+#app-sim .setup-body .field label{width:80px;}
+#app-sim .setup-body .field input[type=text]{
+  flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;max-width:220px;
+}
+#app-sim .setup-rows{margin-bottom:14px;}
+#app-sim .setup-row{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  padding:8px 0;border-bottom:1px dashed var(--line);
+}
+#app-sim .setup-row .setup-label{width:56px;font-size:0.82rem;color:#5B677E;flex-shrink:0;}
+#app-sim .setup-row select.setup-day,
+#app-sim .setup-row input[type=time]{
+  padding:7px 10px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:0.82rem;
+}
+#app-sim .setup-output{margin-top:14px;}
+#app-sim .setup-output label{display:block;font-size:0.8rem;color:#5B677E;margin-bottom:6px;}
+#app-sim .setup-output textarea{
+  width:100%;min-height:140px;font-family:monospace;font-size:0.78rem;
+  border:1px solid var(--line);border-radius:8px;padding:10px;background:#FAFBFD;color:var(--ink);
+  margin-bottom:8px;
+}
 
 #app-sim main{max-width:1100px;margin:20px auto 60px;padding:0 16px;display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start;}
 #app-sim .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
@@ -188,6 +224,40 @@ body{
 #app-sim .toolbar .danger{color:var(--up);border-color:#F2CBC9;}
 #app-sim .toolbar .note{font-size:0.72rem;color:#9AA4BB;margin-left:auto;}
 
+#app-sim .journal-card{grid-column:1 / -1;}
+#app-sim .journal-card h2 .sub{font-weight:500;font-size:0.74rem;color:#7A86A0;margin-left:8px;}
+#app-sim .journal-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 18px;
+}
+@media (max-width:820px){ #app-sim .journal-grid{grid-template-columns:1fr;} }
+#app-sim .journal-entry{
+  border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#FAFBFD;
+}
+#app-sim .journal-entry h3{font-size:0.9rem;margin-bottom:6px;}
+#app-sim .journal-guide{font-size:0.78rem;color:#7A86A0;margin-bottom:10px;line-height:1.5;}
+#app-sim .journal-snapshot{
+  display:none;font-size:0.78rem;background:#fff;border:1px dashed var(--line);
+  border-radius:8px;padding:8px 10px;margin-bottom:10px;color:#5B677E;
+}
+#app-sim .journal-snapshot.show{display:block;}
+#app-sim textarea.journal-text{
+  width:100%;min-height:90px;font-family:inherit;font-size:0.85rem;
+  border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical;
+  color:var(--ink);margin-bottom:8px;
+}
+#app-sim textarea.journal-text:disabled{background:#F0F3F8;color:#7A86A0;}
+#app-sim .journal-btn{
+  padding:9px 16px;border:none;border-radius:8px;background:var(--navy);color:#fff;
+  font:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;
+}
+#app-sim .journal-btn:hover{filter:brightness(1.1);}
+#app-sim .journal-btn.rewrite{background:#fff;color:var(--navy);border:1px solid var(--line);}
+#app-sim .journal-compare{
+  margin:0 18px 18px;padding:14px 16px;background:#FFF7EC;border:1px solid #F0DFB8;
+  border-radius:10px;font-size:0.85rem;color:#5B4A1F;
+}
+#app-sim .journal-compare b{color:var(--navy);}
+
 #app-sim #toast{
   position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);
   background:var(--navy);color:#fff;padding:10px 20px;border-radius:999px;
@@ -201,9 +271,9 @@ body{
 }
 
 /* ============================================================
-   ▼▼▼ 아래는 [기업가치 탐험대] 전용 스타일 — #app-explorer 안에서만 적용 ▼▼▼
+   ▼▼▼ 아래는 [기업가치 탐험대] 전용 스타일 — :is(#app-learn,#app-valuation,#app-compare) 안에서만 적용 ▼▼▼
    ============================================================ */
-#app-explorer{
+:is(#app-learn,#app-valuation,#app-compare){
   --orange-main:#ff7e2d;
   --orange-light:#ff9c4a;
   --orange-bg:#fff4ec;
@@ -219,390 +289,300 @@ body{
   min-height:100vh;
   line-height:1.6;
 }
-#app-explorer .num{
+:is(#app-learn,#app-valuation,#app-compare) .num{
   display:inline-flex;width:26px;height:26px;border-radius:50%;
   background:linear-gradient(135deg,var(--orange-main),var(--orange-light));
   color:#fff;font-size:0.85rem;align-items:center;justify-content:center;
   margin-right:8px;
 }
 
-#app-explorer .header{text-align:center;padding:34px 16px 18px;}
-#app-explorer .header h1{
+:is(#app-learn,#app-valuation,#app-compare) .header{text-align:center;padding:34px 16px 18px;}
+:is(#app-learn,#app-valuation,#app-compare) .header h1{
   font-size:2rem;font-weight:800;
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   letter-spacing:-0.5px;
 }
-#app-explorer .header p{color:var(--gray);margin-top:6px;font-size:0.98rem;}
-#app-explorer .data-chip{
+:is(#app-learn,#app-valuation,#app-compare) .header p{color:var(--gray);margin-top:6px;font-size:0.98rem;}
+:is(#app-learn,#app-valuation,#app-compare) .data-chip{
   display:inline-flex;align-items:center;gap:6px;
   background:#fff;border:1px solid var(--line);color:#9a6231;
   font-size:0.72rem;padding:4px 10px;border-radius:999px;
   margin-top:10px;
 }
-#app-explorer .data-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--orange-main);}
-#app-explorer .data-chip.live .dot{background:var(--good);}
+:is(#app-learn,#app-valuation,#app-compare) .data-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--orange-main);}
+:is(#app-learn,#app-valuation,#app-compare) .data-chip.live .dot{background:var(--good);}
 
-#app-explorer .notice{
+:is(#app-learn,#app-valuation,#app-compare) .notice{
   max-width:960px;margin:10px auto 0;padding:10px 18px;
   background:var(--orange-bg);border:1px solid var(--line);
   border-radius:12px;font-size:0.85rem;color:#9a6231;text-align:center;
 }
 
-#app-explorer .tabs{
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  margin:22px auto 8px;padding:0 12px;max-width:960px;
+:is(#app-learn,#app-valuation,#app-compare) .page-block{
+  max-width:960px;margin:18px auto 60px;padding:0 16px;
+  animation:appExplorerFadeIn .35s ease;
 }
-#app-explorer .tab-btn{
-  border:none;cursor:pointer;
-  padding:12px 22px;border-radius:30px;
-  font-size:0.95rem;font-weight:700;font-family:inherit;
-  background:#fff;color:var(--navy);
-  border:2px solid var(--line);
-  transition:all .2s;
-}
-#app-explorer .tab-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,126,45,.18);}
-#app-explorer .tab-btn.active{
-  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
-  color:#fff;border-color:transparent;
-  box-shadow:0 4px 14px rgba(255,126,45,.35);
-}
-#app-explorer .tab-btn:focus-visible{outline:3px solid var(--orange-light);outline-offset:2px;}
-
-#app-explorer .panel{display:none;max-width:960px;margin:18px auto 60px;padding:0 16px;}
-#app-explorer .panel.active{display:block;animation:appExplorerFadeIn .35s ease;}
 @keyframes appExplorerFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-#app-explorer .panel h2{font-size:1.3rem;margin-bottom:6px;}
-#app-explorer .panel .sub{color:var(--gray);font-size:0.92rem;margin-bottom:18px;}
+:is(#app-learn,#app-valuation,#app-compare) .page-block h2{font-size:1.3rem;margin-bottom:6px;}
+:is(#app-learn,#app-valuation,#app-compare) .page-block .sub{color:var(--gray);font-size:0.92rem;margin-bottom:18px;}
 
-#app-explorer .card-grid{
+:is(#app-learn,#app-valuation,#app-compare) .card-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
   gap:16px;
 }
-#app-explorer .flip-card{perspective:1000px;height:230px;cursor:pointer;}
-#app-explorer .flip-inner{
+:is(#app-learn,#app-valuation,#app-compare) .flip-card{perspective:1000px;height:230px;cursor:pointer;}
+:is(#app-learn,#app-valuation,#app-compare) .flip-inner{
   position:relative;width:100%;height:100%;
   transition:transform .55s;transform-style:preserve-3d;
 }
-#app-explorer .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
-#app-explorer .flip-face{
+:is(#app-learn,#app-valuation,#app-compare) .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+:is(#app-learn,#app-valuation,#app-compare) .flip-face{
   position:absolute;inset:0;backface-visibility:hidden;
   border-radius:16px;padding:20px;
   display:flex;flex-direction:column;justify-content:center;
 }
-#app-explorer .flip-front{
+:is(#app-learn,#app-valuation,#app-compare) .flip-front{
   background:#fff;border:2px solid var(--line);
   box-shadow:0 3px 10px rgba(0,0,0,.05);
   align-items:center;text-align:center;
 }
-#app-explorer .flip-front .badge{
+:is(#app-learn,#app-valuation,#app-compare) .flip-front .badge{
   font-size:0.75rem;font-weight:700;color:var(--orange-main);
   background:var(--orange-bg);padding:3px 12px;border-radius:20px;margin-bottom:10px;
 }
-#app-explorer .flip-front .term{font-size:1.45rem;font-weight:800;}
-#app-explorer .flip-front .kor{color:var(--gray);font-size:0.9rem;margin-top:4px;}
-#app-explorer .flip-front .formula{
+:is(#app-learn,#app-valuation,#app-compare) .flip-front .term{font-size:1.45rem;font-weight:800;}
+:is(#app-learn,#app-valuation,#app-compare) .flip-front .kor{color:var(--gray);font-size:0.9rem;margin-top:4px;}
+:is(#app-learn,#app-valuation,#app-compare) .flip-front .formula{
   margin-top:14px;font-size:0.95rem;font-weight:600;color:var(--blue);
   background:#f2f6ff;padding:6px 14px;border-radius:10px;
 }
-#app-explorer .flip-front .hint{margin-top:12px;font-size:0.78rem;color:#c9a98e;}
-#app-explorer .flip-back{
+:is(#app-learn,#app-valuation,#app-compare) .flip-front .hint{margin-top:12px;font-size:0.78rem;color:#c9a98e;}
+:is(#app-learn,#app-valuation,#app-compare) .flip-back{
   background:linear-gradient(135deg,var(--orange-main),var(--orange-light));
   color:#fff;transform:rotateY(180deg);font-size:0.88rem;
 }
-#app-explorer .flip-back b{display:block;margin-bottom:6px;font-size:0.95rem;}
-#app-explorer .flip-back .tip{
+:is(#app-learn,#app-valuation,#app-compare) .flip-back b{display:block;margin-bottom:6px;font-size:0.95rem;}
+:is(#app-learn,#app-valuation,#app-compare) .flip-back .tip{
   margin-top:10px;background:rgba(255,255,255,.18);
   border-radius:10px;padding:8px 10px;font-size:0.82rem;
 }
 
-#app-explorer .chip-row{display:flex;flex-wrap:wrap;gap:10px 16px;margin-bottom:18px;}
-#app-explorer .sector-group{
+:is(#app-learn,#app-valuation,#app-compare) .chip-row{display:flex;flex-wrap:wrap;gap:10px 16px;margin-bottom:18px;}
+:is(#app-learn,#app-valuation,#app-compare) .sector-group{
   display:flex;align-items:center;gap:6px;
   background:#fff;border:1.5px dashed var(--line);border-radius:30px;
   padding:5px 10px 5px 14px;
 }
-#app-explorer .sector-tag{font-size:0.74rem;font-weight:700;color:#c08a55;white-space:nowrap;}
-#app-explorer .chip{
+:is(#app-learn,#app-valuation,#app-compare) .sector-tag{font-size:0.74rem;font-weight:700;color:#c08a55;white-space:nowrap;}
+:is(#app-learn,#app-valuation,#app-compare) .chip{
   border:2px solid var(--line);background:#fff;border-radius:24px;
   padding:8px 16px;font-size:0.9rem;font-weight:600;font-family:inherit;
   cursor:pointer;transition:all .15s;color:var(--navy);
 }
-#app-explorer .chip:hover{border-color:var(--orange-light);}
-#app-explorer .chip.on{
+:is(#app-learn,#app-valuation,#app-compare) .chip:hover{border-color:var(--orange-light);}
+:is(#app-learn,#app-valuation,#app-compare) .chip.on{
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   color:#fff;border-color:transparent;
 }
-#app-explorer .chip:focus-visible{outline:3px solid var(--orange-light);outline-offset:2px;}
+:is(#app-learn,#app-valuation,#app-compare) .chip:focus-visible{outline:3px solid var(--orange-light);outline-offset:2px;}
 
-#app-explorer .compare-wrap{overflow-x:auto;background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px;}
-#app-explorer table.compare{width:100%;border-collapse:collapse;font-size:0.9rem;min-width:520px;}
-#app-explorer table.compare th,#app-explorer table.compare td{padding:10px 12px;text-align:right;border-bottom:1px solid #f7ede3;}
-#app-explorer table.compare th:first-child,#app-explorer table.compare td:first-child{text-align:left;font-weight:700;}
-#app-explorer table.compare thead th{
+:is(#app-learn,#app-valuation,#app-compare) .compare-wrap{overflow-x:auto;background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px;}
+:is(#app-learn,#app-valuation,#app-compare) table.compare{width:100%;border-collapse:collapse;font-size:0.9rem;min-width:520px;}
+:is(#app-learn,#app-valuation,#app-compare) table.compare th,:is(#app-learn,#app-valuation,#app-compare) table.compare td{padding:10px 12px;text-align:right;border-bottom:1px solid #f7ede3;}
+:is(#app-learn,#app-valuation,#app-compare) table.compare th:first-child,:is(#app-learn,#app-valuation,#app-compare) table.compare td:first-child{text-align:left;font-weight:700;}
+:is(#app-learn,#app-valuation,#app-compare) table.compare thead th{
   background:var(--orange-bg);color:#9a6231;font-size:0.82rem;
   position:sticky;top:0;
 }
-#app-explorer table.compare tbody tr:last-child td{border-bottom:none;}
-#app-explorer .mini{display:block;font-size:0.72rem;color:var(--gray);font-weight:400;}
+:is(#app-learn,#app-valuation,#app-compare) table.compare tbody tr:last-child td{border-bottom:none;}
+:is(#app-learn,#app-valuation,#app-compare) .mini{display:block;font-size:0.72rem;color:var(--gray);font-weight:400;}
 
-#app-explorer .bar-section{margin-top:22px;}
-#app-explorer .bar-group{
+:is(#app-learn,#app-valuation,#app-compare) .bar-section{margin-top:22px;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-group{
   background:#fff;border:2px solid var(--line);border-radius:16px;
   padding:16px 18px;margin-bottom:14px;
 }
-#app-explorer .bar-group h3{font-size:1rem;margin-bottom:4px;}
-#app-explorer .bar-group .desc{font-size:0.8rem;color:var(--gray);margin-bottom:10px;}
-#app-explorer .bar-row{display:flex;align-items:center;gap:10px;margin:7px 0;}
-#app-explorer .bar-label{width:110px;font-size:0.84rem;font-weight:600;flex-shrink:0;}
-#app-explorer .bar-track{flex:1;background:#faf2ea;border-radius:8px;height:22px;overflow:hidden;}
-#app-explorer .bar-fill{
+:is(#app-learn,#app-valuation,#app-compare) .bar-group h3{font-size:1rem;margin-bottom:4px;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-group .desc{font-size:0.8rem;color:var(--gray);margin-bottom:10px;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-row{display:flex;align-items:center;gap:10px;margin:7px 0;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-label{width:110px;font-size:0.84rem;font-weight:600;flex-shrink:0;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-track{flex:1;background:#faf2ea;border-radius:8px;height:22px;overflow:hidden;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-fill{
   height:100%;border-radius:8px;
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   transition:width .6s ease;min-width:2px;
 }
-#app-explorer .bar-val{width:80px;font-size:0.84rem;font-weight:700;text-align:right;flex-shrink:0;}
+:is(#app-learn,#app-valuation,#app-compare) .bar-val{width:80px;font-size:0.84rem;font-weight:700;text-align:right;flex-shrink:0;}
 
-#app-explorer .insight{
+:is(#app-learn,#app-valuation,#app-compare) .insight{
   margin-top:18px;background:#f3fbf6;border:2px solid #cdeeda;
   border-radius:16px;padding:16px 18px;font-size:0.9rem;
 }
-#app-explorer .insight h3{font-size:1rem;color:var(--good);margin-bottom:8px;}
-#app-explorer .insight li{margin-left:18px;margin-bottom:4px;}
+:is(#app-learn,#app-valuation,#app-compare) .insight h3{font-size:1rem;color:var(--good);margin-bottom:8px;}
+:is(#app-learn,#app-valuation,#app-compare) .insight li{margin-left:18px;margin-bottom:4px;}
 
-#app-explorer .quiz-box{
+:is(#app-learn,#app-valuation,#app-compare) .quiz-box{
   background:#fff;border:2px solid var(--line);border-radius:18px;
   padding:26px 24px;max-width:680px;margin:0 auto;
 }
-#app-explorer .quiz-progress{font-size:0.82rem;color:var(--gray);margin-bottom:10px;font-weight:600;}
-#app-explorer .quiz-q{font-size:1.05rem;font-weight:700;margin-bottom:18px;white-space:pre-line;}
-#app-explorer .quiz-opts{display:flex;flex-direction:column;gap:10px;}
-#app-explorer .opt-btn{
+:is(#app-learn,#app-valuation,#app-compare) .tier-cards{display:flex;flex-direction:column;gap:14px;}
+:is(#app-learn,#app-valuation,#app-compare) .tier-card{
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  text-align:left;border:2px solid var(--line);border-radius:14px;
+  padding:16px 18px;font-family:inherit;background:#fffaf5;cursor:pointer;
+  transition:all .15s;
+}
+:is(#app-learn,#app-valuation,#app-compare) .tier-card:hover{border-color:var(--orange-light);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,126,45,.15);}
+:is(#app-learn,#app-valuation,#app-compare) .tier-card.locked{
+  background:#f5f5f5;opacity:0.65;cursor:not-allowed;
+}
+:is(#app-learn,#app-valuation,#app-compare) .tier-card.locked:hover{
+  border-color:var(--line);transform:none;box-shadow:none;
+}
+:is(#app-learn,#app-valuation,#app-compare) .tier-badge{font-size:0.95rem;font-weight:800;padding:2px 10px;border-radius:20px;}
+:is(#app-learn,#app-valuation,#app-compare) .tier-badge.b{background:#e9f9f0;color:var(--good);}
+:is(#app-learn,#app-valuation,#app-compare) .tier-badge.i{background:#fff8e2;color:#b08a1f;}
+:is(#app-learn,#app-valuation,#app-compare) .tier-badge.a{background:#fdeeee;color:var(--bad);}
+:is(#app-learn,#app-valuation,#app-compare) .tier-name{font-weight:700;font-size:0.98rem;margin-top:4px;}
+:is(#app-learn,#app-valuation,#app-compare) .tier-desc{font-size:0.82rem;color:var(--gray);}
+:is(#app-learn,#app-valuation,#app-compare) .tier-best{font-size:0.76rem;color:var(--orange-main);font-weight:700;margin-top:4px;}
+:is(#app-learn,#app-valuation,#app-compare) .quiz-progress{font-size:0.82rem;color:var(--gray);margin-bottom:10px;font-weight:600;}
+:is(#app-learn,#app-valuation,#app-compare) .quiz-q{font-size:1.05rem;font-weight:700;margin-bottom:18px;white-space:pre-line;}
+:is(#app-learn,#app-valuation,#app-compare) .quiz-opts{display:flex;flex-direction:column;gap:10px;}
+:is(#app-learn,#app-valuation,#app-compare) .opt-btn{
   text-align:left;border:2px solid var(--line);background:#fffaf5;
   border-radius:12px;padding:12px 16px;font-size:0.93rem;font-family:inherit;
   cursor:pointer;transition:all .15s;color:var(--navy);
 }
-#app-explorer .opt-btn:hover:not(:disabled){border-color:var(--orange-light);transform:translateX(3px);}
-#app-explorer .opt-btn.correct{background:#e9f9f0;border-color:var(--good);font-weight:700;}
-#app-explorer .opt-btn.wrong{background:#fdeeee;border-color:var(--bad);}
-#app-explorer .opt-btn:disabled{cursor:default;}
-#app-explorer .quiz-explain{
+:is(#app-learn,#app-valuation,#app-compare) .opt-btn:hover:not(:disabled){border-color:var(--orange-light);transform:translateX(3px);}
+:is(#app-learn,#app-valuation,#app-compare) .opt-btn.correct{background:#e9f9f0;border-color:var(--good);font-weight:700;}
+:is(#app-learn,#app-valuation,#app-compare) .opt-btn.wrong{background:#fdeeee;border-color:var(--bad);}
+:is(#app-learn,#app-valuation,#app-compare) .opt-btn:disabled{cursor:default;}
+:is(#app-learn,#app-valuation,#app-compare) .quiz-explain{
   margin-top:14px;background:var(--orange-bg);border-radius:12px;
   padding:12px 14px;font-size:0.86rem;color:#9a6231;display:none;
 }
-#app-explorer .quiz-next{
+:is(#app-learn,#app-valuation,#app-compare) .quiz-next{
   margin-top:16px;display:none;
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   color:#fff;border:none;border-radius:24px;padding:11px 28px;
   font-size:0.95rem;font-weight:700;font-family:inherit;cursor:pointer;
 }
-#app-explorer .quiz-next:hover{box-shadow:0 4px 14px rgba(255,126,45,.35);}
-#app-explorer .quiz-result{text-align:center;display:none;}
-#app-explorer .quiz-result .score{
+:is(#app-learn,#app-valuation,#app-compare) .quiz-next:hover{box-shadow:0 4px 14px rgba(255,126,45,.35);}
+:is(#app-learn,#app-valuation,#app-compare) .quiz-result{text-align:center;display:none;}
+:is(#app-learn,#app-valuation,#app-compare) .quiz-result .score{
   font-size:2.6rem;font-weight:800;margin:12px 0;
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
 
-#app-explorer .ws-step{
+:is(#app-learn,#app-valuation,#app-compare) .ws-step{
   background:#fff;border:2px solid var(--line);border-radius:16px;
   padding:18px 20px;margin-bottom:16px;
 }
-#app-explorer .ws-step h3{font-size:1rem;margin-bottom:8px;}
-#app-explorer .ws-step .guide{font-size:0.85rem;color:var(--gray);margin-bottom:10px;}
-#app-explorer select.ws-select{
+:is(#app-learn,#app-valuation,#app-compare) .ws-step h3{font-size:1rem;margin-bottom:8px;}
+:is(#app-learn,#app-valuation,#app-compare) .ws-step .guide{font-size:0.85rem;color:var(--gray);margin-bottom:10px;}
+:is(#app-learn,#app-valuation,#app-compare) .judgment-options{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+:is(#app-learn,#app-valuation,#app-compare) .judgment-chip{
+  border:2px solid var(--line);background:#fff;border-radius:20px;
+  padding:8px 16px;font-size:0.88rem;font-weight:600;font-family:inherit;
+  cursor:pointer;transition:all .15s;color:var(--navy);
+}
+:is(#app-learn,#app-valuation,#app-compare) .judgment-chip:hover{border-color:var(--orange-light);}
+:is(#app-learn,#app-valuation,#app-compare) .judgment-chip.on{
+  background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
+  color:#fff;border-color:transparent;
+}
+:is(#app-learn,#app-valuation,#app-compare) textarea.ws-memo:disabled{background:#f5f5f5;color:var(--gray);cursor:not-allowed;}
+:is(#app-learn,#app-valuation,#app-compare) select.ws-select{
   font-family:inherit;font-size:0.95rem;padding:10px 14px;
   border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);
   width:100%;max-width:340px;
 }
-#app-explorer .data-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
-#app-explorer .pill{
+:is(#app-learn,#app-valuation,#app-compare) .data-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+:is(#app-learn,#app-valuation,#app-compare) .pill{
   background:var(--orange-bg);border-radius:12px;padding:8px 14px;
   font-size:0.84rem;
 }
-#app-explorer .pill b{display:block;font-size:0.72rem;color:#b07a4a;font-weight:600;}
-#app-explorer .slider-row{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap;}
-#app-explorer input[type=range]{flex:1;min-width:180px;accent-color:var(--orange-main);}
-#app-explorer .slider-val{
+:is(#app-learn,#app-valuation,#app-compare) .pill b{display:block;font-size:0.72rem;color:#b07a4a;font-weight:600;}
+:is(#app-learn,#app-valuation,#app-compare) .slider-row{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap;}
+:is(#app-learn,#app-valuation,#app-compare) input[type=range]{flex:1;min-width:180px;accent-color:var(--orange-main);}
+:is(#app-learn,#app-valuation,#app-compare) .slider-val{
   font-size:1.1rem;font-weight:800;color:var(--orange-main);
   min-width:70px;text-align:center;
 }
-#app-explorer .calc-box{
+:is(#app-learn,#app-valuation,#app-compare) .calc-box{
   margin-top:10px;background:#f2f6ff;border-radius:12px;padding:12px 16px;
   font-size:0.95rem;font-weight:600;color:var(--blue);
 }
-#app-explorer .gauge-wrap{margin-top:14px;}
-#app-explorer .gauge-track{
+:is(#app-learn,#app-valuation,#app-compare) .gauge-wrap{margin-top:14px;}
+:is(#app-learn,#app-valuation,#app-compare) .gauge-track{
   position:relative;height:30px;border-radius:16px;overflow:hidden;
   background:linear-gradient(90deg,#2f9e6e 0%,#a8d977 35%,#ffd24a 50%,#ffa14a 65%,#e05252 100%);
 }
-#app-explorer .gauge-needle{
+:is(#app-learn,#app-valuation,#app-compare) .gauge-needle{
   position:absolute;top:-4px;width:4px;height:38px;background:var(--navy);
   border-radius:2px;left:50%;transition:left .5s ease;
 }
-#app-explorer .gauge-labels{display:flex;justify-content:space-between;font-size:0.74rem;color:var(--gray);margin-top:4px;}
-#app-explorer .verdict{
+:is(#app-learn,#app-valuation,#app-compare) .gauge-labels{display:flex;justify-content:space-between;font-size:0.74rem;color:var(--gray);margin-top:4px;}
+:is(#app-learn,#app-valuation,#app-compare) .verdict{
   margin-top:12px;font-size:1.05rem;font-weight:800;text-align:center;
   padding:10px;border-radius:12px;
 }
-#app-explorer .verdict.under{background:#e9f9f0;color:var(--good);}
-#app-explorer .verdict.over{background:#fdeeee;color:var(--bad);}
-#app-explorer .verdict.fair{background:#fff8e2;color:#b08a1f;}
-#app-explorer textarea.ws-memo{
+:is(#app-learn,#app-valuation,#app-compare) .verdict.under{background:#e9f9f0;color:var(--good);}
+:is(#app-learn,#app-valuation,#app-compare) .verdict.over{background:#fdeeee;color:var(--bad);}
+:is(#app-learn,#app-valuation,#app-compare) .verdict.fair{background:#fff8e2;color:#b08a1f;}
+:is(#app-learn,#app-valuation,#app-compare) textarea.ws-memo{
   width:100%;min-height:110px;font-family:inherit;font-size:0.92rem;
   border:2px solid var(--line);border-radius:12px;padding:12px;resize:vertical;
   color:var(--navy);
 }
-#app-explorer textarea.ws-memo:focus{outline:none;border-color:var(--orange-light);}
-#app-explorer .print-btn{
+:is(#app-learn,#app-valuation,#app-compare) textarea.ws-memo:focus{outline:none;border-color:var(--orange-light);}
+:is(#app-learn,#app-valuation,#app-compare) .ws-memo-print{
+  display:none; /* 기능 : 평소 화면에서는 숨김, 인쇄할 때만 표시 (textarea는 인쇄 시 스크롤된 내용이 잘리는 문제 방지용) */
+}
+:is(#app-learn,#app-valuation,#app-compare) .judgment-company-print{display:none;}
+:is(#app-learn,#app-valuation,#app-compare) .print-btn{
   display:block;margin:6px auto 0;
   background:linear-gradient(90deg,var(--orange-main),var(--orange-light));
   color:#fff;border:none;border-radius:26px;padding:13px 36px;
   font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;
 }
-#app-explorer .print-btn:hover{box-shadow:0 4px 16px rgba(255,126,45,.4);transform:translateY(-2px);}
+:is(#app-learn,#app-valuation,#app-compare) .print-btn:hover{box-shadow:0 4px 16px rgba(255,126,45,.4);transform:translateY(-2px);}
 
-#app-explorer .footer{
+:is(#app-learn,#app-valuation,#app-compare) .footer{
   text-align:center;color:#c2a98f;font-size:0.78rem;
   padding:0 16px 36px;max-width:760px;margin:0 auto;
 }
 
 @media print{
-  #appSwitcher,#app-sim{display:none!important;}
-  #app-explorer{display:block!important;}
-  #app-explorer .header,#app-explorer .tabs,#app-explorer .notice,#app-explorer .footer,#app-explorer .print-btn{display:none!important;}
-  #app-explorer .panel{display:none!important;}
-  #app-explorer #panel-ws{display:block!important;margin:0;}
-  #app-explorer .ws-step{break-inside:avoid;border-color:#ccc;}
+  #appSwitcher,#app-sim,#app-ai{display:none!important;}
+  :is(#app-learn,#app-valuation,#app-compare):not(.active){display:none!important;}
+  :is(#app-learn,#app-valuation,#app-compare).active{display:block!important;}
+  :is(#app-learn,#app-valuation,#app-compare).active .header,
+  :is(#app-learn,#app-valuation,#app-compare).active .notice,
+  :is(#app-learn,#app-valuation,#app-compare).active .print-btn{display:none!important;}
+  #app-valuation.active .ws-step{break-inside:avoid;border-color:#ccc;}
+  #app-compare.active .chip-row,
+  #app-compare.active .judgment-options{display:none!important;}
+  #app-compare.active .judgment-company-print{
+    display:block!important;font-weight:700;margin-bottom:8px;color:#222;
+  }
+  :is(#app-valuation,#app-compare).active textarea.ws-memo{display:none!important;}
+  :is(#app-valuation,#app-compare).active .ws-memo-print{
+    display:block!important;
+    white-space:pre-wrap;word-break:break-word;
+    border:1px solid #ccc;border-radius:8px;
+    padding:10px 12px;min-height:80px;
+    font-family:inherit;font-size:0.92rem;color:#222;
+  }
 }
 
 @media (max-width:600px){
-  #app-explorer .header h1{font-size:1.5rem;}
-  #app-explorer .tab-btn{padding:10px 14px;font-size:0.85rem;}
-  #app-explorer .bar-label{width:84px;font-size:0.78rem;}
+  #app-learn .header h1, #app-valuation .header h1, #app-compare .header h1{font-size:1.5rem;}
+  #app-compare .bar-label{width:84px;font-size:0.78rem;}
 }
-
-/* ============================================================
-   ▼▼▼ 아래는 [미션] 전용 스타일 — #app-mission 안에서만 적용 ▼▼▼
-   ============================================================ */
-#app-mission{
-  --teal:#0f9d78;
-  --teal-light:#3fc99c;
-  --teal-bg:#eafaf3;
-  --ink:#173a30;
-  --gray:#6b7280;
-  --line:#dcf1e7;
-  background:linear-gradient(160deg,#f2fbf7 0%,#fff 40%,#eafaf3 100%);
-  color:var(--ink);
-  min-height:100vh;
-  font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;
-}
-#app-mission .header{text-align:center;padding:34px 16px 18px;}
-#app-mission .header h1{
-  font-size:2rem;font-weight:800;
-  background:linear-gradient(90deg,var(--teal),var(--teal-light));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-}
-#app-mission .header p{color:var(--gray);margin-top:6px;font-size:0.98rem;}
-#app-mission .wrap{max-width:760px;margin:0 auto 60px;padding:0 16px;}
-#app-mission .progress-box{
-  background:#fff;border:2px solid var(--line);border-radius:18px;
-  padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-}
-#app-mission .progress-box .count{font-size:1.6rem;font-weight:800;color:var(--teal);white-space:nowrap;}
-#app-mission .progress-track{flex:1;min-width:140px;background:var(--teal-bg);border-radius:10px;height:14px;overflow:hidden;}
-#app-mission .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:10px;transition:width .5s ease;}
-#app-mission .refresh-btn{
-  border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:20px;
-  padding:8px 16px;font:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;
-}
-#app-mission .refresh-btn:hover{border-color:var(--teal-light);}
-#app-mission .mission-group{margin-bottom:22px;}
-#app-mission .mission-group h2{font-size:1rem;color:var(--teal);margin-bottom:10px;}
-#app-mission .session-tabs{
-  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;
-}
-#app-mission .session-tab-btn{
-  position:relative;border:2px solid var(--line);background:#fff;color:var(--ink);
-  border-radius:20px;padding:9px 18px;font:inherit;font-size:0.86rem;font-weight:700;
-  cursor:pointer;transition:all .15s;
-}
-#app-mission .session-tab-btn:hover{border-color:var(--teal-light);}
-#app-mission .session-tab-btn.active{
-  background:linear-gradient(90deg,var(--teal),var(--teal-light));
-  color:#fff;border-color:transparent;
-}
-#app-mission .session-tab-btn .lock{font-size:0.72rem;margin-left:3px;opacity:0.7;}
-#app-mission .session-tab-btn.cleared::after{
-  content:"✓";position:absolute;top:-6px;right:-6px;
-  width:18px;height:18px;border-radius:50%;background:var(--teal);color:#fff;
-  font-size:0.66rem;display:flex;align-items:center;justify-content:center;
-}
-#app-mission .session-info{
-  background:#fff;border:2px dashed var(--line);border-radius:14px;
-  padding:14px 18px;margin-bottom:16px;
-}
-#app-mission .session-info .s-title{font-weight:800;font-size:1.02rem;color:var(--teal);}
-#app-mission .session-info .s-desc{font-size:0.85rem;color:var(--gray);margin-top:4px;}
-#app-mission .mission-item{
-  display:flex;align-items:flex-start;gap:12px;
-  background:#fff;border:2px solid var(--line);border-radius:14px;
-  padding:14px 16px;margin-bottom:10px;transition:all .2s;
-}
-#app-mission .mission-item.done{background:var(--teal-bg);border-color:var(--teal-light);}
-#app-mission .mission-item .check{
-  flex-shrink:0;width:26px;height:26px;border-radius:50%;
-  border:2px solid var(--line);display:flex;align-items:center;justify-content:center;
-  font-size:0.85rem;color:transparent;background:#fff;
-}
-#app-mission .mission-item.done .check{background:var(--teal);border-color:var(--teal);color:#fff;}
-#app-mission .mission-item .txt{flex:1;}
-#app-mission .mission-item .title{font-weight:700;font-size:0.95rem;}
-#app-mission .mission-item .desc{font-size:0.82rem;color:var(--gray);margin-top:2px;}
-#app-mission .goto-btn{
-  display:inline-block;margin-top:8px;
-  background:#fff;border:2px solid var(--teal-light);color:var(--teal);
-  border-radius:16px;padding:7px 14px;font:inherit;font-size:0.78rem;font-weight:700;
-  cursor:pointer;transition:all .15s;
-}
-#app-mission .goto-btn:hover{background:var(--teal);color:#fff;}
-#app-mission .mission-item.locked{
-  opacity:0.55;background:#f5f5f5;border-style:dashed;cursor:not-allowed;
-}
-#app-mission .mission-item.locked .check.lock-icon{
-  background:transparent;border-color:var(--line);color:var(--gray);font-size:0.95rem;
-}
-#app-mission .session-tab-btn.locked{
-  opacity:0.5;cursor:not-allowed;background:#f3f3f3;color:var(--gray);
-}
-#app-mission .session-tab-btn.locked:hover{border-color:var(--line);}
-#app-mission .mission-item.note-item{align-items:stretch;}
-#app-mission .mission-item.note-item .txt{width:100%;}
-#app-mission textarea.mission-note{
-  width:100%;min-height:90px;margin-top:8px;
-  font-family:inherit;font-size:0.87rem;color:var(--ink);
-  border:2px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;
-}
-#app-mission textarea.mission-note:focus{outline:none;border-color:var(--teal-light);}
-#app-mission .mission-item.note-item .note-count{margin-top:6px;text-align:right;font-weight:600;}
-  display:block;margin:6px auto 0;
-  background:linear-gradient(90deg,var(--teal),var(--teal-light));
-  color:#fff;border:none;border-radius:26px;padding:13px 36px;
-  font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;
-}
-#app-mission .copy-btn:hover{box-shadow:0 4px 16px rgba(15,157,120,.35);transform:translateY(-2px);}
-#app-mission .reset-all-btn{
-  display:block;margin:14px auto 0;
-  background:#fff;color:#c23b3b;border:2px solid #f3d3d3;border-radius:22px;
-  padding:11px 22px;font-size:0.84rem;font-weight:700;font-family:inherit;cursor:pointer;
-}
-#app-mission .reset-all-btn:hover{background:#fdf0f0;border-color:#e8a9a9;}
-#app-mission #missionToast{
-  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);
-  background:var(--ink);color:#fff;padding:10px 20px;border-radius:999px;
-  font-size:0.82rem;opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:50;
-}
-#app-mission #missionToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ============================================================
    ▼▼▼ 아래는 [AI에게 물어보기] 전용 스타일 — #app-ai 안에서만 적용 ▼▼▼
@@ -657,10 +637,12 @@ body{
 
 <!-- 기능 : 두 학습 프로그램 사이 전환 스위처 -->
 <nav id="appSwitcher">
-  <button data-view="app-mission" class="active">🎯 미션</button>
-  <button data-view="app-explorer">📊 기업가치 탐험대</button>
-  <button data-view="app-sim">💰 모의주식 투자</button>
-  <button data-view="app-ai">🤖 AI에게 물어보기</button>
+  <span class="app-brand">📊 기업가치 탐험대</span>
+  <button data-view="app-learn" class="active">📚 지표학습</button>
+  <button data-view="app-valuation">🧮 가치평가</button>
+  <button data-view="app-compare">📈 기업 비교 분석</button>
+  <button data-view="app-sim">💰 모의투자</button>
+  <button data-view="app-ai">🤖 AI학습</button>
 </nav>
 
 <!-- ============================================================
@@ -674,6 +656,7 @@ body{
       <h1>모의주식 투자 교실</h1>
       <p>가상 자금으로 실제 종목을 거래하며 배우는 투자 연습장</p>
       <span class="data-chip" id="dataChip"><span class="dot"></span><span id="dataChipText">시세 불러오는 중…</span></span>
+      <span class="data-chip" id="tradeStatusChip"><span class="dot"></span><span id="tradeStatusText">거래 가능 시간 확인 중…</span></span>
     </div>
     <div class="stat">
       <div class="label">보유 현금</div>
@@ -691,6 +674,28 @@ body{
 </header>
 
 <main>
+  <!-- 기능 : 선생님용 시간표 설정 도구 (주소에 ?setup=1 을 붙였을 때만 보임) -->
+  <section class="card setup-card" id="setupCard" style="display:none;">
+    <h2>🔧 시간표 설정 도구 <span class="sub">선생님 전용 — 학생에게는 이 주소를 알려주지 마세요</span></h2>
+    <div class="setup-body">
+      <p class="setup-guide">
+        <b>매주 반복될 요일·시간</b>(최대 5개)을 정하고 "코드 만들기"를 누르면, 코드에
+        붙여넣을 수 있는 내용이 만들어져요. 날짜가 아니라 요일이라, 한 번 설정해두면 학기 내내
+        매주 자동으로 반복돼요. 모든 학생에게 동일하게 적용됩니다 (반 구분 없음). 만든 내용을
+        복사해서 <code>TRADING_WINDOWS</code> 를 통째로 바꿔 넣고 저장한 뒤 GitHub에 다시
+        올려야 실제로 적용됩니다 (이 화면에서 누른다고 학생들에게 바로 반영되지는 않아요 —
+        서버가 없는 정적 사이트라 이 마지막 단계가 꼭 필요해요).
+      </p>
+      <div class="setup-rows" id="setupRows"></div>
+      <button class="journal-btn" id="setupGenBtn">📋 코드 만들기</button>
+      <div class="setup-output" id="setupOutput" style="display:none;">
+        <label>아래 내용을 복사해서 TRADING_WINDOWS 를 통째로 바꿔 넣으세요</label>
+        <textarea id="setupOutputText" readonly></textarea>
+        <button class="journal-btn rewrite" id="setupCopyBtn">📎 복사하기</button>
+      </div>
+    </div>
+  </section>
+
   <!-- 기능 : 종목 시세표 영역 -->
   <section class="card">
     <h2>종목 시세 <span class="sub">종목을 누르면 주문할 수 있어요</span></h2>
@@ -718,6 +723,28 @@ body{
     </section>
   </div>
 
+  <!-- 기능 : 투자 일지 (학습 전 → 학습 후 2단계 기록) -->
+  <section class="card journal-card">
+    <h2>📝 투자 기록 일지 <span class="sub">학습 전과 후, 내 투자 판단이 어떻게 바뀌었는지 남겨보세요</span></h2>
+    <div class="journal-grid">
+      <div class="journal-entry" id="journalBeforeBox">
+        <h3>① 학습 전 기록</h3>
+        <p class="journal-guide">아직 지표를 배우기 전이에요. 지금 어떤 종목을 보유 중인지, 왜 그 종목을 골랐는지(직감이어도 괜찮아요) 적어보세요.</p>
+        <div class="journal-snapshot" id="journalBeforeSnapshot"></div>
+        <textarea class="journal-text" id="journalBeforeText" placeholder="예시) 나는 OO전자를 매수했다. 이름을 많이 들어봐서 골랐다..."></textarea>
+        <button class="journal-btn" id="journalBeforeBtn">✍️ 지금 기록하기</button>
+      </div>
+      <div class="journal-entry" id="journalAfterBox">
+        <h3>② 학습 후 기록</h3>
+        <p class="journal-guide">지표학습·가치평가·기업 비교 분석을 거친 뒤 다시 와서 적어보세요. 판단이 어떻게, 왜 바뀌었나요?</p>
+        <div class="journal-snapshot" id="journalAfterSnapshot"></div>
+        <textarea class="journal-text" id="journalAfterText" placeholder="예시) 처음엔 이름만 보고 골랐는데, PER·ROE를 확인해보니..."></textarea>
+        <button class="journal-btn" id="journalAfterBtn">✍️ 지금 기록하기</button>
+      </div>
+    </div>
+    <div class="journal-compare" id="journalCompare" style="display:none;"></div>
+  </section>
+
   <!-- 기능 : 학생 이름 입력 및 결과 제출 도구 -->
   <div class="toolbar">
     <input type="text" id="studentName" placeholder="이름 (예: 2학년 3반 김OO)" maxlength="20">
@@ -735,45 +762,55 @@ body{
 <!-- ============================================================
      [2] 기업가치 탐험대 프로그램
      ============================================================ -->
-<div id="app-explorer" class="app-view">
+<!-- ============================================================
+     [2] 지표학습 (개념 카드 + 지표 퀴즈)
+     ============================================================ -->
+<div id="app-learn" class="app-view active">
 
 <header class="header">
-  <h1>📊 기업가치 탐험대</h1>
-  <p>PER · PBR · ROE — 주식 지표로 배우는 기업 가치 분석</p>
-  <span class="data-chip" id="expDataChip"><span class="dot"></span><span id="expDataChipText">시세 불러오는 중…</span></span>
+  <h1>📚 지표학습</h1>
+  <p>PER · PBR · ROE — 핵심 지표를 배우고 퀴즈로 확인해요</p>
+  <span class="data-chip exp-data-chip"><span class="dot"></span><span class="chip-text">시세 불러오는 중…</span></span>
 </header>
 
 <div class="notice">
   ⚠️ <b>주가</b>는 연결된 경우 실시간 시세를 사용하고, <b>EPS·BPS·배당수익률 등 나머지 지표</b>는
-  <b>2026년 상반기 기준 학습용 예시 값(고정)</b>입니다. 따라서 PER·PBR은 주가 변동에 따라 실시간으로
-  바뀌지만, 실제 최신 재무제표와는 차이가 있을 수 있습니다. 투자 권유가 아닌 <b>교육 목적</b>으로만 사용하세요.
+  <b>2026년 상반기 기준 학습용 예시 값(고정)</b>입니다. 투자 권유가 아닌 <b>교육 목적</b>으로만 사용하세요.
 </div>
 
-<nav class="tabs" role="tablist">
-  <button class="tab-btn active" data-tab="learn" role="tab">① 지표 개념 학습</button>
-  <button class="tab-btn" data-tab="quiz" role="tab">② 지표 퀴즈</button>
-  <button class="tab-btn" data-tab="ws" role="tab">③ 가치평가 워크시트</button>
-  <button class="tab-btn" data-tab="compare" role="tab">④ 기업 비교 분석</button>
-</nav>
-
-<section class="panel active" id="panel-learn">
-  <h2>① 지표 개념 학습</h2>
+<section class="page-block">
+  <h2>지표 개념 카드</h2>
   <p class="sub">카드를 클릭하면 뒤집혀서 자세한 설명이 나타납니다. 모든 카드를 뒤집어 보세요!</p>
   <div class="card-grid" id="cardGrid"></div>
 </section>
 
-<section class="panel" id="panel-compare">
-  <h2>④ 기업 비교 분석</h2>
-  <p class="sub">기업을 <b>2~3개</b> 선택하면 지표를 표와 그래프로 비교하고, 해석 도우미가 분석 힌트를 알려줍니다.</p>
-  <div class="chip-row" id="chipRow"></div>
-  <div id="compareArea"><p style="color:var(--gray);font-size:0.9rem;">👆 위에서 기업을 선택해 보세요.</p></div>
-</section>
-
-<section class="panel" id="panel-quiz">
-  <h2>② 지표 퀴즈</h2>
-  <p class="sub">개념 문제와 계산 문제가 섞여 나옵니다. 총 10문제!</p>
+<section class="page-block">
+  <h2>지표 퀴즈로 확인하기</h2>
+  <p class="sub">난이도를 골라 도전하세요. 초급 → 중급 → 고급 순서로 점점 어려워져요.</p>
   <div class="quiz-box">
-    <div id="quizPlay">
+    <div id="quizSelect">
+      <div class="tier-cards">
+        <button class="tier-card" data-tier="beginner">
+          <span class="tier-badge b">🟢 초급</span>
+          <span class="tier-name">기본 개념 확인</span>
+          <span class="tier-desc">지표의 뜻과 공식을 알고 있는지 확인해요</span>
+          <span class="tier-best" id="tierBestbeginner">아직 도전 전</span>
+        </button>
+        <button class="tier-card" data-tier="intermediate">
+          <span class="tier-badge i">🟡 중급</span>
+          <span class="tier-name">직접 계산해보기</span>
+          <span class="tier-desc">지표를 실제로 계산할 수 있는지 확인해요</span>
+          <span class="tier-best" id="tierBestintermediate">아직 도전 전</span>
+        </button>
+        <button class="tier-card" data-tier="advanced">
+          <span class="tier-badge a">🔴 고급</span>
+          <span class="tier-name">응용해서 판단하기</span>
+          <span class="tier-desc">여러 지표를 함께 보고 해석할 수 있는지 확인해요</span>
+          <span class="tier-best" id="tierBestadvanced">아직 도전 전</span>
+        </button>
+      </div>
+    </div>
+    <div id="quizPlay" style="display:none;">
       <div class="quiz-progress" id="quizProgress"></div>
       <div class="quiz-q" id="quizQ"></div>
       <div class="quiz-opts" id="quizOpts"></div>
@@ -781,16 +818,41 @@ body{
       <button class="quiz-next" id="quizNext">다음 문제 →</button>
     </div>
     <div class="quiz-result" id="quizResult">
-      <h3>🎉 퀴즈 완료!</h3>
+      <h3 id="quizResultTitle">🎉 퀴즈 완료!</h3>
       <div class="score" id="quizScore"></div>
       <p id="quizComment" style="color:var(--gray);font-size:0.92rem;"></p>
       <button class="quiz-next" id="quizRetry" style="display:inline-block;margin-top:18px;">다시 풀기</button>
+      <button class="quiz-next" id="quizBackToSelect" style="display:inline-block;margin-top:18px;margin-left:8px;background:#fff;color:var(--orange-main);border:2px solid var(--orange-main);">난이도 다시 선택</button>
     </div>
   </div>
 </section>
 
-<section class="panel" id="panel-ws">
-  <h2>③ 모의 가치평가 워크시트</h2>
+<footer class="footer">
+  본 프로그램은 경제·금융 교육용 학습 도구입니다. 표시된 수치는 학습 편의를 위한 예시 데이터이며
+  특정 종목에 대한 투자 권유 또는 추천이 아닙니다. · Play! Click! Think! 학습 모형 기반
+</footer>
+
+</div>
+<!-- /#app-learn -->
+
+<!-- ============================================================
+     [3] 가치평가 (모의 가치평가 워크시트)
+     ============================================================ -->
+<div id="app-valuation" class="app-view">
+
+<header class="header">
+  <h1>🧮 가치평가</h1>
+  <p>애널리스트가 되어 적정주가를 계산하고 판단해봐요</p>
+  <span class="data-chip exp-data-chip"><span class="dot"></span><span class="chip-text">시세 불러오는 중…</span></span>
+</header>
+
+<div class="notice">
+  ⚠️ <b>주가</b>는 연결된 경우 실시간 시세를 사용하고, <b>EPS·BPS·배당수익률 등 나머지 지표</b>는
+  <b>2026년 상반기 기준 학습용 예시 값(고정)</b>입니다. 투자 권유가 아닌 <b>교육 목적</b>으로만 사용하세요.
+</div>
+
+<section class="page-block">
+  <h2>모의 가치평가 워크시트</h2>
   <p class="sub">애널리스트가 되어 한 기업의 <b>적정주가</b>를 직접 계산하고, 고평가/저평가 여부를 판단해 봅시다.</p>
 
   <div class="ws-step">
@@ -831,6 +893,7 @@ body{
       PER 외에 함께 살펴봐야 할 지표(PBR, ROE, 배당수익률 등)는 무엇인지 적어 보세요.
     </p>
     <textarea class="ws-memo" id="wsMemo" placeholder="예시) 나는 ○○기업의 목표 PER을 △△배로 정했다. 그 이유는..."></textarea>
+    <div class="ws-memo-print" id="wsMemoPrint"></div>
   </div>
 
   <button class="print-btn" onclick="window.print()">🖨️ 워크시트 인쇄하기</button>
@@ -842,34 +905,50 @@ body{
 </footer>
 
 </div>
-<!-- /#app-explorer -->
+<!-- /#app-valuation -->
 
 <!-- ============================================================
-     [3] 미션 페이지
+     [4] 기업 비교 분석
      ============================================================ -->
-<div id="app-mission" class="app-view active">
-  <header class="header">
-    <h1>🎯 5차시 미션 챌린지</h1>
-    <p>1차시부터 5차시까지, 회차가 올라갈수록 미션이 조금씩 심화돼요</p>
-  </header>
-  <div class="wrap">
-    <div class="progress-box">
-      <div class="count" id="missionCount">0 / 15 완료</div>
-      <div class="progress-track"><div class="progress-fill" id="missionFill" style="width:0%"></div></div>
-      <button class="refresh-btn" id="missionRefresh">🔄 현황 새로고침</button>
-    </div>
+<div id="app-compare" class="app-view">
 
-    <nav class="session-tabs" id="sessionTabs" role="tablist"></nav>
+<header class="header">
+  <h1>📈 기업 비교 분석</h1>
+  <p>여러 기업을 비교하며 지표를 실전처럼 활용해봐요</p>
+  <span class="data-chip exp-data-chip"><span class="dot"></span><span class="chip-text">시세 불러오는 중…</span></span>
+</header>
 
-    <div class="session-info" id="sessionInfo"></div>
-    <div id="missionList"></div>
-
-    <button class="copy-btn" id="missionCopyBtn">📋 미션 현황 복사 (전체 5차시)</button>
-    <button class="reset-all-btn" id="missionResetAll">🗑️ 전체 처음부터 다시 시작 (모의주식+탐험대+미션 전부 초기화)</button>
-  </div>
-  <div id="missionToast"></div>
+<div class="notice">
+  ⚠️ <b>주가</b>는 연결된 경우 실시간 시세를 사용하고, <b>EPS·BPS·배당수익률 등 나머지 지표</b>는
+  <b>2026년 상반기 기준 학습용 예시 값(고정)</b>입니다. 투자 권유가 아닌 <b>교육 목적</b>으로만 사용하세요.
 </div>
-<!-- /#app-mission -->
+
+<section class="page-block">
+  <h2>기업 비교 분석</h2>
+  <p class="sub">기업을 <b>2~3개</b> 선택하면 지표를 표와 그래프로 비교하고, 해석 도우미가 분석 힌트를 알려줍니다.</p>
+  <div class="chip-row" id="chipRow"></div>
+  <div id="compareArea"><p style="color:var(--gray);font-size:0.9rem;">👆 위에서 기업을 선택해 보세요.</p></div>
+</section>
+
+<section class="page-block">
+  <div class="ws-step">
+    <h3><span class="num">✓</span>나의 투자 판단 쓰기</h3>
+    <p class="guide" id="judgmentGuide">기업을 2개 이상 비교하면 이 중 하나를 골라 판단을 남길 수 있어요.</p>
+    <div class="judgment-options" id="judgmentCompanyOptions"></div>
+    <div class="judgment-company-print" id="judgmentCompanyPrint"></div>
+    <textarea class="ws-memo" id="compareJudgmentText" placeholder="예시) 나는 ○○기업을 고르겠다. PER이 △△배로 낮고 ROE가 □□%로 높아서..." disabled></textarea>
+    <div class="ws-memo-print" id="compareJudgmentPrint"></div>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ 비교 결과 인쇄하기</button>
+</section>
+
+<footer class="footer">
+  본 프로그램은 경제·금융 교육용 학습 도구입니다. 표시된 수치는 학습 편의를 위한 예시 데이터이며
+  특정 종목에 대한 투자 권유 또는 추천이 아닙니다. · Play! Click! Think! 학습 모형 기반
+</footer>
+
+</div>
+<!-- /#app-compare -->
 
 <!-- ============================================================
      [4] AI에게 물어보기 페이지
@@ -922,21 +1001,16 @@ body{
 function activateAppView(view){
   document.querySelectorAll("#appSwitcher button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
   document.querySelectorAll(".app-view").forEach(v => v.classList.toggle("active", v.id === view));
-  if(view === "app-mission" && typeof window.__recomputeMissions === "function"){
-    window.__recomputeMissions();
-  }
 }
 document.querySelectorAll("#appSwitcher button").forEach(btn => {
   btn.addEventListener("click", () => activateAppView(btn.dataset.view));
 });
 
-/* 기능 : 미션 카드의 "바로가기" 버튼 등에서 호출 — 화면 전환 + (탐험대인 경우) 세부 탭까지 이동 */
+/* 기능 : (이 버전에는 미션 페이지가 없어 사용되지 않지만, 다른 스크립트와의 호환을 위해 남겨둠)
+   참고 : 예전에는 기업가치 탐험대 내부 탭(subTab)으로 한 번 더 이동해야 했지만,
+         이제 지표학습·가치평가·기업비교분석이 모두 최상위 메뉴라 view 전환만으로 충분합니다. */
 window.__gotoAppView = function(view, subTab){
   activateAppView(view);
-  if(subTab){
-    const tabBtn = document.querySelector(`#app-explorer .tab-btn[data-tab="${subTab}"]`);
-    if(tabBtn) tabBtn.click();
-  }
   window.scrollTo({top:0, behavior:"smooth"});
 };
 </script>
@@ -952,6 +1026,62 @@ const FEE_RATE   = 0.00015;       // 매매 수수료 0.015%
 const TAX_RATE   = 0.002;         // 매도 시 증권거래세 0.20%
 const REFRESH_MS = 60000;         // 시세 자동 새로고침 주기 (60초)
 const PRICES_URL = "prices.json"; // GitHub Actions가 갱신하는 시세 파일
+
+/* ============================================================
+   🔧 선생님 설정 : 거래 가능 시간대 (요일·시간 반복 방식)
+   ------------------------------------------------------------
+   - 모든 학생에게 동일하게 적용됩니다 (반 구분 없음).
+   - 날짜가 아니라 "요일 + 시간"으로 설정합니다. 한 번 설정해두면
+     학기 내내 매주 자동으로 반복되어, 다시 손댈 필요가 없습니다.
+   - day는 요일 번호입니다: 0=일, 1=월, 2=화, 3=수, 4=목, 5=금, 6=토
+   - 시간 형식은 "HH:MM" (24시간제, 학생 기기의 로컬 시간 기준)이며,
+     start~end 사이에만 매수·매도 버튼이 열립니다.
+   - 그 외 시간에는 시세 확인·포트폴리오·일지 작성 등은 그대로 되지만
+     매수·매도만 잠깁니다.
+   - 테스트해볼 때는 주소 끝에 ?teachertest=열려라 를 붙이면
+     (예: .../index.html?teachertest=열려라) 요일·시간과 무관하게
+     강제로 열립니다. 학생에게는 이 주소를 알려주지 마세요.
+   ============================================================ */
+const DAY_NAMES = ["일","월","화","수","목","금","토"];
+
+/* 기능 : 월~금, 매시 40분~다음 정각(20분간) 개방
+   (09:40~10:00, 10:40~11:00, ... 16:40~17:00, 오후 5시 정각까지) */
+const TRADING_WINDOWS = [1,2,3,4,5].flatMap(day =>
+  [9,10,11,12,13,14,15,16].map(h => ({
+    day, start: `${String(h).padStart(2,"0")}:40`, end: `${String(h+1).padStart(2,"0")}:00`
+  }))
+);
+const FORCE_OPEN = new URLSearchParams(location.search).get("teachertest") === "열려라"; // 기능 : 교사 테스트용 강제 개방
+
+function getTradingStatus(){
+  if(FORCE_OPEN) return {open:true, label:"테스트 모드", end:null};
+  const now = new Date();
+  const curDay = now.getDay();
+  const curHM = now.getHours()*60 + now.getMinutes();
+
+  for(const w of TRADING_WINDOWS){
+    if(w.day !== curDay) continue;
+    const [sh,sm] = w.start.split(":").map(Number);
+    const [eh,em] = w.end.split(":").map(Number);
+    const startHM = sh*60+sm, endHM = eh*60+em;
+    if(curHM >= startHM && curHM <= endHM) return {open:true, label:`${DAY_NAMES[w.day]}요일`, end:null};
+  }
+
+  // 기능 : 오늘 이후(오늘 포함) 가장 가까운 요일+시간을 찾아 "다음 거래 시간"으로 안내
+  let best = null, bestDiff = Infinity;
+  for(const w of TRADING_WINDOWS){
+    const [sh,sm] = w.start.split(":").map(Number);
+    const startHM = sh*60+sm;
+    let dayDiff = (w.day - curDay + 7) % 7;
+    if(dayDiff === 0 && startHM <= curHM) dayDiff = 7; // 오늘이지만 이미 지난 시간이면 다음 주로
+    const totalMinDiff = dayDiff*24*60 + (startHM - curHM);
+    if(totalMinDiff < bestDiff){ bestDiff = totalMinDiff; best = w; }
+  }
+  return {open:false, next: best};
+}
+function fmtWhen(w){
+  return `${DAY_NAMES[w.day]}요일 ${w.start}`;
+}
 
 /* 기능 : 내장 예시 시세 (prices.json이 없을 때 사용하는 대비책) */
 const FALLBACK_STOCKS = [
@@ -1003,7 +1133,8 @@ let state = {
   cash: SEED_MONEY,
   holdings: {},   // {종목코드: {qty, avgPrice}}
   history: [],    // [{time, type, name, qty, price, amount}]
-  name: ""
+  name: "",
+  journal: { before: null, after: null } // 기능 : 투자 일지 (학습 전/후 2단계 기록, 각 항목은 {time, total, rate, holdingsList, text})
 };
 
 function saveState(){
@@ -1017,6 +1148,7 @@ function loadState(){
     const parsed = JSON.parse(raw);
     if(typeof parsed.cash === "number" && parsed.holdings) state = parsed;
     if(!Array.isArray(state.history)) state.history = [];
+    if(!state.journal) state.journal = { before: null, after: null };
   } catch(e){ /* 손상된 데이터는 무시하고 새로 시작 */ }
 }
 
@@ -1073,6 +1205,25 @@ function renderHeader(){
     chip.classList.remove("live");
     chipText.textContent = "예시 시세로 연습 중 (prices.json 미연결)";
   }
+
+  renderTradeStatusChip();
+}
+
+/* 기능 : 거래 가능 시간대 상태 칩 갱신 (열림/잠김 표시) */
+function renderTradeStatusChip(){
+  const chip = document.getElementById("tradeStatusChip");
+  const text = document.getElementById("tradeStatusText");
+  if(!chip || !text) return;
+  const tstatus = getTradingStatus();
+  if(tstatus.open){
+    chip.classList.remove("locked");
+    chip.classList.add("live");
+    text.textContent = tstatus.label === "테스트 모드" ? "🧪 테스트 모드로 거래 개방 중" : `🟢 거래 가능 (${tstatus.label})`;
+  } else {
+    chip.classList.remove("live");
+    chip.classList.add("locked");
+    text.textContent = tstatus.next ? `🔒 거래 잠김 · 다음: ${fmtWhen(tstatus.next)}` : "🔒 거래 잠김 (설정된 요일 없음)";
+  }
 }
 
 function renderMarket(){
@@ -1100,6 +1251,7 @@ function renderOrder(){
     return;
   }
   const held = state.holdings[s.code]?.qty || 0;
+  const tstatus = getTradingStatus();
   panel.innerHTML = `
     <div class="order-body">
       <div class="order-stock">
@@ -1107,18 +1259,19 @@ function renderOrder(){
         <span class="price num ${cls(s.changeRate)}">${s.price.toLocaleString("ko-KR")}원</span>
       </div>
       <div class="order-change ${cls(s.changeRate)}">${arrow(s.changeRate)} ${Math.abs(s.changeRate).toFixed(2)}% &nbsp;<span style="color:#9AA4BB">보유 ${held}주</span></div>
+      ${!tstatus.open ? `<div class="lock-banner">🔒 지금은 거래 시간이 아니에요.${tstatus.next ? ` 다음 거래: <b>${fmtWhen(tstatus.next)}</b>` : " 설정된 요일이 없어요."}</div>` : ""}
       <div class="field">
         <label for="qtyInput">수량</label>
-        <input type="number" id="qtyInput" min="1" step="1" value="1" inputmode="numeric">
+        <input type="number" id="qtyInput" min="1" step="1" value="1" inputmode="numeric" ${!tstatus.open ? "disabled" : ""}>
       </div>
       <div class="qty-btns">
-        <button data-q="1">+1</button><button data-q="5">+5</button><button data-q="10">+10</button>
-        <button data-q="maxbuy">최대 매수</button><button data-q="maxsell">전량 매도</button>
+        <button data-q="1" ${!tstatus.open ? "disabled" : ""}>+1</button><button data-q="5" ${!tstatus.open ? "disabled" : ""}>+5</button><button data-q="10" ${!tstatus.open ? "disabled" : ""}>+10</button>
+        <button data-q="maxbuy" ${!tstatus.open ? "disabled" : ""}>최대 매수</button><button data-q="maxsell" ${!tstatus.open ? "disabled" : ""}>전량 매도</button>
       </div>
       <div class="cost-table" id="costTable"></div>
       <div class="order-btns">
-        <button class="btn-buy" id="buyBtn">매수</button>
-        <button class="btn-sell" id="sellBtn">매도</button>
+        <button class="btn-buy" id="buyBtn" ${!tstatus.open ? "disabled" : ""}>매수</button>
+        <button class="btn-sell" id="sellBtn" ${!tstatus.open ? "disabled" : ""}>매도</button>
       </div>
     </div>`;
 
@@ -1159,6 +1312,11 @@ function renderOrder(){
 }
 
 function trade(type, s, qty){
+  const tstatus = getTradingStatus();
+  if(!tstatus.open){
+    toast("지금은 거래 시간이 아니에요" + (tstatus.next ? ` (다음: ${fmtWhen(tstatus.next)})` : ""));
+    return;
+  }
   if(!qty || qty < 1){ toast("수량을 1 이상 입력하세요"); return; }
   const amount = s.price * qty;
   const fee = Math.floor(amount * FEE_RATE);
@@ -1237,14 +1395,20 @@ function buildSummary(){
   }
   const total = state.cash + holdingValue;
   const rate = (total - SEED_MONEY) / SEED_MONEY * 100;
-  return [
+  const summary = [
     `[모의주식 결과] ${state.name || "(이름 미입력)"}`,
     `총 자산: ${won(total)} / 수익률: ${rate >= 0 ? "+" : ""}${rate.toFixed(2)}%`,
     `현금: ${won(state.cash)} / 주식 평가: ${won(holdingValue)}`,
     `거래 횟수: ${state.history.length}회`,
     lines.length ? "보유종목:\n" + lines.join("\n") : "보유종목: 없음",
-    `기준: ${isLiveData ? "실제 시세 " + (dataUpdatedAt || "") : "예시 시세"}`
-  ].join("\n");
+    `기준: ${isLiveData ? "실제 시세 " + (dataUpdatedAt || "") : "예시 시세"}`,
+  ];
+  if(state.journal && (state.journal.before || state.journal.after)){
+    summary.push("", "▸ 투자 기록 일지");
+    if(state.journal.before) summary.push(`① 학습 전 (${state.journal.before.time}, 수익률 ${state.journal.before.rate.toFixed(2)}%): ${state.journal.before.text}`);
+    if(state.journal.after) summary.push(`② 학습 후 (${state.journal.after.time}, 수익률 ${state.journal.after.rate.toFixed(2)}%): ${state.journal.after.text}`);
+  }
+  return summary.join("\n");
 }
 
 function renderAll(){
@@ -1253,6 +1417,101 @@ function renderAll(){
   renderOrder();
   renderTabs();
 }
+
+/* ============================================================
+   기능 : 투자 일지 (학습 전 → 학습 후 2단계 기록)
+   ============================================================ */
+function computeSnapshot(){
+  let holdingValue = 0;
+  const holdingsList = [];
+  for(const code in state.holdings){
+    const s = getStock(code);
+    const h = state.holdings[code];
+    if(s){
+      holdingValue += s.price * h.qty;
+      holdingsList.push(`${s.name} ${h.qty}주`);
+    }
+  }
+  const total = state.cash + holdingValue;
+  const rate = (total - SEED_MONEY) / SEED_MONEY * 100;
+  return {
+    time: new Date().toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}),
+    total, rate,
+    holdingsList: holdingsList.length ? holdingsList : ["보유 종목 없음"],
+  };
+}
+
+function snapshotHTML(entry){
+  return `기록 시각: ${entry.time}<br>
+    총자산: <b>${won(entry.total)}</b> · 수익률: <b class="${cls(entry.rate)}">${(entry.rate>0?"+":"")+entry.rate.toFixed(2)}%</b><br>
+    보유종목: ${entry.holdingsList.join(", ")}`;
+}
+
+function renderJournalSlot(key){
+  const box = document.getElementById(key === "before" ? "journalBeforeBox" : "journalAfterBox");
+  const snapshotEl = box.querySelector(".journal-snapshot");
+  const textEl = box.querySelector(".journal-text");
+  const btn = box.querySelector(".journal-btn");
+  const entry = state.journal[key];
+
+  if(entry){
+    snapshotEl.innerHTML = snapshotHTML(entry);
+    snapshotEl.classList.add("show");
+    textEl.value = entry.text;
+    textEl.disabled = true;
+    btn.textContent = "✏️ 다시 기록하기";
+    btn.classList.add("rewrite");
+  } else {
+    snapshotEl.classList.remove("show");
+    textEl.disabled = false;
+    btn.textContent = "✍️ 지금 기록하기";
+    btn.classList.remove("rewrite");
+  }
+}
+
+function renderJournalCompare(){
+  const box = document.getElementById("journalCompare");
+  const {before, after} = state.journal;
+  if(!before || !after){ box.style.display = "none"; return; }
+  const diff = after.rate - before.rate;
+  const diffStr = (diff>=0?"+":"") + diff.toFixed(2) + "%p";
+  box.style.display = "block";
+  box.innerHTML = `
+    <b>📊 학습 전 → 학습 후 변화</b><br>
+    수익률: ${before.rate.toFixed(2)}% → ${after.rate.toFixed(2)}% (${diffStr})<br>
+    <span style="font-size:0.8rem;">두 기록의 글을 비교해보며, 무엇을 배워서 판단이 달라졌는지 스스로 점검해보세요.</span>`;
+}
+
+function renderJournal(){
+  renderJournalSlot("before");
+  renderJournalSlot("after");
+  renderJournalCompare();
+}
+
+function bindJournalButton(key){
+  const boxId = key === "before" ? "journalBeforeBox" : "journalAfterBox";
+  const btn = document.getElementById(key === "before" ? "journalBeforeBtn" : "journalAfterBtn");
+  btn.addEventListener("click", () => {
+    const box = document.getElementById(boxId);
+    const textEl = box.querySelector(".journal-text");
+    if(state.journal[key]){
+      // 기능 : 다시 쓰기 — 확인 후 잠금 해제
+      if(!confirm("이미 기록이 있어요. 다시 쓰면 이전 기록은 사라집니다. 계속할까요?")) return;
+      state.journal[key] = null;
+      saveState();
+      renderJournalSlot(key);
+      textEl.focus();
+      return;
+    }
+    if(!textEl.value.trim()){ toast("내용을 먼저 적어주세요"); return; }
+    state.journal[key] = { ...computeSnapshot(), text: textEl.value.trim() };
+    saveState();
+    renderJournal();
+    toast(key === "before" ? "학습 전 기록을 저장했어요!" : "학습 후 기록을 저장했어요!");
+  });
+}
+bindJournalButton("before");
+bindJournalButton("after");
 
 document.querySelectorAll("#app-sim .tabs button").forEach(b =>
   b.addEventListener("click", () => { activeTab = b.dataset.tab; renderTabs(); }));
@@ -1269,17 +1528,80 @@ document.getElementById("copyBtn").addEventListener("click", async () => {
 
 document.getElementById("resetBtn").addEventListener("click", () => {
   if(!confirm("모든 거래 기록과 자산이 초기화됩니다. 처음부터 다시 시작할까요?")) return;
-  state = {cash:SEED_MONEY, holdings:{}, history:[], name:state.name};
+  state = {cash:SEED_MONEY, holdings:{}, history:[], name:state.name, journal:state.journal};
   saveState();
   renderAll();
+  renderJournal();
   toast("초기화 완료! 1,000만원으로 다시 시작합니다");
 });
 
+/* 기능 : 반 선택 배너 — 최초 접속 시 반을 고르게 하고, 이후엔 그 반의 거래 시간만 적용 */
+let lastTradeOpenState = null;
+/* 기능 : 선생님용 시간표 설정 도구 (?setup=1 일 때만 표시) — 코드 문법을 직접 안 써도
+   날짜·시간을 입력하면 TRADING_WINDOWS에 붙여넣을 수 있는 코드를 만들어줌 */
+function initSetupTool(){
+  const isSetupMode = new URLSearchParams(location.search).get("setup") === "1";
+  const card = document.getElementById("setupCard");
+  if(!isSetupMode){ card.style.display = "none"; return; }
+  card.style.display = "block";
+
+  const dayOptions = DAY_NAMES.map((d,i) => `<option value="${i}">${d}요일</option>`).join("");
+  const rowsBox = document.getElementById("setupRows");
+  rowsBox.innerHTML = "";
+  for(let i = 1; i <= 5; i++){
+    const row = document.createElement("div");
+    row.className = "setup-row";
+    row.innerHTML = `
+      <span class="setup-label">${i}차시</span>
+      <select class="setup-day" data-i="${i}"><option value="">사용 안 함</option>${dayOptions}</select>
+      <span>시작</span><input type="time" class="setup-start" data-i="${i}" value="09:10">
+      <span>~ 종료</span><input type="time" class="setup-end" data-i="${i}" value="09:20">`;
+    rowsBox.appendChild(row);
+  }
+
+  document.getElementById("setupGenBtn").addEventListener("click", () => {
+    const lines = [];
+    let filledCount = 0;
+    for(let i = 1; i <= 5; i++){
+      const dayEl = rowsBox.querySelector(`.setup-day[data-i="${i}"]`);
+      const startEl = rowsBox.querySelector(`.setup-start[data-i="${i}"]`);
+      const endEl = rowsBox.querySelector(`.setup-end[data-i="${i}"]`);
+      if(dayEl.value === "") continue; // "사용 안 함"이면 그 줄은 건너뜀
+      filledCount++;
+      lines.push(`  { day: ${dayEl.value}, start: "${startEl.value}", end: "${endEl.value}" }, // ${DAY_NAMES[dayEl.value]}요일`);
+    }
+    if(!filledCount){ toast("최소 1개 요일을 선택해주세요"); return; }
+    const code = `const TRADING_WINDOWS = [\n${lines.join("\n")}\n];`;
+    document.getElementById("setupOutputText").value = code;
+    document.getElementById("setupOutput").style.display = "block";
+  });
+
+  document.getElementById("setupCopyBtn").addEventListener("click", async () => {
+    const text = document.getElementById("setupOutputText").value;
+    try { await navigator.clipboard.writeText(text); toast("복사했어요! TRADING_WINDOWS 안에 붙여넣으세요"); }
+    catch(e){ document.getElementById("setupOutputText").select(); toast("자동 복사가 안 되면 직접 선택해서 복사해주세요"); }
+  });
+}
+
+
+function checkTradeStatusChange(){
+  renderTradeStatusChip();
+  const isOpenNow = getTradingStatus().open;
+  if(lastTradeOpenState !== isOpenNow){
+    lastTradeOpenState = isOpenNow;
+    renderOrder(); // 기능 : 열림/잠김 상태가 실제로 바뀔 때만 주문 패널을 다시 그림 (입력 중이던 수량 보존)
+  }
+}
+
 loadState();
 document.getElementById("studentName").value = state.name || "";
+initSetupTool();
 renderAll();
+renderJournal();
+lastTradeOpenState = getTradingStatus().open;
 loadPrices();
 setInterval(loadPrices, REFRESH_MS);
+setInterval(checkTradeStatusChange, 15000); // 기능 : 15초마다 거래 가능 시간 재확인 (자동 개방/잠금)
 })();
 </script>
 
@@ -1301,7 +1623,11 @@ const expStorage = (() => {
     set(key,val){ try { if(useLocal) localStorage.setItem(key,val); else memory[key]=val; } catch(e){ memory[key]=val; } }
   };
 })();
-let expProgress = {flippedTerms:[], quizBestScore:0, quizCompleted:false, compareEverDone:false, maxCompareSelected:0, wsMemo:"", wsPerTouched:false};
+let expProgress = {
+  flippedTerms:[], quizBestScore:0, quizCompleted:false,
+  quizScores:{beginner:0, intermediate:0, advanced:0},
+  compareEverDone:false, maxCompareSelected:0, wsMemo:"", wsPerTouched:false,
+};
 try {
   const raw = expStorage.get("expProgress");
   if(raw) expProgress = {...expProgress, ...JSON.parse(raw)};
@@ -1311,31 +1637,32 @@ function saveExpProgress(){ expStorage.set("expProgress", JSON.stringify(expProg
 /* 기능 : 학습용 기업 스냅샷 데이터 정의
    설명 : 2026년 상반기 기준 예시 값 (수업용)
           price=주가(원), eps=주당순이익, bps=주당순자산,
-          div=배당수익률(%), cap=시가총액(조원) */
+          div=배당수익률(%), cap=시가총액(조원),
+          debtRatio=부채비율(%), opMargin=영업이익률(%) */
 /* 기능 : code는 실시간 시세(prices.json)와 매칭하기 위한 종목코드입니다.
-   price/eps/bps/div/cap은 학습용 예시 스냅샷이며, code가 매칭되면
+   price/eps/bps/div/cap/debtRatio/opMargin은 학습용 예시 스냅샷이며, code가 매칭되면
    price만 실시간 값으로 갱신되고 PER·PBR은 그 자리에서 재계산됩니다. */
 const COMPANIES=[
-  {code:"005930", name:"삼성전자",        sector:"반도체",   price:268500,  eps:12573,  bps:62100,  div:0.6, cap:1600},
-  {code:"000660", name:"SK하이닉스",      sector:"반도체",   price:1686000, eps:280000, bps:450000, div:0.7, cap:1230},
-  {code:"035420", name:"NAVER",           sector:"IT서비스", price:231000,  eps:14100,  bps:166000, div:0.5, cap:37},
-  {code:"035720", name:"카카오",          sector:"IT서비스", price:61500,   eps:1540,   bps:23700,  div:0.1, cap:27},
-  {code:"005380", name:"현대차",          sector:"자동차",   price:262000,  eps:47600,  bps:323000, div:4.6, cap:55},
-  {code:"000270", name:"기아",            sector:"자동차",   price:115000,  eps:24200,  bps:151000, div:5.2, cap:45},
-  {code:"373220", name:"LG에너지솔루션",  sector:"2차전지",  price:420000,  eps:6000,   bps:105000, div:0.0, cap:98},
-  {code:"006400", name:"삼성SDI",         sector:"2차전지",  price:220000,  eps:5500,   bps:290000, div:0.5, cap:17},
-  {code:"207940", name:"삼성바이오로직스",sector:"바이오",   price:1050000, eps:16500,  bps:155000, div:0.0, cap:75},
-  {code:"068270", name:"셀트리온",        sector:"바이오",   price:191000,  eps:3820,   bps:80300,  div:0.4, cap:41},
-  {code:"329180", name:"HD현대중공업",    sector:"조선",     price:480000,  eps:13000,  bps:95000,  div:0.5, cap:42},
-  {code:"042660", name:"한화오션",        sector:"조선",     price:115000,  eps:2800,   bps:23000,  div:0.0, cap:35},
-  {code:"352820", name:"하이브",          sector:"엔터",     price:300000,  eps:6200,   bps:78000,  div:0.2, cap:12.5},
-  {code:"035900", name:"JYP Ent.",        sector:"엔터",     price:95000,   eps:3400,   bps:16500,  div:1.0, cap:3.4},
-  {code:"017670", name:"SK텔레콤",        sector:"통신",     price:58000,   eps:5300,   bps:57000,  div:6.1, cap:12.5},
-  {code:"030200", name:"KT",              sector:"통신",     price:52000,   eps:6300,   bps:74000,  div:4.0, cap:13},
-  {code:"105560", name:"KB금융",          sector:"금융",     price:112000,  eps:13800,  bps:167000, div:4.0, cap:44},
-  {code:"055550", name:"신한지주",        sector:"금융",     price:65000,   eps:9500,   bps:120000, div:4.2, cap:33},
-  {code:"005490", name:"POSCO홀딩스",     sector:"철강",     price:298000,  eps:11900,  bps:508000, div:3.4, cap:25},
-  {code:"004020", name:"현대제철",        sector:"철강",     price:33000,   eps:2100,   bps:135000, div:2.4, cap:4.4},
+  {code:"005930", name:"삼성전자",        sector:"반도체",   price:268500,  eps:12573,  bps:62100,  div:0.6, cap:1600, debtRatio:27,  opMargin:18},
+  {code:"000660", name:"SK하이닉스",      sector:"반도체",   price:1686000, eps:280000, bps:450000, div:0.7, cap:1230, debtRatio:45,  opMargin:28},
+  {code:"035420", name:"NAVER",           sector:"IT서비스", price:231000,  eps:14100,  bps:166000, div:0.5, cap:37,   debtRatio:32,  opMargin:22},
+  {code:"035720", name:"카카오",          sector:"IT서비스", price:61500,   eps:1540,   bps:23700,  div:0.1, cap:27,   debtRatio:68,  opMargin:8},
+  {code:"005380", name:"현대차",          sector:"자동차",   price:262000,  eps:47600,  bps:323000, div:4.6, cap:55,   debtRatio:180, opMargin:9},
+  {code:"000270", name:"기아",            sector:"자동차",   price:115000,  eps:24200,  bps:151000, div:5.2, cap:45,   debtRatio:145, opMargin:11},
+  {code:"373220", name:"LG에너지솔루션",  sector:"2차전지",  price:420000,  eps:6000,   bps:105000, div:0.0, cap:98,   debtRatio:95,  opMargin:4},
+  {code:"006400", name:"삼성SDI",         sector:"2차전지",  price:220000,  eps:5500,   bps:290000, div:0.5, cap:17,   debtRatio:78,  opMargin:6},
+  {code:"207940", name:"삼성바이오로직스",sector:"바이오",   price:1050000, eps:16500,  bps:155000, div:0.0, cap:75,   debtRatio:35,  opMargin:32},
+  {code:"068270", name:"셀트리온",        sector:"바이오",   price:191000,  eps:3820,   bps:80300,  div:0.4, cap:41,   debtRatio:42,  opMargin:27},
+  {code:"329180", name:"HD현대중공업",    sector:"조선",     price:480000,  eps:13000,  bps:95000,  div:0.5, cap:42,   debtRatio:165, opMargin:6},
+  {code:"042660", name:"한화오션",        sector:"조선",     price:115000,  eps:2800,   bps:23000,  div:0.0, cap:35,   debtRatio:270, opMargin:4},
+  {code:"352820", name:"하이브",          sector:"엔터",     price:300000,  eps:6200,   bps:78000,  div:0.2, cap:12.5, debtRatio:72,  opMargin:12},
+  {code:"035900", name:"JYP Ent.",        sector:"엔터",     price:95000,   eps:3400,   bps:16500,  div:1.0, cap:3.4,  debtRatio:25,  opMargin:28},
+  {code:"017670", name:"SK텔레콤",        sector:"통신",     price:58000,   eps:5300,   bps:57000,  div:6.1, cap:12.5, debtRatio:105, opMargin:11},
+  {code:"030200", name:"KT",              sector:"통신",     price:52000,   eps:6300,   bps:74000,  div:4.0, cap:13,   debtRatio:95,  opMargin:8},
+  {code:"105560", name:"KB금융",          sector:"금융",     price:112000,  eps:13800,  bps:167000, div:4.0, cap:44,   debtRatio:850, opMargin:35},
+  {code:"055550", name:"신한지주",        sector:"금융",     price:65000,   eps:9500,   bps:120000, div:4.2, cap:33,   debtRatio:800, opMargin:33},
+  {code:"005490", name:"POSCO홀딩스",     sector:"철강",     price:298000,  eps:11900,  bps:508000, div:3.4, cap:25,   debtRatio:65,  opMargin:6},
+  {code:"004020", name:"현대제철",        sector:"철강",     price:33000,   eps:2100,   bps:135000, div:2.4, cap:4.4,  debtRatio:85,  opMargin:4},
 ];
 
 COMPANIES.forEach(c=>{
@@ -1346,15 +1673,6 @@ COMPANIES.forEach(c=>{
 
 const fmt=(n,d=1)=>Number(n).toLocaleString("ko-KR",{maximumFractionDigits:d,minimumFractionDigits:d});
 const fmtWon=n=>Math.round(n).toLocaleString("ko-KR")+"원";
-
-document.querySelectorAll("#app-explorer .tab-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll("#app-explorer .tab-btn").forEach(b=>b.classList.remove("active"));
-    document.querySelectorAll("#app-explorer .panel").forEach(p=>p.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById("panel-"+btn.dataset.tab).classList.add("active");
-  });
-});
 
 const CONCEPTS=[
   {term:"시가총액",eng:"Market Cap",formula:"주가 × 발행 주식 수",
@@ -1378,6 +1696,12 @@ const CONCEPTS=[
   {term:"배당수익률",eng:"Dividend Yield",formula:"주당 배당금 ÷ 주가 × 100",
    mean:"주가 대비 1년에 받는 배당금의 비율입니다. 주식을 보유하며 받는 '이자'와 비슷한 개념입니다.",
    tip:"배당수익률이 높은 기업은 안정적이지만, 성장에 재투자할 돈이 적을 수도 있습니다."},
+  {term:"부채비율",eng:"Debt Ratio",formula:"부채총계 ÷ 자기자본 × 100",
+   mean:"자기자본 대비 빚이 얼마나 되는지를 보여주는 '재무 건전성' 지표입니다. 100%면 빚과 자기자본이 같다는 뜻입니다.",
+   tip:"업종마다 다르지만, 일반적으로 200%를 넘으면 위험 신호로 여겨집니다. ROE가 높아도 부채비율이 지나치게 높으면 주의가 필요합니다."},
+  {term:"영업이익률",eng:"Operating Margin",formula:"영업이익 ÷ 매출액 × 100",
+   mean:"매출에서 실제 사업(본업)으로 얼마나 남기는지를 보여주는 '수익성' 지표입니다.",
+   tip:"영업이익률이 높으면 같은 매출로 더 많은 이익을 내는, 효율이 좋은 사업 구조라는 뜻입니다. 업종 간 비교보다는 같은 업종 안에서 비교가 유용합니다."},
 ];
 
 const cardGrid=document.getElementById("cardGrid");
@@ -1450,6 +1774,7 @@ function renderCompare(){
   const area=document.getElementById("compareArea");
   if(selected.length<2){
     area.innerHTML='<p style="color:var(--gray);font-size:0.9rem;">기업을 <b>2개 이상</b> 선택하면 비교 결과가 나타납니다.</p>';
+    renderJudgmentOptions([]);
     return;
   }
   const list=selected.map(i=>COMPANIES[i]);
@@ -1465,6 +1790,8 @@ function renderCompare(){
       <tr><td>PBR</td>${list.map(c=>`<td>${fmt(c.pbr,2)}배</td>`).join("")}</tr>
       <tr><td>ROE</td>${list.map(c=>`<td>${fmt(c.roe)}%</td>`).join("")}</tr>
       <tr><td>배당수익률</td>${list.map(c=>`<td>${fmt(c.div)}%</td>`).join("")}</tr>
+      <tr><td>부채비율</td>${list.map(c=>`<td>${fmt(c.debtRatio,0)}%</td>`).join("")}</tr>
+      <tr><td>영업이익률</td>${list.map(c=>`<td>${fmt(c.opMargin,1)}%</td>`).join("")}</tr>
     </tbody></table></div>`;
 
   const metrics=[
@@ -1472,6 +1799,8 @@ function renderCompare(){
     {key:"pbr",label:"PBR (배)",desc:"1배 미만이면 장부가치보다 주가가 낮다는 의미",d:2},
     {key:"roe",label:"ROE (%)",desc:"높을수록 주주의 돈을 효율적으로 굴리는 기업",d:1},
     {key:"div",label:"배당수익률 (%)",desc:"높을수록 보유 중 현금 수익이 크다는 뜻",d:1},
+    {key:"debtRatio",label:"부채비율 (%)",desc:"낮을수록 자기자본 대비 빚이 적다는 뜻 — 단, 금융업은 원래 매우 높습니다",d:0},
+    {key:"opMargin",label:"영업이익률 (%)",desc:"높을수록 매출에서 본업으로 남기는 이익이 크다는 뜻",d:1},
   ];
   html+='<div class="bar-section">';
   metrics.forEach(m=>{
@@ -1492,66 +1821,288 @@ function renderCompare(){
   const highRoe=list.reduce((a,b)=>a.roe>b.roe?a:b);
   const highDiv=list.reduce((a,b)=>a.div>b.div?a:b);
   const lowPbr=list.reduce((a,b)=>a.pbr<b.pbr?a:b);
+  const lowDebt=list.reduce((a,b)=>a.debtRatio<b.debtRatio?a:b);
+  const highOpMargin=list.reduce((a,b)=>a.opMargin>b.opMargin?a:b);
   let tips=[
     `<li><b>${lowPer.name}</b>의 PER(${fmt(lowPer.per)}배)이 가장 낮습니다. 이익 대비 주가가 상대적으로 싸지만, 미래 이익이 줄어들 것이라는 시장의 우려가 반영됐을 수도 있습니다.</li>`,
     `<li><b>${highRoe.name}</b>의 ROE(${fmt(highRoe.roe)}%)가 가장 높아 자본을 가장 효율적으로 활용하고 있습니다.</li>`,
     `<li>배당을 중시한다면 배당수익률이 가장 높은 <b>${highDiv.name}</b>(${fmt(highDiv.div)}%)이 눈에 띕니다.</li>`,
+    `<li><b>${highOpMargin.name}</b>의 영업이익률(${fmt(highOpMargin.opMargin)}%)이 가장 높아, 매출 대비 본업에서 남기는 이익이 가장 큽니다.</li>`,
   ];
   if(lowPbr.pbr<1) tips.push(`<li><b>${lowPbr.name}</b>의 PBR은 ${fmt(lowPbr.pbr,2)}배로 1배 미만입니다. 장부상 가치보다 주가가 낮게 거래되고 있다는 뜻인데, 왜 그럴지 토론해 보세요!</li>`);
+  const hasFinance = list.some(c=>c.sector==="금융");
+  if(hasFinance) tips.push(`<li>⚠️ 금융업(은행·지주사)은 고객 예금 자체가 회계상 '부채'로 잡혀서, 다른 업종과 비교하면 부채비율이 원래 매우 높게 나옵니다. 금융업의 부채비율은 다른 업종과 단순 비교하지 마세요.</li>`);
+  else tips.push(`<li><b>${lowDebt.name}</b>의 부채비율(${fmt(lowDebt.debtRatio,0)}%)이 가장 낮아, 비교 기업 중 재무적으로 가장 안정적인 편입니다.</li>`);
   const sectors=new Set(list.map(c=>c.sector));
-  if(sectors.size>1) tips.push(`<li>⚠️ 서로 다른 업종(${[...sectors].join(", ")})을 비교 중입니다. PER·PBR의 '정상 범위'는 업종마다 다르므로 단순 비교에 주의하세요.</li>`);
+  if(sectors.size>1) tips.push(`<li>⚠️ 서로 다른 업종(${[...sectors].join(", ")})을 비교 중입니다. PER·PBR·부채비율의 '정상 범위'는 업종마다 다르므로 단순 비교에 주의하세요.</li>`);
   else tips.push(`<li>✅ 같은 <b>${list[0].sector}</b> 업종끼리의 비교입니다. 동종업계에서는 PER·PBR 차이가 곧 시장 평가의 차이를 의미합니다. 어느 기업이 왜 더 높은 평가를 받는지 이유를 추론해 보세요!</li>`);
   html+=`<div class="insight"><h3>🔍 해석 도우미</h3><ul>${tips.join("")}</ul></div>`;
 
   area.innerHTML=html;
+  renderJudgmentOptions(list);
 }
 
-const QUIZ=[
-  {q:"PER(주가수익비율)을 구하는 올바른 식은?",
-   opts:["주가 ÷ EPS","EPS ÷ 주가","주가 ÷ BPS","순이익 ÷ 자기자본"],a:0,
-   ex:"PER = 주가 ÷ 주당순이익(EPS). 이익 대비 주가가 몇 배인지 나타냅니다."},
-  {q:"PBR이 1배 미만이라는 것은 무엇을 의미할까?",
-   opts:["주가가 장부상 순자산 가치보다 낮다","회사가 적자를 내고 있다","배당을 주지 않는다","주식 수가 줄었다"],a:0,
-   ex:"PBR = 주가 ÷ BPS이므로, 1배 미만이면 주가 < 1주당 순자산. 장부 가치보다 싸게 거래된다는 뜻입니다."},
-  {q:"기업의 '덩치(전체 크기)'를 비교할 때 가장 적절한 지표는?",
-   opts:["시가총액","주가","EPS","배당수익률"],a:0,
-   ex:"주가는 발행 주식 수에 따라 달라지므로, 기업 규모는 주가 × 주식 수인 시가총액으로 비교해야 합니다."},
-  {q:"ROE가 높다는 것은 어떤 의미일까?",
-   opts:["주주의 자본으로 이익을 효율적으로 내고 있다","주가가 매일 오르고 있다","부채가 전혀 없다","배당을 많이 준다"],a:0,
-   ex:"ROE = 순이익 ÷ 자기자본. 주주가 맡긴 돈을 얼마나 잘 굴려 이익을 냈는지 보여주는 효율 지표입니다."},
-  {q:"일반적으로 PER이 높게 형성되는 기업의 특징은?",
-   opts:["미래 성장에 대한 기대가 크다","자산이 매우 많다","배당수익률이 높다","주식 수가 적다"],a:0,
-   ex:"시장이 미래 이익 성장을 기대하면 현재 이익 대비 높은 가격(높은 PER)을 지불합니다. IT·바이오 기업에서 흔합니다."},
-  {q:"어떤 기업의 주가가 50,000원이고 EPS가 5,000원이다.\n이 기업의 PER은?",
-   opts:["10배","5배","25배","0.1배"],a:0,
-   ex:"PER = 50,000 ÷ 5,000 = 10배."},
-  {q:"어떤 기업의 주가가 80,000원이고 BPS가 100,000원이다.\n이 기업의 PBR은?",
-   opts:["0.8배","1.25배","8배","20배"],a:0,
-   ex:"PBR = 80,000 ÷ 100,000 = 0.8배. 장부 가치보다 낮게 거래되는 상태입니다."},
-  {q:"EPS가 4,000원인 기업에 목표 PER 15배를 적용하면\n적정주가는 얼마일까?",
-   opts:["60,000원","19,000원","37,500원","4,015원"],a:0,
-   ex:"적정주가 = EPS × 목표 PER = 4,000 × 15 = 60,000원."},
-  {q:"주가 100,000원, 주당 배당금 4,000원인 기업의\n배당수익률은?",
-   opts:["4%","2.5%","40%","0.4%"],a:0,
-   ex:"배당수익률 = 4,000 ÷ 100,000 × 100 = 4%."},
-  {q:"은행 업종은 PBR이 낮게 나오는 경우가 많다.\n그 이유로 가장 적절한 설명은?",
-   opts:["자산(자본) 규모가 매우 커서 BPS가 높기 때문","주가가 0원에 가깝기 때문","배당을 주지 않기 때문","EPS가 음수이기 때문"],a:0,
-   ex:"은행은 보유 자산이 거대해 BPS가 매우 큽니다. PBR = 주가 ÷ BPS이므로 분모가 크면 PBR이 낮아집니다."},
+/* 기능 : 지표 퀴즈 문제 은행 — 난이도 3단계
+   설계 : 초급(개념 확인) → 중급(직접 계산) → 고급(응용·추론)으로 점점 어려워집니다.
+         각 단계 5문제, 문제당 20점(만점 100점) */
+const QUIZ_TIERS = {
+  beginner: [
+    {q:"PER(주가수익비율)을 구하는 올바른 식은?",
+     opts:["주가 ÷ EPS","EPS ÷ 주가","주가 ÷ BPS","순이익 ÷ 자기자본"],a:0,
+     ex:"PER = 주가 ÷ 주당순이익(EPS). 이익 대비 주가가 몇 배인지 나타냅니다."},
+    {q:"PBR이 1배 미만이라는 것은 무엇을 의미할까?",
+     opts:["주가가 장부상 순자산 가치보다 낮다","회사가 적자를 내고 있다","배당을 주지 않는다","주식 수가 줄었다"],a:0,
+     ex:"PBR = 주가 ÷ BPS이므로, 1배 미만이면 주가 < 1주당 순자산. 장부 가치보다 싸게 거래된다는 뜻입니다."},
+    {q:"기업의 '덩치(전체 크기)'를 비교할 때 가장 적절한 지표는?",
+     opts:["시가총액","주가","EPS","배당수익률"],a:0,
+     ex:"주가는 발행 주식 수에 따라 달라지므로, 기업 규모는 주가 × 주식 수인 시가총액으로 비교해야 합니다."},
+    {q:"ROE가 높다는 것은 어떤 의미일까?",
+     opts:["주주의 자본으로 이익을 효율적으로 내고 있다","주가가 매일 오르고 있다","부채가 전혀 없다","배당을 많이 준다"],a:0,
+     ex:"ROE = 순이익 ÷ 자기자본. 주주가 맡긴 돈을 얼마나 잘 굴렸는지 보여주는 효율 지표입니다."},
+    {q:"EPS(주당순이익)가 나타내는 것은?",
+     opts:["1주가 1년 동안 벌어들인 순이익","1주당 장부상 순자산","1년간 주가 상승률","1주당 받는 배당금 총액"],a:0,
+     ex:"EPS = 당기순이익 ÷ 주식 수. 1주가 벌어들인 '수입'을 나타냅니다."},
+    {q:"부채비율이 나타내는 것은?",
+     opts:["자기자본 대비 부채(빚)의 비율","매출액 대비 이익의 비율","주가와 순자산의 비율","주가 대비 배당금의 비율"],a:0,
+     ex:"부채비율 = 부채총계 ÷ 자기자본 × 100. 자기자본 대비 빚이 얼마나 되는지 보여주는 재무 건전성 지표입니다."},
+    {q:"영업이익률은 무엇을 보여주는 지표일까?",
+     opts:["매출액 대비 본업에서 남긴 이익의 비율","주가 대비 배당금의 비율","자기자본 대비 부채의 비율","주식 수 대비 순이익의 비율"],a:0,
+     ex:"영업이익률 = 영업이익 ÷ 매출액 × 100. 매출에서 본업으로 얼마나 남기는지 보여주는 수익성 지표입니다."},
+    {q:"PBR(주가순자산비율)을 구하는 올바른 식은?",
+     opts:["주가 ÷ BPS","BPS ÷ 주가","주가 ÷ EPS","순이익 ÷ 자기자본"],a:0,
+     ex:"PBR = 주가 ÷ 주당순자산(BPS). 장부상 가치 대비 주가가 몇 배인지 나타냅니다."},
+    {q:"BPS(주당순자산)가 나타내는 것은?",
+     opts:["1주당 장부상 순자산","1주가 벌어들인 순이익","1년간 주가 상승률","1주당 받는 배당금 총액"],a:0,
+     ex:"BPS = 순자산 ÷ 주식 수. 회사 문을 닫고 자산을 나눈다면 1주당 돌아오는 금액입니다."},
+    {q:"배당수익률을 구하는 올바른 식은?",
+     opts:["주당 배당금 ÷ 주가 × 100","주가 ÷ 배당금","순이익 ÷ 자기자본","배당금 ÷ EPS"],a:0,
+     ex:"배당수익률 = 주당 배당금 ÷ 주가 × 100. 주가 대비 1년에 받는 배당금의 비율입니다."},
+  ],
+  intermediate: [], // 기능 : 중급은 아래 INTERMEDIATE_GENERATORS로 매번 숫자를 바꿔 새로 생성합니다
+  advanced: [
+    {q:"은행 업종은 PBR이 낮게 나오는 경우가 많다.\n그 이유로 가장 적절한 설명은?",
+     opts:["자산(자본) 규모가 매우 커서 BPS가 높기 때문","주가가 0원에 가깝기 때문","배당을 주지 않기 때문","EPS가 음수이기 때문"],a:0,
+     ex:"은행은 보유 자산이 거대해 BPS가 매우 큽니다. PBR = 주가 ÷ BPS이므로 분모가 크면 PBR이 낮아집니다."},
+    {q:"일반적으로 PER이 높게 형성되는 기업의 특징은?",
+     opts:["미래 성장에 대한 기대가 크다","자산이 매우 많다","배당수익률이 높다","주식 수가 적다"],a:0,
+     ex:"시장이 미래 이익 성장을 기대하면 현재 이익 대비 높은 가격(높은 PER)을 지불합니다. IT·바이오 기업에서 흔합니다."},
+    {q:"A기업은 PER 8배, ROE 15%이고 B기업은 PER 20배, ROE 5%이다.\n다음 중 가장 적절한 설명은?",
+     opts:["A는 이익 대비 주가도 싸고, 자본도 효율적으로 굴리고 있다","B가 성장성이 전혀 없다는 뜻이다","무조건 A가 더 좋은 주식이다","PER과 ROE는 서로 관계가 없다"],a:0,
+     ex:"A는 PER이 낮아 이익 대비 주가가 싸면서, ROE도 높아 자본을 효율적으로 쓰고 있습니다. 다만 업종·성장성 등도 함께 봐야 '무조건 좋다'고 단정할 수 없습니다."},
+    {q:"어떤 기업의 ROE는 높은데 PBR은 낮다면,\n어떤 해석이 가능할까?",
+     opts:["시장이 아직 이 기업을 저평가하고 있을 가능성이 있다","이 기업은 적자 기업일 것이다","PBR과 ROE는 항상 같은 방향으로 움직인다","배당을 전혀 주지 않는다는 뜻이다"],a:0,
+     ex:"ROE(수익성)가 높은데 PBR(시장 평가)이 낮다면, 실적에 비해 시장의 평가가 아직 따라오지 못했을 가능성을 의심해볼 수 있습니다."},
+    {q:"주가 40,000원, EPS 2,000원, BPS 20,000원인 기업의\nPER과 PBR을 각각 구하면?",
+     opts:["PER 20배, PBR 2배","PER 2배, PBR 20배","PER 20배, PBR 0.5배","PER 0.5배, PBR 2배"],a:0,
+     ex:"PER = 40,000 ÷ 2,000 = 20배. PBR = 40,000 ÷ 20,000 = 2배."},
+    {q:"ROE가 높은데 부채비율도 매우 높다면\n주의해야 할 점은?",
+     opts:["부채(지렛대)를 활용해 ROE가 인위적으로 높아졌을 수 있다","반드시 안전한 기업이라는 뜻이다","부채비율은 ROE와 아무 관련이 없다","배당을 많이 준다는 뜻이다"],a:0,
+     ex:"자기자본 대비 부채가 많으면, 빌린 돈으로 이익을 키워 ROE가 실제보다 부풀려질 수 있습니다. ROE만 보지 말고 부채비율도 함께 확인해야 합니다."},
+    {q:"영업이익률은 높은데 최종 EPS(주당순이익)는 낮다면\n어떤 해석이 가능할까?",
+     opts:["이자비용·법인세 등 영업외 비용 부담이 클 수 있다","매출이 전혀 없다는 뜻이다","영업이익률 계산이 잘못된 것이다","반드시 적자 기업이라는 뜻이다"],a:0,
+     ex:"영업이익은 본업의 성과이지만, 그 이후 이자비용·세금 등이 크게 빠지면 최종 순이익(EPS)은 줄어들 수 있습니다."},
+    {q:"A기업은 부채비율 250%, ROE 20%이고\nB기업은 부채비율 40%, ROE 8%이다. 가장 적절한 설명은?",
+     opts:["A는 부채를 활용해 높은 ROE를 냈을 가능성이 있어 재무위험도 함께 살펴야 한다","A가 무조건 더 안전한 기업이다","부채비율은 ROE에 아무 영향을 주지 않는다","B는 성장성이 전혀 없다는 뜻이다"],a:0,
+     ex:"A는 ROE가 높지만 부채비율도 매우 높아, 그 수익성이 빌린 돈(레버리지) 덕분일 수 있습니다. 겉보기 수익성만으로 판단하면 안 됩니다."},
+    {q:"조선업은 다른 업종보다 부채비율이 높은 경우가 많다.\n그 이유로 가장 적절한 것은?",
+     opts:["선박 건조에 막대한 설비·운영 자금이 필요해 차입이 많기 때문","배당을 전혀 주지 않기 때문","매출이 전혀 없기 때문","발행 주식 수가 매우 적기 때문"],a:0,
+     ex:"조선업은 장기간에 걸쳐 대규모 자금이 들어가는 수주 산업이라, 차입(부채)을 통한 자금 조달이 많은 편입니다."},
+    {q:"영업이익률이 높고 부채비율이 낮은 기업의 특징으로\n가장 적절한 것은?",
+     opts:["본업에서 안정적으로 이익을 내면서 재무 위험도 낮은 편이다","반드시 배당을 많이 준다","무조건 PER이 낮게 형성된다","ROE가 항상 낮게 나온다"],a:0,
+     ex:"영업이익률(수익성)과 부채비율(안정성)을 함께 보면, 이 조합은 사업도 잘되고 재무구조도 건전한 기업일 가능성이 높다는 걸 시사합니다."},
+  ],
+};
+const TIER_LABEL = {beginner:"초급", intermediate:"중급", advanced:"고급"};
+const QUIZ_ATTEMPT_SIZE = 5; // 기능 : 매번 몇 문제를 뽑아/생성해 출제할지
+
+/* ============================================================
+   기능 : 중급(계산) 문제 자동 생성기
+   설계 : 중급은 전부 "공식 + 숫자" 형태라, 숫자만 바꿔도 사실상 새 문제가 됩니다.
+         유형(공식)별로 자연스러운 숫자 조합을 몇 개씩 미리 준비해두고,
+         출제할 때마다 무작위로 하나씩 골라 정답·오답을 그 자리에서 계산합니다.
+   ============================================================ */
+function pickOne(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffleArr(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+function wonStr(n){ return Math.round(n).toLocaleString("ko-KR")+"원"; }
+
+/* 기능 : 정답값을 기준으로 그럴듯한 오답 3개(2배·1/2배·반올림 변형)를 만들고, 정답과 겹치면 살짝 밀어냄 */
+function buildNumOptions(correctVal, fmt){
+  const raw = [correctVal*2, correctVal/2, correctVal*1.5];
+  const seen = new Set([fmt(correctVal)]);
+  const wrongs = [];
+  raw.forEach(v=>{
+    let s = fmt(v);
+    let bump = 1;
+    while(seen.has(s)){ s = fmt(v + bump*(correctVal>10?correctVal*0.1:1)); bump++; if(bump>5) break; }
+    seen.add(s);
+    wrongs.push(s);
+  });
+  const optsArr = shuffleArr([fmt(correctVal), ...wrongs]);
+  return {opts: optsArr, a: optsArr.indexOf(fmt(correctVal))};
+}
+
+const INTERMEDIATE_GENERATORS = [
+  function genPER(){
+    const [price, eps] = pickOne([[50000,5000],[80000,8000],[120000,6000],[100000,10000],[60000,12000],[150000,15000],[90000,9000],[200000,10000],[45000,9000],[300000,20000]]);
+    const correct = price/eps;
+    const fmt = v => (Math.round(v*10)/10)+"배";
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`어떤 기업의 주가가 ${price.toLocaleString()}원이고 EPS가 ${eps.toLocaleString()}원이다.\n이 기업의 PER은?`,
+      opts, a, ex:`PER = ${price.toLocaleString()} ÷ ${eps.toLocaleString()} = ${fmt(correct)}.`};
+  },
+  function genPBR(){
+    const [price, bps] = pickOne([[80000,100000],[60000,120000],[150000,100000],[90000,60000],[200000,160000],[45000,90000],[120000,80000],[300000,200000]]);
+    const correct = price/bps;
+    const fmt = v => (Math.round(v*100)/100)+"배";
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`어떤 기업의 주가가 ${price.toLocaleString()}원이고 BPS가 ${bps.toLocaleString()}원이다.\n이 기업의 PBR은?`,
+      opts, a, ex:`PBR = ${price.toLocaleString()} ÷ ${bps.toLocaleString()} = ${fmt(correct)}.`};
+  },
+  function genFairPrice(){
+    const [eps, per] = pickOne([[4000,15],[3000,10],[5000,12],[2000,20],[6000,8],[2500,25],[8000,10],[10000,6]]);
+    const correct = eps*per;
+    const fmt = v => wonStr(v);
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`EPS가 ${eps.toLocaleString()}원인 기업에 목표 PER ${per}배를 적용하면\n적정주가는 얼마일까?`,
+      opts, a, ex:`적정주가 = EPS × 목표 PER = ${eps.toLocaleString()} × ${per} = ${wonStr(correct)}.`};
+  },
+  function genDivYield(){
+    const [price, div] = pickOne([[100000,4000],[50000,2500],[80000,1600],[120000,3600],[60000,3000],[200000,6000],[150000,4500],[40000,2000]]);
+    const correct = div/price*100;
+    const fmt = v => (Math.round(v*10)/10)+"%";
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`주가 ${price.toLocaleString()}원, 주당 배당금 ${div.toLocaleString()}원인 기업의\n배당수익률은?`,
+      opts, a, ex:`배당수익률 = ${div.toLocaleString()} ÷ ${price.toLocaleString()} × 100 = ${fmt(correct)}.`};
+  },
+  function genBPS(){
+    const [assetEok, sharesMan] = pickOne([[500,1000],[300,500],[800,2000],[1000,2000],[200,400],[1500,3000],[600,1200],[2000,5000]]);
+    const correct = assetEok*10000/sharesMan;
+    const fmt = v => wonStr(v);
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`순자산 ${assetEok.toLocaleString()}억원, 발행주식 수 ${sharesMan.toLocaleString()}만주인 기업의\nBPS는?`,
+      opts, a, ex:`BPS = 순자산 ÷ 주식 수 = ${assetEok.toLocaleString()}억 ÷ ${sharesMan.toLocaleString()}만 = ${wonStr(correct)}.`};
+  },
+  function genDebtRatio(){
+    const [debtEok, equityEok] = pickOne([[200,100],[300,150],[400,200],[150,100],[600,200],[250,125],[500,250],[350,175]]);
+    const correct = debtEok/equityEok*100;
+    const fmt = v => Math.round(v)+"%";
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`부채총계 ${debtEok.toLocaleString()}억원, 자기자본 ${equityEok.toLocaleString()}억원인 기업의\n부채비율은?`,
+      opts, a, ex:`부채비율 = ${debtEok.toLocaleString()}억 ÷ ${equityEok.toLocaleString()}억 × 100 = ${fmt(correct)}.`};
+  },
+  function genOpMargin(){
+    const [revenueEok, opProfitEok] = pickOne([[1000,80],[2000,200],[500,50],[1500,90],[800,64],[3000,150],[1200,120],[600,36]]);
+    const correct = opProfitEok/revenueEok*100;
+    const fmt = v => (Math.round(v*10)/10)+"%";
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`매출액 ${revenueEok.toLocaleString()}억원, 영업이익 ${opProfitEok.toLocaleString()}억원인 기업의\n영업이익률은?`,
+      opts, a, ex:`영업이익률 = ${opProfitEok.toLocaleString()}억 ÷ ${revenueEok.toLocaleString()}억 × 100 = ${fmt(correct)}.`};
+  },
+  function genROE(){
+    const [profitEok, equityEok] = pickOne([[50,500],[80,400],[30,300],[100,1000],[60,600],[45,300],[120,800],[90,450]]);
+    const correct = profitEok/equityEok*100;
+    const fmt = v => (Math.round(v*10)/10)+"%";
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`순이익 ${profitEok.toLocaleString()}억원, 자기자본 ${equityEok.toLocaleString()}억원인 기업의\nROE는?`,
+      opts, a, ex:`ROE = ${profitEok.toLocaleString()}억 ÷ ${equityEok.toLocaleString()}억 × 100 = ${fmt(correct)}.`};
+  },
+  function genEPS(){
+    const [profitEok, sharesMan] = pickOne([[300,1000],[150,500],[600,2000],[400,800],[250,500],[900,3000],[120,400],[800,2000]]);
+    const correct = profitEok*100000000/(sharesMan*10000);
+    const fmt = v => wonStr(v);
+    const {opts,a} = buildNumOptions(correct, fmt);
+    return {q:`당기순이익 ${profitEok.toLocaleString()}억원, 발행주식 수 ${sharesMan.toLocaleString()}만주인 기업의\nEPS는?`,
+      opts, a, ex:`EPS = ${profitEok.toLocaleString()}억 ÷ ${sharesMan.toLocaleString()}만 = ${wonStr(correct)}.`};
+  },
+  function genMarketCap(){
+    const [price, sharesMan] = pickOne([[50000,2000],[30000,3000],[100000,1000],[20000,5000],[80000,1250],[40000,2500],[60000,2000],[25000,4000]]);
+    const correctEok = price*sharesMan/10000; // 억원 단위
+    const fmt = v => v>=10000 ? (Math.round(v/1000)/10)+"조원" : Math.round(v).toLocaleString("ko-KR")+"억원";
+    const {opts,a} = buildNumOptions(correctEok, fmt);
+    return {q:`주가 ${price.toLocaleString()}원, 발행주식 수 ${sharesMan.toLocaleString()}만주인 기업의\n시가총액은?`,
+      opts, a, ex:`시가총액 = ${price.toLocaleString()} × ${sharesMan.toLocaleString()}만 = ${fmt(correctEok)}.`};
+  },
 ];
 
+/* 기능 : 중급 문제 N개를 매번 새로 생성 (유형이 겹치지 않도록 생성기를 무작위로 섞어서 사용) */
+function buildIntermediateQuestions(n){
+  const gens = shuffleArr(INTERMEDIATE_GENERATORS).slice(0, n);
+  return gens.map(gen => gen());
+}
+
+let currentTier = null;
 let qIdx=0,qScore=0,qOrder=[];
 const $=id=>document.getElementById(id);
 
-function shuffleQuiz(){
-  qOrder=QUIZ.map(q=>{
-    const idx=q.opts.map((_,i)=>i).sort(()=>Math.random()-0.5);
-    return {...q,opts:idx.map(i=>q.opts[i]),a:idx.indexOf(q.a)};
-  }).sort(()=>Math.random()-0.5);
+const TIER_ORDER = ["beginner","intermediate","advanced"];
+const TIER_PASS_SCORE = 60; // 기능 : 이 점수 이상이어야 다음 난이도가 열림 (5문제 중 3개 이상 정답)
+
+function tierScore(tier){
+  return (expProgress.quizScores && expProgress.quizScores[tier]) || 0;
 }
+function tierBestText(tier){
+  const score = tierScore(tier);
+  return score > 0 ? `최고 ${score}점` : "아직 도전 전";
+}
+function tierUnlocked(tier){
+  const idx = TIER_ORDER.indexOf(tier);
+  if(idx <= 0) return true; // 초급은 항상 열려있음
+  const prevTier = TIER_ORDER[idx-1];
+  return tierScore(prevTier) >= TIER_PASS_SCORE;
+}
+function renderTierSelect(){
+  TIER_ORDER.forEach(t => {
+    const btn = document.querySelector(`#app-learn .tier-card[data-tier="${t}"]`);
+    const bestEl = document.getElementById("tierBest"+t);
+    if(bestEl) bestEl.textContent = tierBestText(t);
+    if(!btn) return;
+    const unlocked = tierUnlocked(t);
+    btn.classList.toggle("locked", !unlocked);
+    const nameEl = btn.querySelector(".tier-name");
+    if(nameEl){
+      const baseName = nameEl.dataset.base || nameEl.textContent;
+      nameEl.dataset.base = baseName;
+      nameEl.textContent = unlocked ? baseName : "🔒 " + baseName;
+    }
+  });
+}
+renderTierSelect();
+
+function startTier(tier){
+  if(!tierUnlocked(tier)){
+    const idx = TIER_ORDER.indexOf(tier);
+    const prevLabel = TIER_LABEL[TIER_ORDER[idx-1]];
+    alert(`${prevLabel} 단계에서 ${TIER_PASS_SCORE}점 이상을 받아야 다음 난이도가 열려요!`);
+    return;
+  }
+  currentTier = tier;
+  qIdx = 0; qScore = 0;
+  let picked;
+  if(tier === "intermediate"){
+    // 기능 : 중급은 숫자를 매번 새로 생성 (보기 순서는 이미 생성 단계에서 섞여 있음)
+    qOrder = buildIntermediateQuestions(QUIZ_ATTEMPT_SIZE);
+  } else {
+    // 기능 : 초급·고급은 문제은행에서 무작위로 뽑고, 보기 순서도 매번 섞음
+    const pool = QUIZ_TIERS[tier];
+    picked = [...pool].sort(()=>Math.random()-0.5).slice(0, QUIZ_ATTEMPT_SIZE);
+    qOrder = picked.map(q=>{
+      const idx=q.opts.map((_,i)=>i).sort(()=>Math.random()-0.5);
+      return {...q,opts:idx.map(i=>q.opts[i]),a:idx.indexOf(q.a)};
+    });
+  }
+  $("quizSelect").style.display="none";
+  $("quizResult").style.display="none";
+  $("quizPlay").style.display="block";
+  showQuiz();
+}
+
+document.querySelectorAll("#app-learn .tier-card").forEach(btn=>{
+  btn.addEventListener("click", ()=>startTier(btn.dataset.tier));
+});
 
 function showQuiz(){
   const q=qOrder[qIdx];
-  $("quizProgress").textContent=`문제 ${qIdx+1} / ${qOrder.length}  ·  현재 점수 ${qScore}점`;
+  $("quizProgress").textContent=`[${TIER_LABEL[currentTier]}] 문제 ${qIdx+1} / ${qOrder.length}  ·  현재 점수 ${qScore}점`;
   $("quizQ").textContent=q.q;
   $("quizExplain").style.display="none";
   $("quizNext").style.display="none";
@@ -1566,11 +2117,11 @@ function showQuiz(){
 
 function answer(i,btn){
   const q=qOrder[qIdx];
-  document.querySelectorAll("#app-explorer .opt-btn").forEach((b,j)=>{
+  document.querySelectorAll("#app-learn .opt-btn").forEach((b,j)=>{
     b.disabled=true;
     if(j===q.a)b.classList.add("correct");
   });
-  if(i===q.a){qScore+=10;}
+  if(i===q.a){qScore+=20;}
   else{btn.classList.add("wrong");}
   $("quizExplain").textContent="📘 "+q.ex;
   $("quizExplain").style.display="block";
@@ -1584,26 +2135,37 @@ $("quizNext").addEventListener("click",()=>{
   else{
     $("quizPlay").style.display="none";
     $("quizResult").style.display="block";
+    $("quizResultTitle").textContent=`🎉 [${TIER_LABEL[currentTier]}] 퀴즈 완료!`;
     $("quizScore").textContent=qScore+"점";
+
+    if(!expProgress.quizScores) expProgress.quizScores = {beginner:0, intermediate:0, advanced:0};
+    if(!expProgress.quizCompleted || typeof expProgress.quizCompleted !== "object") expProgress.quizCompleted = {beginner:false, intermediate:false, advanced:false};
     let changed=false;
-    if(qScore>expProgress.quizBestScore){ expProgress.quizBestScore=qScore; changed=true; }
-    if(!expProgress.quizCompleted){ expProgress.quizCompleted=true; changed=true; }
+    if(qScore > (expProgress.quizScores[currentTier]||0)){ expProgress.quizScores[currentTier]=qScore; changed=true; }
+    if(!expProgress.quizCompleted[currentTier]){ expProgress.quizCompleted[currentTier]=true; changed=true; }
+    // 기능 : 이전 버전(2·3차시 미션)과의 호환을 위해 3단계 중 최고점을 quizBestScore로도 함께 저장
+    const overallBest = Math.max(expProgress.quizScores.beginner, expProgress.quizScores.intermediate, expProgress.quizScores.advanced);
+    if(overallBest !== expProgress.quizBestScore){ expProgress.quizBestScore = overallBest; changed=true; }
     if(changed) saveExpProgress();
+
     $("quizComment").textContent=
-      qScore>=90?"완벽해요! 이제 애널리스트처럼 분석할 준비가 됐어요 🏆":
-      qScore>=70?"훌륭해요! 헷갈린 지표만 개념 카드에서 복습해 보세요 👍":
+      qScore>=90?"완벽해요! 다음 난이도에도 도전해 보세요 🏆":
+      qScore>=70?"훌륭해요! 헷갈린 문제만 다시 확인해 보세요 👍":
       qScore>=50?"좋은 출발! ① 지표 개념 학습 탭을 한 번 더 살펴보세요 📚":
       "괜찮아요! 개념 카드부터 차근차근 다시 도전해 봅시다 💪";
   }
 });
 
 $("quizRetry").addEventListener("click",()=>{
-  qIdx=0;qScore=0;shuffleQuiz();
-  $("quizResult").style.display="none";
-  $("quizPlay").style.display="block";
-  showQuiz();
+  startTier(currentTier);
 });
-shuffleQuiz();showQuiz();
+
+$("quizBackToSelect").addEventListener("click",()=>{
+  $("quizResult").style.display="none";
+  $("quizPlay").style.display="none";
+  $("quizSelect").style.display="block";
+  renderTierSelect();
+});
 
 const wsSel=$("wsCompany");
 Object.entries(sectorMap).forEach(([sector,idxs])=>{
@@ -1625,7 +2187,9 @@ function renderPills(){
     <div class="pill"><b>현재 PER</b>${fmt(c.per)}배</div>
     <div class="pill"><b>PBR</b>${fmt(c.pbr,2)}배</div>
     <div class="pill"><b>ROE</b>${fmt(c.roe)}%</div>
-    <div class="pill"><b>배당수익률</b>${fmt(c.div)}%</div>`;
+    <div class="pill"><b>배당수익률</b>${fmt(c.div)}%</div>
+    <div class="pill"><b>부채비율</b>${fmt(c.debtRatio,0)}%</div>
+    <div class="pill"><b>영업이익률</b>${fmt(c.opMargin,1)}%</div>`;
 }
 
 function renderCalc(){
@@ -1660,11 +2224,72 @@ renderPills();renderCalc();
 
 /* 기능 : 워크시트 결론 메모 저장/복원 (미션 자동 체크용) */
 const wsMemoEl = $("wsMemo");
+const wsMemoPrintEl = $("wsMemoPrint");
+function syncWsMemoPrint(){
+  wsMemoPrintEl.textContent = wsMemoEl.value || "(작성한 내용이 없습니다)";
+}
 if(expProgress.wsMemo) wsMemoEl.value = expProgress.wsMemo;
+syncWsMemoPrint();
 wsMemoEl.addEventListener("input", ()=>{
   expProgress.wsMemo = wsMemoEl.value;
   saveExpProgress();
+  syncWsMemoPrint();
 });
+// 기능 : 인쇄 버튼을 누르기 직전에도 한 번 더 동기화 (혹시 모를 누락 방지 안전장치)
+window.addEventListener("beforeprint", syncWsMemoPrint);
+
+/* 기능 : 기업 비교 분석 — "나의 투자 판단 쓰기" 활동 (비교 중인 기업 중 하나를 골라 이유를 서술) */
+if(!expProgress.compareJudgmentCompany) expProgress.compareJudgmentCompany = "";
+if(!expProgress.compareJudgmentText) expProgress.compareJudgmentText = "";
+
+const judgmentTextEl = $("compareJudgmentText");
+const judgmentGuideEl = $("judgmentGuide");
+const judgmentPrintEl = $("compareJudgmentPrint");
+const judgmentCompanyPrintEl = $("judgmentCompanyPrint");
+judgmentTextEl.value = expProgress.compareJudgmentText || "";
+
+function syncJudgmentPrint(){
+  judgmentCompanyPrintEl.textContent = expProgress.compareJudgmentCompany
+    ? `선택한 기업: ${expProgress.compareJudgmentCompany}` : "선택한 기업: (아직 선택하지 않음)";
+  judgmentPrintEl.textContent = judgmentTextEl.value || "(작성한 내용이 없습니다)";
+}
+syncJudgmentPrint();
+
+function renderJudgmentOptions(list){
+  const box = $("judgmentCompanyOptions");
+  if(!list || list.length < 2){
+    box.innerHTML = "";
+    judgmentGuideEl.textContent = "기업을 2개 이상 비교하면 이 중 하나를 골라 판단을 남길 수 있어요.";
+    judgmentTextEl.disabled = true;
+    syncJudgmentPrint();
+    return;
+  }
+  // 기능 : 이전에 고른 기업이 지금 비교 목록에 없으면 선택을 초기화
+  if(!list.some(c => c.name === expProgress.compareJudgmentCompany)){
+    expProgress.compareJudgmentCompany = "";
+  }
+  judgmentGuideEl.textContent = "비교한 기업 중 하나를 고르고, 그 이유를 지표를 근거로 적어보세요.";
+  box.innerHTML = list.map(c => `<button class="judgment-chip ${c.name===expProgress.compareJudgmentCompany?"on":""}" data-name="${c.name}">${c.name}</button>`).join("");
+  box.querySelectorAll(".judgment-chip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      expProgress.compareJudgmentCompany = btn.dataset.name;
+      saveExpProgress();
+      box.querySelectorAll(".judgment-chip").forEach(b=>b.classList.toggle("on", b===btn));
+      judgmentTextEl.disabled = false;
+      judgmentTextEl.focus();
+      syncJudgmentPrint();
+    });
+  });
+  judgmentTextEl.disabled = !expProgress.compareJudgmentCompany;
+  syncJudgmentPrint();
+}
+
+judgmentTextEl.addEventListener("input", ()=>{
+  expProgress.compareJudgmentText = judgmentTextEl.value;
+  saveExpProgress();
+  syncJudgmentPrint();
+});
+window.addEventListener("beforeprint", syncJudgmentPrint);
 
 /* ============================================================
    기능 : 실시간 시세(prices.json) 연동 — 종목코드가 일치하는 기업의
@@ -1676,15 +2301,17 @@ let expIsLive = false;
 let expUpdatedAt = null;
 
 function renderExpChip(){
-  const chip = $("expDataChip");
-  const chipText = $("expDataChipText");
-  if(expIsLive){
-    chip.classList.add("live");
-    chipText.textContent = "주가 실시간 반영 중 · 기준 " + (expUpdatedAt ? new Date(expUpdatedAt).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "-");
-  } else {
-    chip.classList.remove("live");
-    chipText.textContent = "예시 주가 사용 중 (prices.json 미연결)";
-  }
+  const chips = document.querySelectorAll(".exp-data-chip");
+  chips.forEach(chip => {
+    const chipText = chip.querySelector(".chip-text");
+    if(expIsLive){
+      chip.classList.add("live");
+      chipText.textContent = "주가 실시간 반영 중 · 기준 " + (expUpdatedAt ? new Date(expUpdatedAt).toLocaleString("ko-KR",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "-");
+    } else {
+      chip.classList.remove("live");
+      chipText.textContent = "예시 주가 사용 중 (prices.json 미연결)";
+    }
+  });
 }
 
 async function loadExplorerPrices(){
@@ -1720,364 +2347,7 @@ setInterval(loadExplorerPrices, EXP_REFRESH_MS);
 })();
 </script>
 
-<script>
-/* ============================================================
-   [미션] 페이지 스크립트 (독립 스코프로 격리)
-   모의주식 투자 · 기업가치 탐험대의 실제 활동 데이터를 읽어
-   미션 완료 여부를 자동으로 판단합니다.
-   ============================================================ */
-(function(){
-/* 기능 : 거래내역은 종목명(name)만 저장하므로, 이름 → 업종 매핑을 준비 (업종 다양성 판단용) */
-const NAME_SECTOR = {
-  "삼성전자":"반도체","SK하이닉스":"반도체",
-  "NAVER":"IT서비스","카카오":"IT서비스",
-  "현대차":"자동차","기아":"자동차",
-  "LG에너지솔루션":"2차전지","삼성SDI":"2차전지",
-  "삼성바이오로직스":"바이오","셀트리온":"바이오",
-  "HD현대중공업":"조선","한화오션":"조선",
-  "하이브":"엔터","JYP Ent.":"엔터",
-  "SK텔레콤":"통신","KT":"통신",
-  "KB금융":"금융","신한지주":"금융",
-  "POSCO홀딩스":"철강","현대제철":"철강",
-};
 
-function readJSON(key, fallback){
-  try {
-    const raw = localStorage.getItem(key);
-    if(!raw) return fallback;
-    return {...fallback, ...JSON.parse(raw)};
-  } catch(e){ return fallback; }
-}
-function saveJSON(key, obj){
-  try { localStorage.setItem(key, JSON.stringify(obj)); } catch(e){ /* 무시 */ }
-}
-
-/* 기능 : 두 프로그램의 저장된 활동 데이터 + 미션 탐구노트를 읽어 판정용 지표로 정리 */
-function readStats(){
-  const sim = readJSON("stockSimState", {cash:10000000, holdings:{}, history:[], name:""});
-  const exp = readJSON("expProgress", {
-    flippedTerms:[], quizBestScore:0, quizCompleted:false,
-    compareEverDone:false, maxCompareSelected:0, wsMemo:"", wsPerTouched:false
-  });
-  const notes = readJSON("missionNotes", {n1:"", n3:"", n4:"", n5:""});
-  const history = sim.history || [];
-  const buyHistory = history.filter(h => h.type === "매수");
-  const sellHistory = history.filter(h => h.type === "매도");
-  return {
-    studentName: sim.name || "",
-    totalTrades: history.length,
-    buyCount: buyHistory.length,
-    sellCount: sellHistory.length,
-    distinctStocksBought: new Set(buyHistory.map(h => h.name)).size,
-    distinctSectorsBought: new Set(buyHistory.map(h => NAME_SECTOR[h.name]).filter(Boolean)).size,
-    flippedCount: (exp.flippedTerms || []).length,
-    maxCompareSelected: exp.maxCompareSelected || 0,
-    quizCompleted: !!exp.quizCompleted,
-    quizBestScore: exp.quizBestScore || 0,
-    wsPerTouched: !!exp.wsPerTouched,
-    wsMemoLen: (exp.wsMemo || "").trim().length,
-    notes,
-  };
-}
-
-/* 기능 : 5차시 미션 정의
-   설계 의도 : 앞 차시는 클릭 몇 번으로 끝나는 "체험" 위주지만,
-             뒤로 갈수록 직접 계산 → 비교 판단 근거 쓰기 → 제미나이 노트북 실제 자료 탐구 →
-             종합 분석 보고서 작성으로 난이도와 사고의 깊이가 함께 올라갑니다.
-   type: "check"(자동 감지) | "note"(직접 서술, 글자 수로 완료 판정) */
-const SESSIONS = [
-  {
-    id:1, title:"1차시 · 지표의 뜻 정확히 알기", desc:"핵심 지표를 모두 익히고, 내가 산 종목의 PER을 직접 계산해봐요.",
-    missions:[
-      {type:"check", title:"지표 개념 카드 7개 모두 뒤집어보기", target:s=>`${s.flippedCount} / 7개`, done:s=>s.flippedCount>=7,
-       goto:{view:"app-explorer", subTab:"learn"}},
-      {type:"check", title:"모의주식에서 종목 1개 매수해보기", target:s=>`매수 ${s.buyCount}회`, done:s=>s.buyCount>=1,
-       goto:{view:"app-sim"}},
-      {type:"note", key:"n1", minLen:15, title:"방금 매수한 종목의 PER을 직접 계산해서 적어보기",
-       guide:"주가 ÷ EPS 를 스스로 계산한 값과 풀이 과정을 적어보세요. (예: 삼성전자 주가 268,500 ÷ EPS 12,573 = 약 21.4배)",
-       target:s=>`${s.notes.n1.trim().length} / 15자`, done:s=>s.notes.n1.trim().length>=15,
-       goto:{view:"app-explorer", subTab:"ws"}},
-    ],
-  },
-  {
-    id:2, title:"2차시 · 매매로 지표 체감하기", desc:"매도까지 경험하고, 업종을 넓혀가며 퀴즈 실력을 키워요.",
-    missions:[
-      {type:"check", title:"매수한 종목을 매도까지 해보기", target:s=>`매도 ${s.sellCount}회`, done:s=>s.sellCount>=1,
-       goto:{view:"app-sim"}},
-      {type:"check", title:"서로 다른 업종 2개 이상 매수해보기", target:s=>`${s.distinctSectorsBought} / 2업종`, done:s=>s.distinctSectorsBought>=2,
-       goto:{view:"app-sim"}},
-      {type:"check", title:"지표 퀴즈에서 70점 이상 받기", target:s=>`최고점 ${s.quizBestScore}점`, done:s=>s.quizBestScore>=70,
-       goto:{view:"app-explorer", subTab:"quiz"}},
-    ],
-  },
-  {
-    id:3, title:"3차시 · 비교로 판단력 기르기", desc:"기업 3곳을 나란히 비교하고, 왜 그렇게 판단했는지 근거를 남겨요.",
-    missions:[
-      {type:"check", title:"기업 3개를 골라 비교 분석해보기", target:s=>`최대 ${s.maxCompareSelected}개 선택`, done:s=>s.maxCompareSelected>=3,
-       goto:{view:"app-explorer", subTab:"compare"}},
-      {type:"note", key:"n3", minLen:40, title:"비교한 기업 중 저평가/고평가라고 생각하는 기업과 이유 적어보기",
-       guide:"어떤 지표(PER·PBR·ROE·배당수익률)를 근거로 그렇게 판단했는지 구체적으로 적어보세요.",
-       target:s=>`${s.notes.n3.trim().length} / 40자`, done:s=>s.notes.n3.trim().length>=40,
-       goto:{view:"app-explorer", subTab:"compare"}},
-      {type:"check", title:"지표 퀴즈에서 90점 이상 받기", target:s=>`최고점 ${s.quizBestScore}점`, done:s=>s.quizBestScore>=90,
-       goto:{view:"app-explorer", subTab:"quiz"}},
-    ],
-  },
-  {
-    id:4, title:"4차시 · 제미나이 노트북으로 자료 탐구하기", desc:"🤖 AI에게 물어보기로 이동해 실제 자료를 조사하고, 워크시트로 적정주가를 계산해요.",
-    missions:[
-      {type:"note", key:"n4", minLen:80, title:"제미나이 노트북에게 관심 기업에 대해 최소 3가지 질문하고 알아낸 내용 요약하기",
-       guide:"🤖 AI에게 물어보기 탭에서 제미나이 노트북을 열고 궁금한 점을 질문해보세요. 무엇을 물었고 어떤 답을 얻었는지 요약해서 적어보세요.",
-       target:s=>`${s.notes.n4.trim().length} / 80자`, done:s=>s.notes.n4.trim().length>=80,
-       goto:{view:"app-ai"}},
-      {type:"check", title:"워크시트에서 목표 PER을 직접 조정해 적정주가 계산해보기", target:s=>s.wsPerTouched?"조정 완료":"미조정", done:s=>s.wsPerTouched,
-       goto:{view:"app-explorer", subTab:"ws"}},
-      {type:"check", title:"계산 결과를 근거로 워크시트 결론을 40자 이상 남기기", target:s=>`${s.wsMemoLen} / 40자`, done:s=>s.wsMemoLen>=40,
-       goto:{view:"app-explorer", subTab:"ws"}},
-    ],
-  },
-  {
-    id:5, title:"5차시 · 나만의 기업 분석 보고서 완성하기", desc:"지금까지의 탐구를 종합해 하나의 분석 보고서로 완성해요.",
-    missions:[
-      {type:"note", key:"n5", minLen:150, title:"제미나이 노트북 탐구 내용을 바탕으로 나만의 기업 분석 보고서 작성하기",
-       guide:"기업 개요, 핵심 지표(PER·PBR·ROE 등) 해석, 제미나이 노트북에서 찾은 근거, 나의 투자 결론을 포함해 하나의 글로 정리해보세요.",
-       target:s=>`${s.notes.n5.trim().length} / 150자`, done:s=>s.notes.n5.trim().length>=150,
-       goto:{view:"app-ai"}},
-      {type:"check", title:"워크시트 결론을 60자 이상으로 완성하기", target:s=>`${s.wsMemoLen} / 60자`, done:s=>s.wsMemoLen>=60,
-       goto:{view:"app-explorer", subTab:"ws"}},
-      {type:"check", title:"거래 10회 이상 + 서로 다른 업종 3개 이상 매수 종합 달성", target:s=>`거래 ${s.totalTrades}회 · ${s.distinctSectorsBought}업종`, done:s=>s.totalTrades>=10 && s.distinctSectorsBought>=3,
-       goto:{view:"app-sim"}},
-    ],
-  },
-];
-
-let activeSession = 1;
-let currentStats = null;
-
-function sessionCleared(session, stats){
-  return session.missions.every(m => m.done(stats));
-}
-
-function sessionUnlocked(sessionId, stats){
-  if(sessionId === 1) return true;
-  const prev = SESSIONS.find(s => s.id === sessionId - 1);
-  return prev ? sessionCleared(prev, stats) : true;
-}
-
-/* 기능 : 미션1을 완료해야 미션2가 열리는 식으로, 같은 차시 안에서도 순서대로 잠금 해제 */
-function missionUnlocked(session, idx, stats){
-  if(idx === 0) return true;
-  return session.missions[idx - 1].done(stats);
-}
-
-function renderTabs(stats){
-  const nav = document.getElementById("sessionTabs");
-  nav.innerHTML = SESSIONS.map(s => {
-    const cleared = sessionCleared(s, stats);
-    const unlocked = sessionUnlocked(s.id, stats);
-    return `<button class="session-tab-btn ${s.id===activeSession?"active":""} ${cleared?"cleared":""} ${!unlocked?"locked":""}" data-id="${s.id}">${!unlocked?"🔒 ":""}${s.id}차시</button>`;
-  }).join("");
-  nav.querySelectorAll(".session-tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = Number(btn.dataset.id);
-      if(!sessionUnlocked(id, currentStats)){
-        toast("이전 차시 미션을 먼저 모두 완료해야 열려요");
-        return;
-      }
-      activeSession = id;
-      renderMissions();
-    });
-  });
-}
-
-function renderSessionInfo(session){
-  document.getElementById("sessionInfo").innerHTML = `
-    <div class="s-title">${session.title}</div>
-    <div class="s-desc">${session.desc}</div>`;
-}
-
-function updateProgressBar(stats){
-  const all = SESSIONS.flatMap(s => s.missions);
-  const doneCount = all.filter(m => m.done(stats)).length;
-  document.getElementById("missionCount").textContent = `${doneCount} / ${all.length} 완료`;
-  document.getElementById("missionFill").style.width = (doneCount / all.length * 100) + "%";
-}
-
-const VIEW_LABEL = {
-  "app-sim":"💰 모의주식 투자로 이동",
-  "app-explorer":"📊 기업가치 탐험대로 이동",
-  "app-ai":"🤖 AI에게 물어보기로 이동",
-};
-function gotoButtonHTML(m){
-  if(!m.goto) return "";
-  const label = VIEW_LABEL[m.goto.view] || "이동하기";
-  return `<button class="goto-btn" data-view="${m.goto.view}" data-subtab="${m.goto.subTab || ""}">${label} →</button>`;
-}
-
-function singleItemHTML(session, idx, stats){
-  const m = session.missions[idx];
-  if(!missionUnlocked(session, idx, stats)){
-    return `
-      <div class="mission-item locked" data-idx="${idx}">
-        <div class="check lock-icon">🔒</div>
-        <div class="txt">
-          <div class="title">${m.title}</div>
-          <div class="desc">바로 위 미션을 먼저 완료하면 열려요</div>
-        </div>
-      </div>`;
-  }
-  const done = m.done(stats);
-  if(m.type === "note"){
-    return `
-      <div class="mission-item note-item ${done ? "done" : ""}" data-idx="${idx}">
-        <div class="check">${done ? "✓" : ""}</div>
-        <div class="txt">
-          <div class="title">${m.title}</div>
-          <div class="desc">${m.guide}</div>
-          ${gotoButtonHTML(m)}
-          <textarea class="mission-note" data-key="${m.key}" placeholder="여기에 적어보세요...">${stats.notes[m.key] || ""}</textarea>
-          <div class="desc note-count">${m.target(stats)}</div>
-        </div>
-      </div>`;
-  }
-  return `
-    <div class="mission-item ${done ? "done" : ""}" data-idx="${idx}">
-      <div class="check">${done ? "✓" : ""}</div>
-      <div class="txt">
-        <div class="title">${m.title}</div>
-        <div class="desc">${m.target(stats)}</div>
-        ${gotoButtonHTML(m)}
-      </div>
-    </div>`;
-}
-
-function attachNoteListeners(session){
-  // 기능 : "바로가기" 버튼은 이벤트 위임으로 한 번만 등록 (재렌더링돼도 계속 동작)
-  const list = document.getElementById("missionList");
-  if(!list.dataset.gotoBound){
-    list.dataset.gotoBound = "1";
-    list.addEventListener("click", (e) => {
-      const btn = e.target.closest(".goto-btn");
-      if(!btn) return;
-      if(typeof window.__gotoAppView === "function"){
-        window.__gotoAppView(btn.dataset.view, btn.dataset.subtab || null);
-      }
-    });
-  }
-
-  document.querySelectorAll("#missionList textarea.mission-note").forEach(ta => {
-    if(ta.dataset.bound) return; // 이미 바인딩된 경우 중복 등록 방지
-    ta.dataset.bound = "1";
-    ta.addEventListener("input", () => {
-      const key = ta.dataset.key;
-      const idx = Number(ta.closest(".mission-item").dataset.idx);
-      const notes = readJSON("missionNotes", {n1:"", n3:"", n4:"", n5:""});
-      notes[key] = ta.value;
-      saveJSON("missionNotes", notes);
-      currentStats.notes[key] = ta.value;
-
-      // 기능 : 지금 입력 중인 항목 자체는 DOM을 다시 그리지 않고 값만 갱신 (커서 이탈 방지)
-      const m = session.missions[idx];
-      const done = m.done(currentStats);
-      const item = ta.closest(".mission-item");
-      item.classList.toggle("done", done);
-      item.querySelector(".check").textContent = done ? "✓" : "";
-      item.querySelector(".note-count").textContent = m.target(currentStats);
-
-      // 기능 : 나머지 항목은 새로 계산해서, 방금 완료로 새로 열린 미션이 있으면 즉시 보여줌
-      session.missions.forEach((mm, i) => {
-        if(i === idx) return; // 입력 중인 항목은 건드리지 않음
-        const el = document.querySelector(`#missionList .mission-item[data-idx="${i}"]`);
-        if(!el) return;
-        const newHTML = singleItemHTML(session, i, currentStats);
-        if(el.outerHTML !== newHTML) el.outerHTML = newHTML;
-      });
-      attachNoteListeners(session);
-
-      updateProgressBar(currentStats);
-      renderTabs(currentStats); // 탭의 완료·잠금 배지만 갱신 (텍스트영역 포커스에는 영향 없음)
-    });
-  });
-}
-
-function renderMissionItems(session, stats){
-  document.getElementById("missionList").innerHTML =
-    session.missions.map((m, idx) => singleItemHTML(session, idx, stats)).join("");
-  attachNoteListeners(session);
-}
-
-function renderMissions(){
-  currentStats = readStats();
-  if(!sessionUnlocked(activeSession, currentStats)){
-    // 기능 : 어떤 이유로든 잠긴 차시에 머물러 있었다면, 열려 있는 가장 이른 차시로 이동
-    const firstOpen = SESSIONS.find(s => sessionUnlocked(s.id, currentStats) && !sessionCleared(s, currentStats))
-      || SESSIONS.find(s => sessionUnlocked(s.id, currentStats));
-    activeSession = firstOpen ? firstOpen.id : 1;
-  }
-  renderTabs(currentStats);
-  const session = SESSIONS.find(s => s.id === activeSession);
-  renderSessionInfo(session);
-  renderMissionItems(session, currentStats);
-  updateProgressBar(currentStats);
-}
-
-function toast(msg){
-  const t = document.getElementById("missionToast");
-  t.textContent = msg;
-  t.classList.add("show");
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove("show"), 2200);
-}
-
-document.getElementById("missionRefresh").addEventListener("click", () => {
-  renderMissions();
-  toast("미션 현황을 새로고침했어요");
-});
-
-document.getElementById("missionCopyBtn").addEventListener("click", async () => {
-  const stats = readStats();
-  const all = SESSIONS.flatMap(s => s.missions);
-  const doneCount = all.filter(m => m.done(stats)).length;
-  const lines = [
-    `[5차시 미션 현황] ${stats.studentName || "(이름 미입력)"}`,
-    `전체 완료: ${doneCount} / ${all.length}`,
-    "",
-  ];
-  SESSIONS.forEach(s => {
-    lines.push(`▸ ${s.title}`);
-    s.missions.forEach(m => {
-      lines.push(`${m.done(stats) ? "✅" : "⬜"} ${m.title} (${m.target(stats)})`);
-      if(m.type === "note" && stats.notes[m.key] && stats.notes[m.key].trim()){
-        lines.push(`   └ "${stats.notes[m.key].trim()}"`);
-      }
-    });
-    lines.push("");
-  });
-  const text = lines.join("\n").trim();
-  try { await navigator.clipboard.writeText(text); toast("미션 현황을 복사했어요. 선생님께 제출해보세요!"); }
-  catch(e){ prompt("아래 내용을 복사하세요", text); }
-});
-
-document.getElementById("missionResetAll").addEventListener("click", () => {
-  const ok = confirm(
-    "정말 처음부터 다시 시작할까요?\n\n" +
-    "모의주식 투자(잔고·거래내역), 기업가치 탐험대(카드 학습·퀴즈 점수·비교 기록·워크시트),\n" +
-    "미션 서술 답변까지 모두 지워지고, 15개 미션이 전부 잠긴 상태로 되돌아갑니다.\n" +
-    "이 작업은 되돌릴 수 없어요."
-  );
-  if(!ok) return;
-  try {
-    localStorage.removeItem("stockSimState");
-    localStorage.removeItem("expProgress");
-    localStorage.removeItem("missionNotes");
-  } catch(e){ /* 무시 */ }
-  location.reload();
-});
-
-window.__recomputeMissions = renderMissions;
-renderMissions();
-})();
-</script>
 
 <script>
 /* ============================================================
